@@ -2,13 +2,10 @@
 
 @plugin "tailwindcss-animate";
 
-@custom-variant dark (&:is(.dark *));
-
 @layer base {
   body {
     @apply scroll-smooth;
     @apply overflow-x-hidden;
-    @apply main-bg-color;
   }
 }
 
@@ -18,4 +15,8 @@
 
 ::-webkit-scrollbar-thumb {
   background-color: #888;
+}
+
+* {
+  background-color:  #F1F2FA;
 }
