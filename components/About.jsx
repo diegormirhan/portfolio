@@ -15,14 +15,14 @@ const About = ({isDarkMode}) => {
       whileInView={{opacity: 1, y: 0}}
       transition={{duration: 0.5, delay: 0.3}}
       className='text-center mb-2 text-lg font-Ovo'>
-        Introduction</motion.h4>
+        Introdução</motion.h4>
 
       <motion.h2 
       initial={{opacity: 0, y: -20}}
       whileInView={{opacity: 1, y: 0}}
       transition={{duration: 0.5, delay: 0.5}}
       className='text-center text-5xl font-Ovo'>
-        About me</motion.h2>
+        Sobre mim</motion.h2>
 
         <motion.div 
         initial={{opacity: 0}}
@@ -65,7 +65,7 @@ const About = ({isDarkMode}) => {
                 initial={{ y: 20, opacity: 0 }}
                 whileInView={{ y: 0, opacity: 1 }}
                 transition={{ delay: 1.3, duration: 0.5 }}
-                className='my-6 text-gray-700 font-Ovo dark:text-white/80'>Tools I use</motion.h4>
+                className='my-6 text-gray-700 font-Ovo dark:text-white/80'>Ferramentas que uso</motion.h4>
 
                 <motion.ul
                 initial={{ opacity: 0 }}

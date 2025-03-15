@@ -16,14 +16,14 @@ const Services = () => {
        whileInView={{ y: 0, opacity: 1 }} 
        transition={{ delay: 0.3, duration: 0.5 }}
        className='text-center mb-2 text-lg font-Ovo'>
-       What I offer</motion.h4>
+       O que ofereço</motion.h4>
 
       <motion.h2 
       initial={{ y: -20, opacity: 0 }}
       whileInView={{ y: 0, opacity: 1 }}
       transition={{ delay: 0.5, duration: 0.5 }}
       className='text-center text-5xl font-Ovo'>
-      My Services</motion.h2>
+      Serviços</motion.h2>
 
       <motion.p 
       initial={{ opacity: 0 }}
@@ -48,7 +48,7 @@ const Services = () => {
                         {description}
                     </p>
                     <a href={link} className='flex items-center gap-2 text-sm mt-5'>
-                        Read more <Image alt='' src={assets.right_arrow} className='w-4'/>
+                        Ler mais <Image alt='' src={assets.right_arrow} className='w-4'/>
                     </a>
                 </motion.div>
             ))}

@@ -6,7 +6,7 @@ import edu_icon_dark from './edu-icon-dark.png';
 import project_icon from './project-icon.png';
 import project_icon_dark from './project-icon-dark.png';
 import vscode from './vscode.png';
-import firebase from './firebase.png';
+import wordpress from './wordpress.png';
 import figma from './figma.png';
 import git from './git.png';
 import mongodb from './mongodb.png';
@@ -45,7 +45,7 @@ export const assets = {
     project_icon,
     project_icon_dark,
     vscode,
-    firebase,
+    wordpress,
     figma,
     git,
     mongodb,
@@ -78,40 +78,44 @@ export const assets = {
 
 export const workData = [
     {
-        title: 'Frontend project',
-        description: 'Web Design',
+        title: 'Comando Geek',
+        description: 'Marketplace geek',
         bgImage: '/work-1.png',
+        link: 'https://comandogeek.com.br'
     },
     {
-        title: 'Geo based app',
-        description: 'Mobile App',
+        title: 'Best Media Tool',
+        description: 'Website',
         bgImage: '/work-2.png',
+        link: 'https://bestmediatool.com'
     },
     {
-        title: 'Photography site',
-        description: 'Web Design',
+        title: 'Netvistos',
+        description: 'Wordpress Website',
         bgImage: '/work-3.png',
+        link: 'https://netvistos.com.br'
     },
     {
-        title: 'UI/UX designing',
-        description: 'UI/UX Design',
+        title: 'Blog Comando Geek',
+        description: 'Blog Wordpress',
         bgImage: '/work-4.png',
+        link: 'https://comandogeek.com.br/blog'
     },
 ]
 
 export const serviceData = [
     { icon: assets.web_icon, title: 'Web design', description: 'Web development is the process of building, programming...', link: '' },
-    { icon: assets.mobile_icon, title: 'Mobile app', description: 'Mobile app development involves creating software for mobile devices...', link: '' },
-    { icon: assets.ui_icon, title: 'UI/UX design', description: 'UI/UX design focuses on creating a seamless user experience...', link: '' },
+    { icon: assets.mobile_icon, title: 'Wordpress', description: 'Mobile app development involves creating software for mobile devices...', link: '' },
+    { icon: assets.ui_icon, title: 'Otimizações', description: 'UI/UX design focuses on creating a seamless user experience...', link: '' },
     { icon: assets.graphics_icon, title: 'Graphics design', description: 'Creative design solutions to enhance visual communication...', link: '' },
 ]
 
 export const infoList = [
-    { icon: assets.code_icon, iconDark: assets.code_icon_dark, title: 'Languages', description: 'HTML, CSS, JavaScript React Js, Next Js' },
-    { icon: assets.edu_icon, iconDark: assets.edu_icon_dark, title: 'Education', description: 'B.Tech in Computer Science' },
-    { icon: assets.project_icon, iconDark: assets.project_icon_dark, title: 'Projects', description: 'Built more than 5 projects' }
+    { icon: assets.code_icon, iconDark: assets.code_icon_dark, title: 'Linguagens', description: 'HTML, CSS, JavaScript React Js, Next Js, Python'},
+    { icon: assets.edu_icon, iconDark: assets.edu_icon_dark, title: 'Educação', description: 'Graduação em Ciência da computação' },
+    { icon: assets.project_icon, iconDark: assets.project_icon_dark, title: 'Projetos', description: 'Criação de mais de 10 projetos' }
 ];
 
 export const toolsData = [
-    assets.vscode, assets.firebase, assets.mongodb, assets.figma, assets.git
+    assets.vscode, assets.wordpress, assets.mongodb, assets.figma, assets.git
 ];
