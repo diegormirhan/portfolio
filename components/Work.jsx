@@ -36,7 +36,7 @@ const Work = ({ isDarkMode }) => {
         transition={{ delay: 0.7, duration: 0.5 }}
         className="text-center max-w-2xl mx-auto mt-5 mb-12 font-Ovo"
       >
-        Bemv-vindo ao meu portfolio! Explore uma coleção de projetos e serviços
+        Bem-vindo ao meu portfolio! Explore uma coleção de projetos e serviços
         que desenvolvi nos últimos meses.
       </motion.p>
 

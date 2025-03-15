@@ -49,7 +49,7 @@ const Navbar = ({isDarkMode, setIsDarkMode}) => {
                 <Image src={isDarkMode ? assets.sun_icon : assets.moon_icon} alt='' className='w-6' />
             </button>
 
-            <a href="#contact" className='hidden lg:flex items-center gap-3 px-10 py-2.5 border border-gray-500 rounded-full ml-4 font-Ovo dark:border-white/50'>Whatsapp 
+            <a href="https://api.whatsapp.com/send?phone=5512996440284&text=Ol%C3%A1%2C%20gostaria%20de%20saber%20mais%20informa%C3%A7%C3%B5es%20sobre%20seu%20trabalho%20e%20os%20servi%C3%A7os%20que%20voc%C3%AA%20oferece." target='_blank' className='hidden lg:flex bg-emerald-500 hover:bg-emerald-600 transition-all duration-300 items-center gap-3 px-10 py-2.5 border border-gray-500 rounded-full ml-4 font-Ovo dark:border-white/50'>Whatsapp 
             <Image src={isDarkMode ? assets.arrow_icon_dark : assets.arrow_icon} alt="" className='w-3'/></a>
 
             <button className='block md:hidden ml-3' onClick={openMenu}>

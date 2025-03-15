@@ -1,4 +1,4 @@
-import user_image from './user-image.png';
+import user_image from './user-image.jpg';
 import code_icon from './code-icon.png';
 import code_icon_dark from './code-icon-dark.png';
 import edu_icon from './edu-icon.png';
@@ -15,7 +15,7 @@ import logo from './logo.png';
 import logo_dark from './logo_dark.png';
 import mail_icon from './mail_icon.png';
 import mail_icon_dark from './mail_icon_dark.png';
-import profile_img from './profile-img.png';
+import profile_img from './profile-img1.jpg';
 import download_icon from './download-icon.png';
 import hand_icon from './hand-icon.png';
 import header_bg_color from './header-bg-color.png';
@@ -79,35 +79,35 @@ export const assets = {
 export const workData = [
     {
         title: 'Comando Geek',
-        description: 'Marketplace geek',
-        bgImage: '/work-1.png',
+        description: 'Marketplace Wordpress',
+        bgImage: '/comandogeek-1x1.png',
         link: 'https://comandogeek.com.br'
     },
     {
         title: 'Best Media Tool',
-        description: 'Website',
-        bgImage: '/work-2.png',
+        description: 'Website React',
+        bgImage: '/bestmediatool.png',
         link: 'https://bestmediatool.com'
     },
     {
         title: 'Netvistos',
-        description: 'Wordpress Website',
-        bgImage: '/work-3.png',
+        description: 'Website Wordpress',
+        bgImage: '/netvistos.png',
         link: 'https://netvistos.com.br'
     },
     {
         title: 'Blog Comando Geek',
         description: 'Blog Wordpress',
-        bgImage: '/work-4.png',
+        bgImage: '/comandogeekblog-1x1.png',
         link: 'https://comandogeek.com.br/blog'
     },
 ]
 
 export const serviceData = [
-    { icon: assets.web_icon, title: 'Web design', description: 'Web development is the process of building, programming...', link: '' },
-    { icon: assets.mobile_icon, title: 'Wordpress', description: 'Mobile app development involves creating software for mobile devices...', link: '' },
-    { icon: assets.ui_icon, title: 'Otimizações', description: 'UI/UX design focuses on creating a seamless user experience...', link: '' },
-    { icon: assets.graphics_icon, title: 'Graphics design', description: 'Creative design solutions to enhance visual communication...', link: '' },
+    { icon: assets.web_icon, title: 'Desenvolvimento Web', description: 'Crio soluções digitais com design atraente e funcionalidades avançadas, utilizando tecnologias como React e NextJs para construir sites e aplicações web visualmente impressionantes e tecnicamente sólidos, superando expectativas."', link: '' },
+    { icon: assets.mobile_icon, title: 'Wordpress', description: 'Desenvolvo e customizo sites em WordPress, desde blogs simples até plataformas complexas. Trabalho com temas personalizados, plugins e otimização para garantir um desempenho excepcional e uma experiência de usuário intuitiva.', link: '' },
+    { icon: assets.ui_icon, title: 'Otimizações', description: 'Realizo otimizações técnicas e de desempenho para sites WordPress, garantindo carregamento rápido, segurança e melhor SEO. Utilizo caching, minificação de código e otimização de banco de dados para uma experiência de usuário fluida e eficiente."', link: '' },
+    { icon: assets.graphics_icon, title: 'UI/UX', description: 'Foco na criação de interfaces de usuário intuitivas e agradáveis, garantindo uma experiência de usuário fluida e envolvente. Meu objetivo é alinhar o design às necessidades do usuário final, proporcionando uma navegação simples e eficaz.', link: '' },
 ]
 
 export const infoList = [
