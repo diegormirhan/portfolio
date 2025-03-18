@@ -55,13 +55,13 @@ const About = ({ isDarkMode }) => {
           className="flex-1"
         >
           <p className="mb-10 max-w-2xl font-Ovo">
-            Sou um Desenvolvedor Frontend apaixonado por criar experiências
-            digitais. Tenho expriência em Wordpress, React, Next.js e tecnologias
-            modernas do ecossistema JavaScript. Minha jornada inclui
-            colaborações com empresas de diversos segmentos, auxiliando um 
-            desenvolvimento de projetos desafiadores que me
-            permitiram aprimorar continuamente minhas habilidades técnicas e
-            criativas. Atualmente, estou cursando a graduação de Ciência da Computação, além de participar em
+            Desenvolvedor FullStack apaixonado por criar experiências digitais
+            inovadoras. Domino Wordpress, Python, React e Next.js, utilizando-as
+            para construir interfaces intuitivas e sistemas robustos. Colaborei
+            com empresas de diversos setores em projetos desafiadores, como
+            plataformas de e-commerce e aplicativos web interativos, aprimorando
+            minhas habilidades técnicas e criativas. Atualmente, estou cursando
+            a graduação de Ciência da Computação, além de participar em
             pesquisas sobre Inteligência Artificial.
           </p>
 
