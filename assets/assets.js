@@ -108,10 +108,10 @@ export const workData = [
         link: 'https://github.com/diegormirhan/intelligence-ocr'
     },
     {
-        title: 'Blog Comando Geek',
-        description: 'Blog Wordpress',
+        title: 'Comando Geek',
+        description: 'Wordpress Website',
         bgImage: '/comandogeekblog-1x1.png',
-        link: 'https://comandogeek.com.br/blog'
+        link: 'https://comandogeek.com.br/'
     },
 ]
 
