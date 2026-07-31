@@ -78,22 +78,22 @@ export const assets = {
 
 export const workData = [
     {
-        title: 'Comando Geek',
-        description: 'Marketplace Wordpress',
-        bgImage: '/comandogeek-1x1.png',
-        link: 'https://comandogeek.com.br'
+        title: 'LLM Inference Benchmark',
+        description: 'Sistema de Benchmark para IA',
+        bgImage: 'https://i.imgur.com/zSX0HxA.png',
+        link: 'https://github.com/diegormirhan/llm-inference-benchmark'
     },
     {
         title: 'Best Media Tool',
         description: 'Website React',
         bgImage: '/bestmediatool.png',
-        link: 'https://bestmediatool.com'
+        link: 'https://github.com/diegormirhan/all-in-one-download-app'
     },
     {
-        title: 'Netvistos',
-        description: 'Website Wordpress',
-        bgImage: '/netvistos.png',
-        link: 'https://netvistos.com.br'
+        title: 'Intelligence OCR',
+        description: "Ferramenta OCR usando IA's locais",
+        bgImage: 'https://i.imgur.com/iG3vZTM.png',
+        link: 'https://github.com/diegormirhan/intelligence-ocr'
     },
     {
         title: 'Blog Comando Geek',
