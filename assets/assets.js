@@ -35,6 +35,12 @@ import right_arrow from './right-arrow.png';
 import send_icon from './send-icon.png';
 import right_arrow_bold from './right-arrow-bold.png';
 import right_arrow_bold_dark from './right-arrow-bold-dark.png';
+import typescript from "./typescript.png"
+import pytorch from "./pytorch.png"
+import nextjs from "./nextjs.png"
+import jupyter from "./jupyter.png"
+import aws from "./aws.png"
+import python from "./python.png"
 
 export const assets = {
     user_image,
@@ -48,7 +54,13 @@ export const assets = {
     wordpress,
     figma,
     git,
+    jupyter,
+    typescript,
+    nextjs,
+    pytorch,
     mongodb,
+    aws,
+    python,
     right_arrow_white,
     logo,
     logo_dark,
@@ -117,5 +129,5 @@ export const infoList = [
 ];
 
 export const toolsData = [
-    assets.vscode, assets.wordpress, assets.mongodb, assets.figma, assets.git
+    assets.vscode, assets.wordpress, assets.mongodb, assets.figma, assets.git, assets.pytorch, assets.jupyter, assets.aws, assets.nextjs, assets.python, assets.typescript
 ];
