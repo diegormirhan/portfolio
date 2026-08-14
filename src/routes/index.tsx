@@ -276,7 +276,7 @@ function Home() {
           </Reveal>
           <Reveal delay={0.1}>
             <div className="flex h-full flex-col gap-5">
-              <div className="card-modern rounded-3xl p-6 sm:p-8">
+              <div className="card-modern flex flex-col items-start rounded-3xl p-6 sm:p-8">
                 <div className="flex items-center gap-3">
                   <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-amber-400/10 text-amber-400 ring-1 ring-amber-400/20">
                     <Zap className="size-5" aria-hidden />
