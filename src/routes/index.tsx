@@ -83,7 +83,7 @@ export const Route = createFileRoute("/")({
 
 function Timeline({ entries, icon: Icon = Sparkles }: { entries: TimelineEntry[], icon?: any }) {
   return (
-    <ol className="relative mt-8 border-l border-border pl-8 sm:pl-10 ml-6 sm:ml-0">
+    <ol className="relative mt-8 border-l border-border pl-8 sm:pl-10 ml-4 sm:ml-0">
       {entries.map((entry, idx) => (
         <li key={`${entry.title}-${entry.period}`} className="group pb-10 last:pb-0">
           <Reveal delay={idx * 0.1}>
