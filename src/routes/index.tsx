@@ -51,11 +51,7 @@ function highlightMeta(title: string) {
 
 export const Route = createFileRoute("/")({
   head: () => ({
-    links: [
-      { rel: "preconnect", href: "https://pinned.berrysauce.dev", crossOrigin: "anonymous" },
-      { rel: "preconnect", href: "https://api.rss2json.com", crossOrigin: "anonymous" },
-      { rel: "dns-prefetch", href: "https://api.github.com" },
-    ],
+    links: [],
     meta: [
       { title: `${profile.name} — ${profile.role}` },
       { name: "description", content: profile.summary.slice(0, 155) },

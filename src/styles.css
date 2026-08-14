@@ -110,6 +110,7 @@
 @layer base {
   * {
     border-color: var(--color-border);
+    content-visibility: auto;
   }
 
   html {
