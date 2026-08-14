@@ -220,10 +220,9 @@
   background: conic-gradient(
     from var(--angle),
     transparent 0deg,
-    color-mix(in oklch, var(--color-primary) 80%, transparent) 90deg,
-    color-mix(in oklch, var(--color-primary) 100%, transparent) 180deg,
-    color-mix(in oklch, var(--color-primary) 80%, transparent) 270deg,
-    transparent 360deg
+    color-mix(in oklch, var(--color-primary) 100%, transparent) 45deg,
+    color-mix(in oklch, var(--color-primary) 100%, transparent) 135deg,
+    transparent 180deg
   );
   animation: frame-rotate 6s linear infinite;
 }
