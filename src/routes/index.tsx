@@ -83,9 +83,9 @@ function Timeline({ entries, icon: Icon = Sparkles }: { entries: TimelineEntry[]
   return (
     <ol className="relative mt-8 border-l border-border pl-8 sm:pl-10">
       {entries.map((entry, idx) => (
-        <li key={`${entry.title}-${entry.period}`} className="pb-10 last:pb-0">
+        <li key={`${entry.title}-${entry.period}`} className="group pb-10 last:pb-0">
           <Reveal delay={idx * 0.1}>
-            <div className="absolute -left-[32px] sm:-left-[35px] mt-1.5 flex size-6 sm:size-7 items-center justify-center rounded-full bg-primary/10 text-primary ring-4 ring-background border border-primary/20">
+            <div className="absolute -left-[32px] sm:-left-[35px] mt-1.5 flex size-6 sm:size-7 items-center justify-center rounded-full bg-primary/10 text-primary ring-4 ring-background border border-primary/20 transition-transform group-hover:scale-110">
               <Icon className="size-3 sm:size-3.5" aria-hidden />
             </div>
             <span className="font-mono text-xs uppercase tracking-[0.2em] text-primary/80">{entry.period}</span>
@@ -328,9 +328,9 @@ function Home() {
                     className="pointer-events-none absolute -right-10 -top-10 size-28 rounded-full bg-primary/15 blur-2xl sm:opacity-60"
                     aria-hidden
                   />
-                  <span className={`inline-flex size-11 items-center justify-center rounded-2xl ${bgClass} ${colorClass}`}>
+                  <div className={`inline-flex size-11 items-center justify-center rounded-2xl ${bgClass} ${colorClass} transition-transform group-hover:scale-110`}>
                     <Icon className="size-5" aria-hidden />
-                  </span>
+                  </div>
                   <h3 className="mt-4 text-base font-semibold">{group.title}</h3>
                   <div className="mt-3 h-px w-full bg-gradient-to-r from-primary/50 to-transparent" />
                   <ul className="mt-4 flex flex-wrap gap-2">
