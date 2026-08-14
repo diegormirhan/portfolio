@@ -225,61 +225,12 @@
   mask-composite: exclude;
 }
 
-.site-frame-rim::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: conic-gradient(
-    from var(--angle),
-    transparent 0deg,
-    color-mix(in oklch, var(--color-primary) 100%, transparent) 45deg,
-    color-mix(in oklch, var(--color-primary) 100%, transparent) 135deg,
-    transparent 180deg
-  );
-  animation: frame-rotate 6s linear infinite;
-}
-
-@property --angle {
-  syntax: "<angle>";
-  initial-value: 0deg;
-  inherits: false;
-}
-
-@keyframes frame-rotate {
-  from { --angle: 0deg; }
-  to { --angle: 360deg; }
-}
-
-/* Removida animação legada baseada em transform */
-
-.site-frame-rim::after {
-  content: "";
-  position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    box-shadow:
-      inset 0 0 32px color-mix(in oklch, var(--color-primary) 40%, transparent),
-      0 0 48px -4px color-mix(in oklch, var(--color-primary) 60%, transparent);
-}
-
-@media (min-width: 640px) {
-  .site-frame {
-    inset: 0px;
-    border-radius: 0rem;
-  }
-}
+/* Removido código legado do rim que foi consolidado no .site-frame */
 
 @media (min-width: 1024px) {
   .site-frame {
-    inset: 0px;
-    border-radius: 0rem;
-  }
-
-  .site-frame-rim {
-    padding: 5px;
+    inset: 20px;
+    border-width: 5px;
   }
 }
 
