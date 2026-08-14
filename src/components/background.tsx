@@ -1,4 +1,4 @@
-import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
+import { motion, useScroll, useTransform, useReducedMotion, type Easing } from "framer-motion";
 import { useRef, memo } from "react";
 
 export const Background = memo(function Background() {
@@ -17,11 +17,8 @@ export const Background = memo(function Background() {
     opacity: [0.3, 0.4, 0.3],
   };
 
-  const blobTransition = {
-    duration: 20,
-    repeat: Infinity,
-    ease: "linear",
-  };
+  const linearEasing: Easing = "linear";
+  const easeInOutEasing: Easing = "easeInOut";
 
   return (
     <div ref={containerRef} className="fixed inset-0 -z-10 overflow-hidden pointer-events-none bg-background contain-strict">
@@ -30,7 +27,11 @@ export const Background = memo(function Background() {
         <motion.div
           style={{ y: y1, rotate: rotateSlower }}
           animate={blobAnimation}
-          transition={blobTransition}
+          transition={{
+            duration: 20,
+            repeat: Infinity,
+            ease: linearEasing,
+          }}
           className="absolute -top-[10%] -left-[10%] size-[80%] rounded-full bg-primary/20 blur-[100px] will-change-transform"
         />
         
@@ -44,7 +45,7 @@ export const Background = memo(function Background() {
           transition={{
             duration: 25,
             repeat: Infinity,
-            ease: "easeInOut",
+            ease: easeInOutEasing,
           }}
           className="absolute top-[20%] -right-[15%] size-[70%] rounded-full bg-highlight/15 blur-[120px] will-change-transform"
         />
@@ -58,7 +59,7 @@ export const Background = memo(function Background() {
           transition={{
             duration: 18,
             repeat: Infinity,
-            ease: "easeInOut",
+            ease: easeInOutEasing,
           }}
           className="absolute bottom-[10%] left-[5%] size-[60%] rounded-full bg-primary/10 blur-[140px] will-change-transform"
         />
