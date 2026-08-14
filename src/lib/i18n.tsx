@@ -46,7 +46,7 @@ export const strings = {
             "Do experimento à interface: aplicações web full-stack pensadas para quem usa, não só para quem programa.",
         },
       ],
-      currently: "Foco atual",
+      currently: "Foco total",
       currentlyText:
         "Pesquisa em IA generativa aplicada, inferência local de modelos e engenharia de dados.",
     },
@@ -137,7 +137,7 @@ export const strings = {
             "From experiment to interface: full-stack web apps built for the people who use them.",
         },
       ],
-      currently: "Current focus",
+      currently: "Total focus",
       currentlyText:
         "Research on applied generative AI, local model inference and data engineering.",
     },

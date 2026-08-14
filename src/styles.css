@@ -99,15 +99,6 @@
 @layer base {
   * {
     border-color: var(--color-border);
-    animation: none !important;
-    transition: none !important;
-    scroll-behavior: auto !important;
-  }
-
-  *::before,
-  *::after {
-    animation: none !important;
-    transition: none !important;
   }
 
   section[id] {
@@ -116,6 +107,11 @@
 
   body {
     background-color: var(--color-background);
+    background-image: 
+      radial-gradient(at 0% 0%, color-mix(in oklch, var(--color-primary) 8%, transparent) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, color-mix(in oklch, var(--color-highlight) 8%, transparent) 0px, transparent 50%),
+      radial-gradient(at 50% 100%, color-mix(in oklch, var(--color-primary) 5%, transparent) 0px, transparent 50%);
+    background-attachment: fixed;
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;

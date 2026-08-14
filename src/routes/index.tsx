@@ -273,29 +273,31 @@ function Home() {
             <div className="flex h-full flex-col gap-5">
               <div className="glass-liquid card-glow rounded-3xl p-6 sm:p-7">
                 <div className="flex items-center gap-3">
-                  <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-amber-400/10 text-amber-400">
+                  <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
                     <Sparkles className="size-4" aria-hidden />
                   </span>
                   <h3 className="font-mono text-xs uppercase tracking-[0.2em] text-primary">
                     {t.about.currently}
                   </h3>
                 </div>
-                <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+                <p className="mt-4 text-sm leading-relaxed text-foreground/90">
                   {t.about.currentlyText}
                 </p>
               </div>
-              <div className="glass-liquid card-glow h-full rounded-3xl p-6 sm:p-7">
+              <div className="glass-liquid card-glow flex flex-col justify-center rounded-3xl p-6 sm:p-7">
                 <h3 className="font-mono text-xs uppercase tracking-[0.2em] text-primary">
                   {t.about.languages}
                 </h3>
-                <ul className="mt-4 space-y-2.5 text-sm text-muted-foreground">
+                <div className="mt-4 flex flex-wrap gap-2">
                   {content.languages.map((language) => (
-                    <li key={language} className="flex gap-2.5">
-                      <span className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" aria-hidden />
-                      <span>{language}</span>
-                    </li>
+                    <span 
+                      key={language} 
+                      className="glass-pill inline-flex items-center rounded-full px-3 py-1.5 text-xs font-medium text-foreground/90 transition-colors hover:text-primary"
+                    >
+                      {language}
+                    </span>
                   ))}
-                </ul>
+                </div>
               </div>
             </div>
           </Reveal>
