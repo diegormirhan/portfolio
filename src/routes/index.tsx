@@ -79,16 +79,16 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
-function Timeline({ entries }: { entries: TimelineEntry[] }) {
+function Timeline({ entries, icon: Icon = Sparkles }: { entries: TimelineEntry[], icon?: any }) {
   return (
     <ol className="relative mt-8 border-l border-border pl-8 sm:pl-10">
       {entries.map((entry, idx) => (
         <li key={`${entry.title}-${entry.period}`} className="pb-10 last:pb-0">
           <Reveal delay={idx * 0.1}>
-            <div className="absolute -left-[30px] sm:-left-[32px] mt-1.5 flex size-5 sm:size-6 items-center justify-center rounded-full bg-primary/20 text-primary ring-4 ring-background">
-              <Sparkles className="size-2.5 sm:size-3" aria-hidden />
+            <div className="absolute -left-[32px] sm:-left-[35px] mt-1.5 flex size-6 sm:size-7 items-center justify-center rounded-full bg-primary/10 text-primary ring-4 ring-background border border-primary/20">
+              <Icon className="size-3 sm:size-3.5" aria-hidden />
             </div>
-            <span className="font-mono text-xs uppercase tracking-[0.2em] text-primary">{entry.period}</span>
+            <span className="font-mono text-xs uppercase tracking-[0.2em] text-primary/80">{entry.period}</span>
             <h3 className="mt-2 text-xl font-semibold">{entry.title}</h3>
             <p className="text-sm text-muted-foreground">{entry.org}</p>
             <p className="mt-3 max-w-2xl text-sm text-muted-foreground">{entry.description}</p>
@@ -367,22 +367,22 @@ function Home() {
                 <div className="flex size-10 items-center justify-center rounded-xl bg-violet-400/10 text-violet-400">
                   <Layers className="size-5" />
                 </div>
-                <h3 className="text-xl font-bold">{lang === 'pt' ? 'Experiência Profissional' : 'Professional Experience'}</h3>
-              </div>
-              <Timeline entries={content.experience} />
+              <h3 className="text-xl font-bold">{lang === 'pt' ? 'Experiência Profissional' : 'Professional Experience'}</h3>
             </div>
-          </Reveal>
-          <Reveal delay={0.2}>
-            <div className="relative">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="flex size-10 items-center justify-center rounded-xl bg-blue-400/10 text-blue-400">
-                  <Sparkles className="size-5" />
-                </div>
-                <h3 className="text-xl font-bold">{lang === 'pt' ? 'Formação Acadêmica' : 'Education'}</h3>
+            <Timeline entries={content.experience} icon={Layers} />
+          </div>
+        </Reveal>
+        <Reveal delay={0.2}>
+          <div className="relative">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="flex size-10 items-center justify-center rounded-xl bg-blue-400/10 text-blue-400">
+                <Sparkles className="size-5" />
               </div>
-              <Timeline entries={content.education} />
+              <h3 className="text-xl font-bold">{lang === 'pt' ? 'Formação Acadêmica' : 'Education'}</h3>
             </div>
-          </Reveal>
+            <Timeline entries={content.education} icon={Sparkles} />
+          </div>
+        </Reveal>
         </div>
       </section>
 
