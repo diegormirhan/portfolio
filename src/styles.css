@@ -9,6 +9,17 @@
  * Todas as cores em oklch e expostas como tokens semânticos.
  */
 
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes frame-rotate {
+  from { --angle: 0deg; }
+  to { --angle: 360deg; }
+}
+
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -210,20 +221,6 @@
     inset 0 0 20px color-mix(in oklch, var(--color-primary) 10%, transparent);
 }
 
-.site-frame-rim {
-  display: none;
-}
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  padding: 4px;
-  overflow: hidden;
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-}
 
 /* Removido código legado do rim que foi consolidado no .site-frame */
 
