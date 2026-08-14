@@ -260,7 +260,7 @@ function Home() {
                 {t.about.highlights.map((item) => {
                   const { icon: Icon, colorClass, bgClass } = highlightMeta(item.title);
                   return (
-                    <div key={item.title} className="glass rounded-2xl p-4 transition-all hover:border-primary/30">
+                    <div key={item.title} className="glass flex flex-col items-start rounded-2xl p-4 transition-all hover:border-primary/30">
                       <span className={`mb-2 inline-flex size-8 items-center justify-center rounded-xl ${bgClass} ${colorClass}`}>
                         <Icon className="size-4" aria-hidden />
                       </span>
@@ -276,7 +276,7 @@ function Home() {
           </Reveal>
           <Reveal delay={0.1}>
             <div className="flex h-full flex-col gap-5">
-              <div className="card-modern rounded-3xl p-6 sm:p-8">
+              <div className="card-modern flex flex-col items-start rounded-3xl p-6 sm:p-8">
                 <div className="flex items-center gap-3">
                   <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-amber-400/10 text-amber-400 ring-1 ring-amber-400/20">
                     <Zap className="size-5" aria-hidden />
@@ -289,7 +289,7 @@ function Home() {
                   {t.about.currentlyText}
                 </p>
               </div>
-              <div className="card-modern flex flex-col justify-center rounded-3xl p-6 sm:p-8">
+              <div className="card-modern flex flex-col items-start rounded-3xl p-6 sm:p-8">
                 <div className="flex items-center gap-3">
                   <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-emerald-400/10 text-emerald-400 ring-1 ring-emerald-400/20">
                     <Globe className="size-5" aria-hidden />
@@ -330,7 +330,7 @@ function Home() {
             const { icon: Icon, colorClass, bgClass } = skillGroupMeta[group.icon];
             return (
               <Reveal key={group.title} delay={groupIdx * 0.1}>
-                <div className="card-modern group relative flex h-full items-center gap-6 overflow-hidden rounded-3xl p-6 transition-all hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5 sm:p-7">
+                <div className="card-modern group relative flex h-full items-start gap-6 overflow-hidden rounded-3xl p-6 transition-all hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5 sm:p-7">
                   <span
                     className="pointer-events-none absolute -right-6 -top-6 size-32 rounded-full bg-primary/20 blur-3xl opacity-40"
                     aria-hidden
