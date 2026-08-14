@@ -1,4 +1,4 @@
-import { Menu, X } from "lucide-react";
+import { Menu, X, Github } from "lucide-react";
 import { useEffect, useState } from "react";
 
 import { LanguageToggle } from "./language-toggle";
@@ -85,8 +85,9 @@ export function SiteHeader() {
             href={profile.github}
             target="_blank"
             rel="noreferrer"
-            className="glass-pill hidden rounded-full px-4 py-1.5 text-sm font-medium sm:inline-flex"
+            className="glass-pill hidden items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium sm:inline-flex"
           >
+            <Github className="size-3.5" />
             GitHub
           </a>
           <button
