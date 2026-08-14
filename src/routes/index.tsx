@@ -260,7 +260,7 @@ function Home() {
                 {t.about.highlights.map((item) => {
                   const { icon: Icon, colorClass, bgClass } = highlightMeta(item.title);
                   return (
-                    <div key={item.title} className="glass rounded-2xl p-4 transition-all hover:border-primary/30">
+                    <div key={item.title} className="glass flex flex-col items-start rounded-2xl p-4 transition-all hover:border-primary/30">
                       <span className={`mb-2 inline-flex size-8 items-center justify-center rounded-xl ${bgClass} ${colorClass}`}>
                         <Icon className="size-4" aria-hidden />
                       </span>
