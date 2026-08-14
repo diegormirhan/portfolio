@@ -1,51 +1,54 @@
-# Welcome to your Lovable project
+# Diego Mirhan — Software Engineer & Data Specialist
 
-This project was built with [Lovable](https://lovable.dev).
+A high-performance portfolio showcasing full-stack engineering, data infrastructure, and AI-driven solutions. Built with a focus on modern design, smooth interactions, and optimized performance.
 
-## Build with Lovable
+## 🚀 Tech Stack
 
-Open your project in the [Lovable editor](https://lovable.dev) and keep building.
+This project leverages cutting-edge web technologies:
 
-- **Ship faster**: describe what you want to build and Lovable handles the code.
-- **Stay in sync**: connect the project to GitHub and every change made in Lovable is committed straight to your repository.
-- **Full ownership**: this code is yours. Push to your repository and your changes sync back into Lovable, ready for your next prompt.
+*   **[TanStack Start](https://tanstack.com/router/v1/docs/guide/start/overview):** Full-stack React framework for optimized SSR/SSG and type-safe routing.
+*   **[React 19](https://react.dev/):** The latest version of the world's most popular UI library.
+*   **[Tailwind CSS v4](https://tailwindcss.com/):** High-performance utility-first CSS framework with native theme variables.
+*   **[Framer Motion](https://motion.dev/):** Powering smooth scroll animations and interactive micro-interactions.
+*   **[Lucide React](https://lucide.dev/):** A beautiful and consistent icon set.
 
-## Development
+## 🏗️ Project Architecture
 
-Prefer working locally? You need Node.js and npm — [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating).
+The codebase is organized into modular, type-safe components for maximum maintainability:
 
-```sh
-git clone <this-repository-url>
-cd <repository-name>
-npm i
-npm run dev
-```
+*   **`Background`**: Dynamic SVG-based mesh and grid backgrounds with parallax effects.
+*   **`SiteFrame`**: A sophisticated animated border system using CSS masks and properties.
+*   **`Reveal`**: Intersection observer-based animation wrapper for lazy-loading visual components.
+*   **`SiteData`**: Centralized content management for easy updates (Skills, Experience, Projects).
+*   **`Integrations`**: Real-time fetching from Medium (Articles) and GitHub (Pinned Repos).
 
-## Built with
+## 🎨 Design Philosophy
 
-- TanStack Start
-- TypeScript
-- React
-- Tailwind CSS
+*   **Glassmorphism 2.0:** Modern frosted-glass aesthetic with deep shadows and vibrant colored accents.
+*   **Responsive & Accessible:** Fully optimized for mobile, tablet, and desktop viewports.
+*   **Dark Mode Native:** Designed from the ground up to be easy on the eyes with a sleek dark aesthetic.
 
-## Deploy no AWS Amplify (site estático)
+## ⚙️ Development
 
-O `amplify.yml` na raiz já define tudo: o build roda com `NITRO_PRESET=static`,
-que gera o site pré-renderizado (HTML estático) em `dist/client` — pasta já
-configurada como `baseDirectory`.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/diegormirhan/portfolio.git
+   ```
+2. Install dependencies:
+   ```bash
+   bun install
+   ```
+3. Run the development server:
+   ```bash
+   bun run dev
+   ```
 
-Em **App settings → Rewrites and redirects**, adicione o fallback de SPA:
+## ☁️ Deployment (AWS Amplify)
 
-```
-Source: /<*>   Target: /index.html   Type: 404 (Rewrite)
-```
+Configured for high-performance static hosting:
+*   **Build Preset:** Static pre-rendering (SSG).
+*   **Artifacts Directory:** `dist/client`.
+*   **SPA Rewrites:** Ensure `/<*>` redirects to `/index.html` (Type 404 Rewrite) in Amplify Console.
 
-Depois disso, todo push na branch conectada (`diegormirhan/portfolio`)
-dispara o deploy automático.
-
-## Onde editar o conteúdo
-
-- `src/lib/site-data.ts` — nome, bio, skills, experiência, formação e links.
-- `src/lib/github.ts` — retriever dos repositórios fixados do GitHub.
-- `src/lib/medium.ts` — retriever dos artigos do Medium.
-- `src/routes/*.tsx` — páginas (início, sobre, projetos, artigos, experiência, contato).
+---
+*Developed by [Diego Mirhan](https://github.com/diegormirhan)*
