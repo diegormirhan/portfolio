@@ -313,7 +313,7 @@ function Home() {
           title={t.skills.title}
           description={t.skills.description}
           action={
-            <div className="hidden sm:flex size-12 items-center justify-center rounded-2xl bg-amber-400/10 text-amber-400 ring-1 ring-amber-400/20">
+            <div className="hidden sm:flex size-12 items-center justify-center rounded-2xl bg-amber-400/10 text-amber-400 ring-1 ring-amber-400/20 transition-transform hover:scale-110">
               <Brain className="size-6" />
             </div>
           }
@@ -434,7 +434,7 @@ function Home() {
             title={t.projects.pinnedTitle}
             description={t.projects.pinnedDescription}
             action={
-              <div className="hidden sm:flex size-12 items-center justify-center rounded-2xl bg-slate-400/10 text-slate-400 ring-1 ring-slate-400/20">
+              <div className="hidden sm:flex size-12 items-center justify-center rounded-2xl bg-slate-400/10 text-slate-400 ring-1 ring-slate-400/20 transition-transform hover:scale-110">
                 <Github className="size-6" />
               </div>
             }
