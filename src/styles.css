@@ -191,7 +191,7 @@
 .site-frame {
   position: fixed;
   inset: 0px;
-  border-radius: 0.75rem;
+  border-radius: 0px;
   pointer-events: none;
   z-index: 9999;
   overflow: hidden;
