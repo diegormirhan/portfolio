@@ -289,7 +289,7 @@ function Home() {
                   {t.about.currentlyText}
                 </p>
               </div>
-              <div className="card-modern flex flex-col justify-center rounded-3xl p-6 sm:p-8">
+              <div className="card-modern flex flex-col items-start rounded-3xl p-6 sm:p-8">
                 <div className="flex items-center gap-3">
                   <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-emerald-400/10 text-emerald-400 ring-1 ring-emerald-400/20">
                     <Globe className="size-5" aria-hidden />
