@@ -47,9 +47,9 @@ export function ArticleCard({ article }: { article: Article }) {
         </p>
 
         <div className="mt-auto flex flex-col gap-4 border-t border-border/40 pt-4">
-          <div className="flex flex-wrap gap-2">
-            {article.categories.slice(0, 2).map((cat) => (
-              <span key={cat} className="text-[10px] font-mono font-medium text-primary/70">
+          <div className="flex flex-wrap gap-2 overflow-hidden">
+            {article.categories.slice(0, 3).map((cat) => (
+              <span key={cat} className="inline-block truncate max-w-[100px] text-[10px] font-mono font-medium text-primary/70">
                 #{cat}
               </span>
             ))}
