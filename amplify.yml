@@ -3,7 +3,7 @@ frontend:
   phases:
     preBuild:
       commands:
-        - npm ci --legacy-peer-deps
+        - npm install --legacy-peer-deps
     build:
       commands:
         # NITRO_PRESET=static gera o site pré-renderizado (HTML estático) em dist/client
