@@ -6,6 +6,7 @@ import { ThemeToggle } from "./theme-toggle";
 import { useI18n } from "../lib/i18n";
 import { profile } from "../lib/site-data";
 import { cn } from "../lib/utils";
+import logoAsset from "../assets/logo.webp.asset.json";
 
 
 export const sections = [
@@ -59,7 +60,7 @@ export function SiteHeader() {
     <header className="pointer-events-none fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-4 sm:pt-4">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-2">
         <a href="#inicio" className="card-modern pointer-events-auto flex items-center gap-2 rounded-full px-2 py-2 transition-transform hover:scale-105 active:scale-95">
-          <img src="/logo.png" alt="Logo" className="size-8 rounded-full object-cover" />
+          <img src={logoAsset.url} alt="Logo" className="size-8 rounded-full object-cover" />
         </a>
 
         <nav
