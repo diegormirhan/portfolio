@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
-import logoAsset from "../assets/logo.png.asset.json";
+
 import { ArticlesGrid } from "../components/articles-grid";
 import { ProjectsGrid } from "../components/projects-grid";
 import { Reveal } from "../components/reveal";
