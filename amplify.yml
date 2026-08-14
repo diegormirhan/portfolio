@@ -3,15 +3,14 @@ frontend:
   phases:
     preBuild:
       commands:
-        - npm install --legacy-peer-deps
+        - npm ci --cache .npm --prefer-offline
     build:
       commands:
-        # NITRO_PRESET=static gera o site pré-renderizado (HTML estático) em dist/client
-        - NITRO_PRESET=static npm run build
+        - npm run build
   artifacts:
     baseDirectory: dist/client
     files:
-      - "**/*"
+      - '**/*'
   cache:
     paths:
-      - node_modules/**/*
+      - .npm/**/*
