@@ -346,9 +346,9 @@ function Home() {
                         return (
                           <li
                             key={item}
-                            className={`inline-flex items-center gap-2 rounded-lg border border-border/50 ${chipClass} px-3 py-1.5 font-mono text-[11px] font-medium text-muted-foreground transition-colors hover:border-primary/40`}
+                            className={`inline-flex items-center gap-2 rounded-lg border border-border/50 ${chipClass} px-3.5 py-2 font-mono text-[13px] font-medium text-muted-foreground/90 transition-colors hover:border-primary/40`}
                           >
-                            <ItemIcon className={`size-4 ${iconClass}`} aria-hidden />
+                            <ItemIcon className={`size-4.5 ${iconClass}`} aria-hidden />
                             {item}
                           </li>
                         );
