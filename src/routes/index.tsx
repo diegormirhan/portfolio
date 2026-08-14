@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
+import logoAsset from "../assets/logo.png.asset.json";
 import { ArticlesGrid } from "../components/articles-grid";
 import { ProjectsGrid } from "../components/projects-grid";
 import { Reveal } from "../components/reveal";
@@ -309,6 +310,15 @@ function Home() {
           eyebrow={t.skills.eyebrow}
           title={t.skills.title}
           description={t.skills.description}
+          action={
+            <div className="hidden lg:block">
+              <img 
+                src={logoAsset.url} 
+                alt="Logo" 
+                className="size-16 object-contain opacity-80" 
+              />
+            </div>
+          }
         />
         <div className="mt-8 grid gap-5 sm:mt-10 sm:grid-cols-2 lg:grid-cols-4">
           {content.skillGroups.map((group, groupIdx) => {
