@@ -3,11 +3,16 @@ import { ArrowUpRight, Clock } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { formatDate, type Article } from "@/lib/medium";
 
+import { motion } from "framer-motion";
+
 export function ArticleCard({ article }: { article: Article }) {
   const { t } = useI18n();
 
   return (
-    <article className="card-glow flex h-full flex-col overflow-hidden rounded-2xl border border-border">
+    <motion.article 
+      whileHover={{ y: -5, scale: 1.01 }}
+      className="card-glow flex h-full flex-col overflow-hidden rounded-2xl border border-border"
+    >
       {article.thumbnail ? (
         <img
           src={article.thumbnail}
@@ -52,7 +57,7 @@ export function ArticleCard({ article }: { article: Article }) {
           {t.articles.read} <ArrowUpRight className="size-4" aria-hidden />
         </a>
       </div>
-    </article>
+    </motion.article>
   );
 }
 

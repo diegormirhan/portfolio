@@ -7,7 +7,7 @@ export const profile = {
     "Estudante de Ciência da Computação com foco em Data Science e Machine Learning, construindo soluções de IA local de ponta a ponta.",
   summary:
     "Desenvolvo soluções de IA local ponta a ponta — LLMs locais, visão computacional, OCR e pipelines de dados assíncronos — além de interfaces web full-stack. Participo de pesquisas em Inteligência Artificial e já otimizei plataformas reais de e-commerce. Inglês avançado (C1).",
-  location: "Brasil",
+  location: "",
   phone: "(12) 99141-0569",
   email: "mirhan.diego@gmail.com",
   site: "https://diegomirhan.com",
@@ -54,7 +54,7 @@ const pt: SiteContent = {
   role: profile.role,
   headline: profile.headline,
   summary: profile.summary,
-  location: "Brasil",
+  location: "",
   skillGroups: [
     {
       title: "IA & Machine Learning",
@@ -171,7 +171,7 @@ const en: SiteContent = {
     "Computer Science student focused on Data Science and Machine Learning, building end-to-end local AI solutions.",
   summary:
     "I build end-to-end local AI solutions — local LLMs, computer vision, OCR and async data pipelines — plus full-stack web interfaces. I take part in Artificial Intelligence research and have optimized real e-commerce platforms. Advanced English (C1).",
-  location: "Brazil",
+  location: "",
   skillGroups: [
     {
       title: "AI & Machine Learning",

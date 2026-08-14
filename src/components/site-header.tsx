@@ -24,12 +24,12 @@ function useActiveSection() {
 
   useEffect(() => {
     const compute = () => {
-      const line = window.scrollY + window.innerHeight * 0.3;
+      const line = window.scrollY + window.innerHeight * 0.2;
       let current = sections[0].id as string;
       for (const section of sections) {
         const el = document.getElementById(section.id);
         if (!el) continue;
-        if (el.offsetTop <= line) current = section.id;
+        if (el.offsetTop <= line + 10) current = section.id;
       }
       if (window.innerHeight + window.scrollY >= document.body.scrollHeight - 4) {
         current = "contato";

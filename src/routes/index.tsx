@@ -210,9 +210,11 @@ function Home() {
       <section id="inicio">
         <div className="mx-auto max-w-6xl px-5 pb-20 pt-32 sm:pb-28 sm:pt-40 lg:pb-32 lg:pt-44">
           <Reveal>
-            <span className="glass inline-flex rounded-full px-4 py-1.5 font-mono text-xs uppercase tracking-[0.25em] text-primary">
-              {content.location}
-            </span>
+            {content.location ? (
+              <span className="glass inline-flex rounded-full px-4 py-1.5 font-mono text-xs uppercase tracking-[0.25em] text-primary">
+                {content.location}
+              </span>
+            ) : null}
             <h1 className="mt-6 max-w-4xl text-4xl font-semibold leading-[1.05] sm:text-6xl lg:text-7xl">
               {profile.name} — <span className="text-primary">{content.role}</span>
             </h1>
@@ -375,7 +377,7 @@ function Home() {
                 href={project.url}
                 target="_blank"
                 rel="noreferrer"
-                className="glass-liquid card-glow flex h-full flex-col rounded-3xl p-6"
+                className="glass-liquid card-glow group flex h-full flex-col rounded-3xl p-6 transition-all hover:-translate-y-1 hover:scale-[1.01]"
               >
                 <span className="font-mono text-xs uppercase tracking-[0.2em] text-primary">
                   {project.year}

@@ -3,11 +3,16 @@ import { ExternalLink, GitFork, Star } from "lucide-react";
 import { languageColors, type Project } from "@/lib/github";
 import { useI18n } from "@/lib/i18n";
 
+import { motion } from "framer-motion";
+
 export function ProjectCard({ project }: { project: Project }) {
   const { t } = useI18n();
 
   return (
-    <article className="glass-liquid card-glow flex h-full flex-col rounded-2xl p-6">
+    <motion.article 
+      whileHover={{ y: -5, scale: 1.01 }}
+      className="glass-liquid card-glow flex h-full flex-col rounded-2xl p-6"
+    >
       <div className="flex items-start justify-between gap-3">
         <h3 className="text-lg font-semibold">
           <a href={project.url} target="_blank" rel="noreferrer" className="hover:text-primary">
@@ -71,7 +76,7 @@ export function ProjectCard({ project }: { project: Project }) {
           ) : null}
         </div>
       </div>
-    </article>
+    </motion.article>
   );
 }
 
