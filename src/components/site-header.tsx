@@ -6,7 +6,8 @@ import { ThemeToggle } from "./theme-toggle";
 import { useI18n } from "../lib/i18n";
 import { profile } from "../lib/site-data";
 import { cn } from "../lib/utils";
-import logoAsset from "../assets/site-logo.png.asset.json";
+import logoAsset from "../assets/site-logo.webp.asset.json";
+
 
 export const sections = [
   { id: "inicio" },
