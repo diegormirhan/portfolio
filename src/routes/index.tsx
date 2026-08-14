@@ -402,9 +402,14 @@ function Home() {
                 className="card-modern group relative flex h-full flex-col overflow-hidden rounded-3xl p-6 transition-all hover:border-primary/40"
               >
                 <div className="flex items-center justify-between">
-                  <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-primary/80 font-bold">
-                    {project.year}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <div className="flex size-7 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                      <Cpu className="size-3.5" />
+                    </div>
+                    <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-primary/80 font-bold">
+                      {project.year}
+                    </span>
+                  </div>
                   <div className="flex size-8 items-center justify-center rounded-lg bg-primary/5 text-primary opacity-0 group-hover:opacity-100 transition-opacity">
                     <Sparkles className="size-4" />
                   </div>
