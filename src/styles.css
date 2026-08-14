@@ -170,7 +170,21 @@
   }
 }
 
-  & {}
+@utility glass-strong {
+  background: color-mix(in oklch, var(--color-background) 30%, transparent);
+  backdrop-filter: blur(28px) saturate(200%);
+  border: 1px solid color-mix(in oklch, var(--color-border) 42%, transparent);
+}
+
+@utility card-glow {
+  transition: all 0.3s cubic-bezier(0.21, 0.47, 0.32, 0.98);
+  &:hover {
+    border-color: color-mix(in oklch, var(--color-primary) 65%, transparent);
+    box-shadow: 
+      0 20px 50px -20px color-mix(in oklch, var(--color-primary) 40%, transparent),
+      0 0 0 1px color-mix(in oklch, var(--color-primary) 20%, transparent);
+    transform: translateY(-4px) scale(1.01);
+  }
 }
 
 /* Frame estático ao redor do site */
