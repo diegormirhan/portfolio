@@ -245,7 +245,8 @@
 
 @media (min-width: 1024px) {
   .site-frame {
-    inset: 10px;
+    inset: 20px;
+    border-radius: 2.5rem;
   }
 }
 
