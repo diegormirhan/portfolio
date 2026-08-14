@@ -206,18 +206,37 @@
   pointer-events: none;
   z-index: 9999;
   overflow: hidden;
-  border: 3px solid transparent;
-  background: linear-gradient(transparent, transparent) padding-box,
-              conic-gradient(
-                from var(--angle),
-                transparent 0deg,
-                color-mix(in oklch, var(--color-primary) 100%, transparent) 45deg,
-                color-mix(in oklch, var(--color-primary) 100%, transparent) 135deg,
-                transparent 180deg
-              ) border-box;
+}
+
+.site-frame::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 3px; /* Espessura da borda */
+  background: conic-gradient(
+    from var(--angle),
+    transparent 0deg,
+    var(--color-primary) 45deg,
+    var(--color-primary) 135deg,
+    transparent 180deg
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
   animation: frame-rotate 6s linear infinite;
-  box-shadow: 
-    0 0 20px -5px color-mix(in oklch, var(--color-primary) 20%, transparent);
+  opacity: 0.8;
+}
+
+.site-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 15px color-mix(in oklch, var(--color-primary) 20%, transparent);
+  opacity: 0.5;
 }
 
 
