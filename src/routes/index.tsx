@@ -18,6 +18,7 @@ import { ArticlesGrid } from "@/components/articles-grid";
 import { ProjectsGrid } from "@/components/projects-grid";
 import { Reveal } from "@/components/reveal";
 import { SectionHeading } from "@/components/section-heading";
+import { Background } from "@/components/background";
 import { useI18n } from "@/lib/i18n";
 import { getSkillConfig } from "@/lib/skill-icons";
 import { contentByLang, profile, type SkillIcon, type TimelineEntry } from "@/lib/site-data";
@@ -120,7 +121,7 @@ function ContactForm() {
 
   return (
     <form
-      className="glass-liquid rounded-3xl p-6"
+      className="glass-liquid card-modern rounded-3xl p-6"
       onSubmit={(event) => {
         event.preventDefault();
         window.location.href = mailto;
@@ -206,9 +207,10 @@ function Home() {
   ];
 
   return (
-    <div>
+    <div className="relative">
+      <Background />
       <section id="inicio">
-        <div className="mx-auto max-w-6xl px-5 pb-20 pt-32 sm:pb-28 sm:pt-40 lg:pb-32 lg:pt-44">
+        <div className="mx-auto max-w-6xl px-5 pb-20 pt-32 sm:pb-28 sm:pt-40 lg:pb-32 lg:pt-44 relative z-10">
           <Reveal>
             {content.location ? (
               <span className="glass inline-flex rounded-full px-4 py-1.5 font-mono text-xs uppercase tracking-[0.25em] text-primary">
@@ -242,7 +244,7 @@ function Home() {
         <SectionHeading eyebrow={t.about.eyebrow} title={t.about.title} />
         <div className="mt-8 grid gap-5 sm:mt-10 lg:grid-cols-[1.6fr_1fr]">
           <Reveal>
-            <div className="glass-liquid relative h-full overflow-hidden rounded-3xl p-6 sm:p-8">
+            <div className="card-modern relative h-full overflow-hidden rounded-3xl p-6 sm:p-8">
               <span
                 className="pointer-events-none absolute -right-16 -top-16 size-48 rounded-full bg-primary/20 blur-3xl"
                 aria-hidden
@@ -257,7 +259,7 @@ function Home() {
                 {t.about.highlights.map((item) => {
                   const { icon: Icon, colorClass, bgClass } = highlightMeta(item.title);
                   return (
-                    <div key={item.title} className="glass-pill rounded-2xl p-4 transition-transform hover:scale-[1.02]">
+                    <div key={item.title} className="glass rounded-2xl p-4 transition-all hover:border-primary/30">
                       <span className={`mb-2 inline-flex size-8 items-center justify-center rounded-xl ${bgClass} ${colorClass}`}>
                         <Icon className="size-4" aria-hidden />
                       </span>
@@ -273,7 +275,7 @@ function Home() {
           </Reveal>
           <Reveal delay={0.1}>
             <div className="flex h-full flex-col gap-5">
-              <div className="glass-liquid card-glow rounded-3xl p-6 sm:p-7">
+              <div className="card-modern rounded-3xl p-6 sm:p-7">
                 <div className="flex items-center gap-3">
                   <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
                     <Sparkles className="size-4" aria-hidden />
@@ -286,7 +288,7 @@ function Home() {
                   {t.about.currentlyText}
                 </p>
               </div>
-              <div className="glass-liquid card-glow flex flex-col justify-center rounded-3xl p-6 sm:p-7">
+              <div className="card-modern flex flex-col justify-center rounded-3xl p-6 sm:p-7">
                 <h3 className="font-mono text-xs uppercase tracking-[0.2em] text-primary">
                   {t.about.languages}
                 </h3>
@@ -317,7 +319,7 @@ function Home() {
             const { icon: Icon, colorClass, bgClass } = skillGroupMeta[group.icon];
             return (
               <Reveal key={group.title} delay={groupIdx * 0.1}>
-                <div className="glass-liquid card-glow group relative h-full overflow-hidden rounded-3xl p-6">
+                <div className="card-modern group relative h-full overflow-hidden rounded-3xl p-6">
                   <span
                     className="pointer-events-none absolute -right-10 -top-10 size-28 rounded-full bg-primary/15 blur-2xl sm:opacity-60"
                     aria-hidden
@@ -377,7 +379,7 @@ function Home() {
                 href={project.url}
                 target="_blank"
                 rel="noreferrer"
-                className="glass-liquid card-glow group flex h-full flex-col rounded-3xl p-6 transition-all hover:-translate-y-1 hover:scale-[1.01]"
+                className="card-modern group flex h-full flex-col rounded-3xl p-6"
               >
                 <span className="font-mono text-xs uppercase tracking-[0.2em] text-primary">
                   {project.year}
@@ -435,7 +437,7 @@ function Home() {
                     href={href}
                     target={href.startsWith("http") ? "_blank" : undefined}
                     rel="noreferrer"
-                    className="glass-liquid card-glow flex items-center gap-4 rounded-2xl p-4"
+                    className="card-modern flex items-center gap-4 rounded-2xl p-4"
                   >
                     <span className={`inline-flex size-10 items-center justify-center rounded-full ${bgClass} ${colorClass}`}>
                       <Icon className="size-4" aria-hidden />
