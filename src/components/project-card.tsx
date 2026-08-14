@@ -76,6 +76,7 @@ export function ProjectCard({ project }: { project: Project }) {
           ) : null}
         </div>
       </div>
+    </motion.article>
   );
 }
 
