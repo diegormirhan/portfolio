@@ -201,8 +201,8 @@
 /* Frame estático ao redor do site */
 .site-frame {
   position: fixed;
-  inset: 6px;
-  border-radius: 1rem;
+  inset: 12px;
+  border-radius: 2rem;
   pointer-events: none;
   z-index: 9999;
 }
