@@ -170,77 +170,10 @@
   }
 }
 
-  h1,
-  h2,
-  h3,
-  h4 {
-    font-family: var(--font-display);
-    letter-spacing: 0;
-  }
-}
-
-@utility glass {
-  background: color-mix(in oklch, var(--color-background) 48%, transparent);
-  backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid color-mix(in oklch, var(--color-highlight) 30%, transparent);
-  box-shadow:
-    0 1px 0 0 color-mix(in oklch, white 22%, transparent) inset,
-    0 18px 40px -28px color-mix(in oklch, var(--color-primary) 70%, transparent);
-}
-
 @utility glass-strong {
   background: color-mix(in oklch, var(--color-background) 30%, transparent);
   backdrop-filter: blur(28px) saturate(200%);
-  border: 1px solid color-mix(in oklch, var(--color-highlight) 42%, transparent);
-  box-shadow:
-    0 1px 0 0 color-mix(in oklch, white 30%, transparent) inset,
-    0 24px 60px -32px color-mix(in oklch, var(--color-primary) 85%, transparent);
-}
-
-@utility glass-liquid {
-  position: relative;
-  overflow: hidden;
-  background: color-mix(in oklch, var(--color-background) 22%, transparent);
-  backdrop-filter: blur(32px) saturate(220%);
-  border: 1px solid color-mix(in oklch, var(--color-highlight) 38%, transparent);
-  box-shadow:
-    0 1px 0 0 color-mix(in oklch, white 28%, transparent) inset,
-    0 20px 50px -30px color-mix(in oklch, var(--color-primary) 90%, transparent);
-  &::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: radial-gradient(
-      120% 80% at 50% -20%,
-      color-mix(in oklch, white 18%, transparent),
-      transparent 60%
-    );
-    pointer-events: none;
-  }
-}
-
-@utility glass-pill {
-  position: relative;
-  overflow: hidden;
-  background: color-mix(in oklch, var(--color-primary) 22%, transparent);
-  backdrop-filter: blur(16px) saturate(200%);
-  border: 1px solid color-mix(in oklch, var(--color-highlight) 55%, transparent);
-  box-shadow:
-    0 1px 0 0 color-mix(in oklch, white 40%, transparent) inset,
-    0 8px 24px -14px color-mix(in oklch, var(--color-primary) 90%, transparent);
-  &::after {
-    content: "";
-    position: absolute;
-    inset: 0 0 55% 0;
-    border-radius: inherit;
-    background: linear-gradient(
-      to bottom,
-      color-mix(in oklch, white 30%, transparent),
-      transparent
-    );
-    pointer-events: none;
-  }
+  border: 1px solid color-mix(in oklch, var(--color-border) 42%, transparent);
 }
 
 @utility card-glow {
