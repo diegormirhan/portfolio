@@ -101,6 +101,10 @@
     border-color: var(--color-border);
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   section[id] {
     scroll-margin-top: 6.5rem;
   }
@@ -115,6 +119,22 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    position: relative;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    opacity: 0.4;
+    z-index: -1;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    filter: contrast(120%) brightness(100%);
+  }
+
+  .dark body::before {
+    opacity: 0.05;
   }
 
   h1,
@@ -191,9 +211,13 @@
 }
 
 @utility card-glow {
+  transition: all 0.3s cubic-bezier(0.21, 0.47, 0.32, 0.98);
   &:hover {
-    border-color: color-mix(in oklch, var(--color-primary) 55%, transparent);
-    box-shadow: 0 18px 40px -24px color-mix(in oklch, var(--color-primary) 80%, transparent);
+    border-color: color-mix(in oklch, var(--color-primary) 65%, transparent);
+    box-shadow: 
+      0 20px 50px -20px color-mix(in oklch, var(--color-primary) 40%, transparent),
+      0 0 0 1px color-mix(in oklch, var(--color-primary) 20%, transparent);
+    transform: translateY(-4px) scale(1.01);
   }
 }
 
@@ -232,6 +256,12 @@
     color-mix(in oklch, var(--color-highlight) 100%, transparent),
     color-mix(in oklch, var(--color-primary) 85%, transparent)
   );
+  animation: frame-rotate 10s linear infinite;
+}
+
+@keyframes frame-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 .site-frame-rim::after {
