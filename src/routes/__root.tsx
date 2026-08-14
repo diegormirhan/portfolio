@@ -13,7 +13,6 @@ import { SiteFooter } from "../components/site-footer";
 import { SiteFrame } from "../components/site-frame";
 import { SiteHeader } from "../components/site-header";
 import { LanguageProvider } from "../lib/i18n";
-import faviconAsset from "../assets/favicon.webp.asset.json";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -95,7 +94,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: faviconAsset.url, type: "image/webp" },
+      { rel: "icon", href: "/favicon.png", type: "image/webp" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "" },
       { rel: "preconnect", href: "https://pinned.berrysauce.dev", crossOrigin: "anonymous" },
