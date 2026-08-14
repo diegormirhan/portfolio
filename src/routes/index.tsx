@@ -83,11 +83,11 @@ export const Route = createFileRoute("/")({
 
 function Timeline({ entries, icon: Icon = Sparkles }: { entries: TimelineEntry[], icon?: any }) {
   return (
-    <ol className="relative mt-8 border-l border-border ml-12 sm:ml-6 pl-8 sm:pl-10">
+    <ol className="relative mt-8 border-l border-border ml-16 sm:ml-8 pl-8 sm:pl-10">
       {entries.map((entry, idx) => (
         <li key={`${entry.title}-${entry.period}`} className="group pb-10 last:pb-0">
           <Reveal delay={idx * 0.1}>
-            <div className="absolute -left-[48px] sm:-left-[41px] mt-1.5 flex size-8 sm:size-7 items-center justify-center rounded-full bg-primary text-primary-foreground ring-4 ring-background border border-primary/20 transition-transform group-hover:scale-110">
+            <div className="absolute -left-[48px] sm:-left-[43px] mt-1.5 flex size-8 sm:size-7 items-center justify-center rounded-full bg-primary text-primary-foreground ring-4 ring-background border border-primary/20 transition-transform group-hover:scale-110">
               <Icon className="size-4 sm:size-3.5" aria-hidden />
             </div>
             <span className="font-mono text-xs uppercase tracking-[0.2em] text-primary/80">{entry.period}</span>
