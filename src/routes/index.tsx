@@ -85,7 +85,9 @@ function Timeline({ entries }: { entries: TimelineEntry[] }) {
       {entries.map((entry, idx) => (
         <li key={`${entry.title}-${entry.period}`} className="pb-10 last:pb-0">
           <Reveal delay={idx * 0.1}>
-            <span className="absolute -left-[7px] mt-2 size-3 rounded-full bg-primary" aria-hidden />
+            <div className="absolute -left-[30px] mt-1.5 flex size-4 items-center justify-center rounded-full bg-primary/20 text-primary ring-4 ring-background">
+              <Sparkles className="size-2" aria-hidden />
+            </div>
             <span className="font-mono text-xs uppercase tracking-[0.2em] text-primary">{entry.period}</span>
             <h3 className="mt-2 text-xl font-semibold">{entry.title}</h3>
             <p className="text-sm text-muted-foreground">{entry.org}</p>
@@ -93,7 +95,7 @@ function Timeline({ entries }: { entries: TimelineEntry[] }) {
             {entry.tags ? (
               <ul className="mt-4 flex flex-wrap gap-2">
                 {entry.tags.map((tag) => (
-                  <li key={tag} className="glass rounded-full px-3 py-1 font-mono text-[11px]">
+                  <li key={tag} className="glass rounded-full px-3 py-1 font-mono text-[11px] hover:border-primary/40 transition-colors">
                     {tag}
                   </li>
                 ))}
@@ -310,15 +312,7 @@ function Home() {
           eyebrow={t.skills.eyebrow}
           title={t.skills.title}
           description={t.skills.description}
-          action={
-            <div className="hidden lg:block">
-              <img 
-                src={logoAsset.url} 
-                alt="Logo" 
-                className="size-16 object-contain opacity-80" 
-              />
-            </div>
-          }
+          action={null}
         />
         <div className="mt-8 grid gap-5 sm:mt-10 sm:grid-cols-2 lg:grid-cols-4">
           {content.skillGroups.map((group, groupIdx) => {

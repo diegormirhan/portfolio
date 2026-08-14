@@ -46,10 +46,10 @@ export function ArticleCard({ article }: { article: Article }) {
           {article.excerpt}
         </p>
 
-        <div className="mt-6 flex items-center justify-between">
+        <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-border/40 pt-4">
           <div className="flex gap-2">
             {article.categories.slice(0, 2).map((cat) => (
-              <span key={cat} className="text-[10px] font-mono text-primary/60">
+              <span key={cat} className="text-[10px] font-mono font-medium text-primary/70">
                 #{cat}
               </span>
             ))}
@@ -58,7 +58,7 @@ export function ArticleCard({ article }: { article: Article }) {
             href={article.link}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-1 text-xs font-bold text-primary group-hover:gap-2 transition-all"
+            className="ml-auto inline-flex shrink-0 items-center gap-1.5 text-xs font-bold text-primary transition-all hover:gap-2"
           >
             {t.articles.read} <ArrowUpRight className="size-3.5" />
           </a>
