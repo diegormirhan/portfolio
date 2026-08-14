@@ -1,6 +1,6 @@
 import { ExternalLink, GitFork, Star, Folder } from "lucide-react";
-import { languageColors, type Project } from "@/lib/github";
-import { useI18n } from "@/lib/i18n";
+import { languageColors, type Project } from "../lib/github";
+import { useI18n } from "../lib/i18n";
 import { motion } from "framer-motion";
 
 export function ProjectCard({ project }: { project: Project }) {

@@ -1,7 +1,7 @@
 import { Github, Linkedin, Mail, PenLine } from "lucide-react";
 
-import { useI18n } from "@/lib/i18n";
-import { profile } from "@/lib/site-data";
+import { useI18n } from "../lib/i18n";
+import { profile } from "../lib/site-data";
 
 export function SiteFooter() {
   const { t } = useI18n();

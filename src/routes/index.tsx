@@ -14,14 +14,14 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
-import { ArticlesGrid } from "@/components/articles-grid";
-import { ProjectsGrid } from "@/components/projects-grid";
-import { Reveal } from "@/components/reveal";
-import { SectionHeading } from "@/components/section-heading";
-import { Background } from "@/components/background";
-import { useI18n } from "@/lib/i18n";
-import { getSkillConfig } from "@/lib/skill-icons";
-import { contentByLang, profile, type SkillIcon, type TimelineEntry } from "@/lib/site-data";
+import { ArticlesGrid } from "../components/articles-grid";
+import { ProjectsGrid } from "../components/projects-grid";
+import { Reveal } from "../components/reveal";
+import { SectionHeading } from "../components/section-heading";
+import { Background } from "../components/background";
+import { useI18n } from "../lib/i18n";
+import { getSkillConfig } from "../lib/skill-icons";
+import { contentByLang, profile, type SkillIcon, type TimelineEntry } from "../lib/site-data";
 
 const skillGroupMeta: Record<
   SkillIcon,

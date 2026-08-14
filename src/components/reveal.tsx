@@ -1,7 +1,7 @@
 import { motion, useReducedMotion } from "framer-motion";
-import { type ReactNode, memo } from "react";
+import { type ReactNode } from "react";
 
-export const Reveal = memo(function Reveal({
+export function Reveal({
   children,
   className,
   delay = 0,
@@ -14,17 +14,17 @@ export const Reveal = memo(function Reveal({
 
   return (
     <motion.div
-      initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 20 }}
+      initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 10 }}
       whileInView={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-20px" }}
       transition={{
-        duration: 0.5,
+        duration: 0.4,
         delay: delay,
-        ease: [0.21, 0.47, 0.32, 0.98],
+        ease: "easeOut",
       }}
       className={className}
     >
       {children}
     </motion.div>
   );
-});
+}
