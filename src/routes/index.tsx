@@ -325,35 +325,36 @@ function Home() {
             </div>
           }
         />
-        <div className="mt-8 grid gap-5 sm:mt-10 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-8 grid gap-4 sm:mt-10 lg:grid-cols-2">
           {content.skillGroups.map((group, groupIdx) => {
             const { icon: Icon, colorClass, bgClass } = skillGroupMeta[group.icon];
             return (
               <Reveal key={group.title} delay={groupIdx * 0.1}>
-                <div className="card-modern group relative h-full overflow-hidden rounded-[2.5rem] p-8 sm:p-10 transition-all hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5">
+                <div className="card-modern group relative flex h-full items-center gap-6 overflow-hidden rounded-3xl p-6 transition-all hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5 sm:p-7">
                   <span
-                    className="pointer-events-none absolute -right-10 -top-10 size-40 rounded-full bg-primary/20 blur-3xl sm:opacity-60"
+                    className="pointer-events-none absolute -right-6 -top-6 size-32 rounded-full bg-primary/20 blur-3xl opacity-40"
                     aria-hidden
                   />
-                  <div className={`inline-flex size-16 items-center justify-center rounded-2xl ${bgClass} ${colorClass} ring-1 ring-current/20 transition-transform group-hover:scale-110`}>
-                    <Icon className="size-8" aria-hidden />
+                  <div className={`inline-flex size-14 shrink-0 items-center justify-center rounded-2xl ${bgClass} ${colorClass} ring-1 ring-current/20 transition-transform group-hover:scale-110`}>
+                    <Icon className="size-7" aria-hidden />
                   </div>
-                  <h3 className="mt-8 text-2xl font-bold tracking-tight">{group.title}</h3>
-                  <div className="mt-5 h-px w-full bg-gradient-to-r from-primary/50 to-transparent opacity-30" />
-                  <ul className="mt-8 flex flex-wrap gap-3">
-                    {group.items.map((item) => {
-                      const { icon: ItemIcon, iconClass, chipClass } = getSkillConfig(item);
-                      return (
-                        <li
-                          key={item}
-                          className={`inline-flex items-center gap-2.5 rounded-xl border border-border/70 ${chipClass} px-4 py-2 font-mono text-sm font-medium text-muted-foreground transition-colors hover:border-primary/40`}
-                        >
-                          <ItemIcon className={`size-5 ${iconClass}`} aria-hidden />
-                          {item}
-                        </li>
-                      );
-                    })}
-                  </ul>
+                  <div className="flex-1">
+                    <h3 className="text-xl font-bold tracking-tight text-foreground/90">{group.title}</h3>
+                    <ul className="mt-4 flex flex-wrap gap-2">
+                      {group.items.map((item) => {
+                        const { icon: ItemIcon, iconClass, chipClass } = getSkillConfig(item);
+                        return (
+                          <li
+                            key={item}
+                            className={`inline-flex items-center gap-2 rounded-lg border border-border/50 ${chipClass} px-3 py-1.5 font-mono text-[11px] font-medium text-muted-foreground transition-colors hover:border-primary/40`}
+                          >
+                            <ItemIcon className={`size-4 ${iconClass}`} aria-hidden />
+                            {item}
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
                 </div>
               </Reveal>
             );
