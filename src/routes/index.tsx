@@ -356,13 +356,25 @@ function Home() {
           title={t.career.title}
           description={t.career.description}
         />
-        <div className="mt-8 grid gap-10 sm:mt-10 lg:grid-cols-2 lg:gap-12">
-          <Reveal>
+        <div className="mt-8 grid gap-10 sm:mt-10 lg:grid-cols-2 lg:gap-16">
+          <div className="relative">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="flex size-10 items-center justify-center rounded-xl bg-violet-400/10 text-violet-400">
+                <Layers className="size-5" />
+              </div>
+              <h3 className="text-xl font-bold">{lang === 'pt' ? 'Experiência Profissional' : 'Professional Experience'}</h3>
+            </div>
             <Timeline entries={content.experience} />
-          </Reveal>
-          <Reveal delay={0.2}>
+          </div>
+          <div className="relative">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="flex size-10 items-center justify-center rounded-xl bg-blue-400/10 text-blue-400">
+                <Sparkles className="size-5" />
+              </div>
+              <h3 className="text-xl font-bold">{lang === 'pt' ? 'Formação Acadêmica' : 'Education'}</h3>
+            </div>
             <Timeline entries={content.education} />
-          </Reveal>
+          </div>
         </div>
       </section>
 
@@ -372,20 +384,25 @@ function Home() {
           title={t.projects.title}
           description={t.projects.description}
         />
-        <div className="mt-8 grid gap-5 sm:mt-10 md:grid-cols-2">
+        <div className="mt-8 grid gap-6 sm:mt-10 md:grid-cols-2">
           {content.featuredProjects.map((project, projectIdx) => (
             <Reveal key={project.name} delay={projectIdx * 0.1}>
               <a
                 href={project.url}
                 target="_blank"
                 rel="noreferrer"
-                className="card-modern group flex h-full flex-col rounded-3xl p-6"
+                className="card-modern group relative flex h-full flex-col overflow-hidden rounded-3xl p-6 transition-all hover:border-primary/40"
               >
-                <span className="font-mono text-xs uppercase tracking-[0.2em] text-primary">
-                  {project.year}
-                </span>
-                <h3 className="mt-3 text-xl font-semibold">{project.title}</h3>
-                <p className="mt-3 flex-1 text-sm text-muted-foreground">{project.description}</p>
+                <div className="flex items-center justify-between">
+                  <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-primary/80 font-bold">
+                    {project.year}
+                  </span>
+                  <div className="flex size-8 items-center justify-center rounded-lg bg-primary/5 text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Sparkles className="size-4" />
+                  </div>
+                </div>
+                <h3 className="mt-3 text-xl font-bold group-hover:text-primary transition-colors">{project.title}</h3>
+                <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">{project.description}</p>
                 <ul className="mt-5 flex flex-wrap gap-2">
                   {project.tags.map((tag) => (
                     <li key={tag} className="glass-pill rounded-full px-3 py-1 font-mono text-[11px]">
@@ -403,6 +420,11 @@ function Home() {
             eyebrow="GitHub"
             title={t.projects.pinnedTitle}
             description={t.projects.pinnedDescription}
+            action={
+              <div className="hidden sm:flex size-12 items-center justify-center rounded-2xl bg-slate-400/10 text-slate-400 ring-1 ring-slate-400/20">
+                <Github className="size-6" />
+              </div>
+            }
           />
           <div className="mt-10">
             <ProjectsGrid limit={6} />
