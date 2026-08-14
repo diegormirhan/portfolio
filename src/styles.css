@@ -213,16 +213,20 @@
 .site-frame-rim::before {
   content: "";
   position: absolute;
-  inset: 0;
+  top: 50%;
+  left: 50%;
+  width: 250vmax;
+  height: 250vmax;
   background: conic-gradient(
     from 0deg,
     transparent 0deg,
-    color-mix(in oklch, var(--color-primary) 40%, transparent) 90deg,
-    color-mix(in oklch, var(--color-primary) 80%, transparent) 180deg,
-    color-mix(in oklch, var(--color-primary) 40%, transparent) 270deg,
+    color-mix(in oklch, var(--color-primary) 60%, transparent) 90deg,
+    color-mix(in oklch, var(--color-primary) 100%, transparent) 180deg,
+    color-mix(in oklch, var(--color-primary) 60%, transparent) 270deg,
     transparent 360deg
   );
-  animation: frame-rotate 8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation: frame-rotate 10s linear infinite;
+  transform: translate(-50%, -50%);
 }
 
 @keyframes frame-rotate {
