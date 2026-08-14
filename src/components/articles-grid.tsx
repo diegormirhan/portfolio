@@ -15,7 +15,7 @@ export function ArticlesGrid({ limit }: { limit?: number }) {
 
   if (isPending) {
     return (
-      <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: limit ?? 6 }).map((_, index) => (
           <ArticleCardSkeleton key={index} />
         ))}
@@ -39,7 +39,7 @@ export function ArticlesGrid({ limit }: { limit?: number }) {
   const articles = limit ? data.slice(0, limit) : data;
 
   return (
-    <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {articles.map((article, idx) => (
         <Reveal key={article.id} className="h-full" delay={idx * 0.1}>
           <ArticleCard article={article} />

@@ -1,8 +1,6 @@
-import { ArrowUpRight, Clock } from "lucide-react";
-
+import { ArrowUpRight, Clock, BookOpen } from "lucide-react";
 import { useI18n } from "@/lib/i18n";
 import { formatDate, type Article } from "@/lib/medium";
-
 import { motion } from "framer-motion";
 
 export function ArticleCard({ article }: { article: Article }) {
@@ -10,52 +8,61 @@ export function ArticleCard({ article }: { article: Article }) {
 
   return (
     <motion.article 
-      whileHover={{ y: -5, scale: 1.01 }}
-      className="card-glow flex h-full flex-col overflow-hidden rounded-2xl border border-border"
+      layout
+      className="card-modern group flex h-full flex-col overflow-hidden rounded-3xl"
     >
-      {article.thumbnail ? (
-        <img
-          src={article.thumbnail}
-          alt={t.articles.cover(article.title)}
-          loading="lazy"
-          className="h-44 w-full object-cover"
-        />
-      ) : (
-        <div className="h-44 w-full bg-accent" aria-hidden />
-      )}
-      <div className="glass-liquid flex flex-1 flex-col p-6">
-        <div className="flex items-center gap-3 text-xs text-muted-foreground">
+      <div className="relative aspect-[16/9] overflow-hidden">
+        {article.thumbnail ? (
+          <img
+            src={article.thumbnail}
+            alt={t.articles.cover(article.title)}
+            loading="lazy"
+            className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        ) : (
+          <div className="flex size-full items-center justify-center bg-primary/5">
+            <BookOpen className="size-8 text-primary/20" />
+          </div>
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+      </div>
+
+      <div className="flex flex-1 flex-col p-6">
+        <div className="flex items-center justify-between text-[11px] font-medium uppercase tracking-wider text-muted-foreground/70">
           <span>{formatDate(article.publishedAt)}</span>
-          <span className="inline-flex items-center gap-1">
-            <Clock className="size-3.5" aria-hidden /> {article.readingMinutes} min
-          </span>
+          <div className="flex items-center gap-1">
+            <Clock className="size-3" />
+            <span>{article.readingMinutes} min read</span>
+          </div>
         </div>
-        <h3 className="mt-3 text-lg font-semibold">
-          <a href={article.link} target="_blank" rel="noreferrer" className="hover:text-primary">
+
+        <h3 className="mt-4 text-xl font-bold leading-tight group-hover:text-primary transition-colors">
+          <a href={article.link} target="_blank" rel="noreferrer">
             {article.title}
           </a>
         </h3>
-        <p className="mt-2 flex-1 text-sm text-muted-foreground">{article.excerpt}</p>
-        {article.categories.length > 0 ? (
-          <ul className="mt-4 flex flex-wrap gap-2">
-            {article.categories.map((category) => (
-              <li
-                key={category}
-                className="rounded-full bg-secondary px-2.5 py-1 font-mono text-[11px] text-secondary-foreground"
-              >
-                {category}
-              </li>
+
+        <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground line-clamp-2">
+          {article.excerpt}
+        </p>
+
+        <div className="mt-6 flex items-center justify-between">
+          <div className="flex gap-2">
+            {article.categories.slice(0, 2).map((cat) => (
+              <span key={cat} className="text-[10px] font-mono text-primary/60">
+                #{cat}
+              </span>
             ))}
-          </ul>
-        ) : null}
-        <a
-          href={article.link}
-          target="_blank"
-          rel="noreferrer"
-          className="mt-5 inline-flex items-center gap-1 text-sm text-primary hover:underline"
-        >
-          {t.articles.read} <ArrowUpRight className="size-4" aria-hidden />
-        </a>
+          </div>
+          <a
+            href={article.link}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-1 text-xs font-bold text-primary group-hover:gap-2 transition-all"
+          >
+            {t.articles.read} <ArrowUpRight className="size-3.5" />
+          </a>
+        </div>
       </div>
     </motion.article>
   );
@@ -63,16 +70,19 @@ export function ArticleCard({ article }: { article: Article }) {
 
 export function ArticleCardSkeleton() {
   return (
-    <div
-      className="flex h-80 flex-col overflow-hidden rounded-2xl border border-border"
-      aria-hidden
-    >
-      <div className="skeleton-block h-44 w-full rounded-none" />
-      <div className="glass-liquid flex flex-1 flex-col gap-3 p-6">
-        <div className="skeleton-block h-3 w-28" />
-        <div className="skeleton-block h-5 w-4/5" />
-        <div className="skeleton-block h-3 w-full" />
-        <div className="skeleton-block h-3 w-2/3" />
+    <div className="card-modern h-[400px] overflow-hidden rounded-3xl opacity-50">
+      <div className="skeleton-block aspect-[16/9] w-full rounded-none" />
+      <div className="p-6 space-y-4">
+        <div className="flex justify-between">
+          <div className="skeleton-block h-3 w-20" />
+          <div className="skeleton-block h-3 w-16" />
+        </div>
+        <div className="skeleton-block h-6 w-full" />
+        <div className="skeleton-block h-4 w-5/6" />
+        <div className="mt-auto flex justify-between pt-2">
+          <div className="skeleton-block h-3 w-24" />
+          <div className="skeleton-block h-3 w-12" />
+        </div>
       </div>
     </div>
   );

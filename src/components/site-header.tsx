@@ -58,7 +58,7 @@ export function SiteHeader() {
     <header className="pointer-events-none fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-4 sm:pt-4">
       <div className="mx-auto flex max-w-6xl items-center justify-center gap-3">
         <nav
-          className="glass pointer-events-auto hidden items-center gap-1 rounded-full px-2 py-2 lg:flex"
+          className="card-modern pointer-events-auto hidden items-center gap-1 rounded-full px-2 py-2 lg:flex"
           aria-label={t.header.mainNav}
         >
           {sections.map((section) => (
@@ -78,7 +78,7 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <div className="glass pointer-events-auto flex items-center gap-2 rounded-full px-2 py-2">
+        <div className="card-modern pointer-events-auto flex items-center gap-2 rounded-full px-2 py-2">
           <ThemeToggle />
           <LanguageToggle />
           <a
