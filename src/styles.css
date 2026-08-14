@@ -41,7 +41,6 @@
   --font-display: ui-sans-serif, system-ui, sans-serif;
   --font-sans: ui-sans-serif, system-ui, sans-serif;
   --font-mono: ui-monospace, "SFMono-Regular", Consolas, monospace;
-  font-display: swap;
 }
 
 :root {
