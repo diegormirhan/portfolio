@@ -269,7 +269,7 @@ function Home() {
               </div>
             </div>
           </Reveal>
-          <Reveal>
+          <Reveal delay={0.1}>
             <div className="flex h-full flex-col gap-5">
               <div className="glass-liquid card-glow rounded-3xl p-6 sm:p-7">
                 <div className="flex items-center gap-3">
