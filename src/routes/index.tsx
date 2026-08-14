@@ -447,7 +447,7 @@ function Home() {
                 </li>
               ))}
             </ul>
-          </Reveal>
+          </div>
           <Reveal>
             <ContactForm />
           </Reveal>
