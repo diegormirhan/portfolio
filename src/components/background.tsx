@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 
 export function Background() {
   return (
-    <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none bg-[#050505]">
+    <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none bg-background">
       {/* Dynamic Mesh Gradients */}
       <div className="absolute inset-0">
         <motion.div
