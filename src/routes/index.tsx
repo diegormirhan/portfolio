@@ -81,12 +81,12 @@ export const Route = createFileRoute("/")({
 
 function Timeline({ entries }: { entries: TimelineEntry[] }) {
   return (
-    <ol className="relative mt-8 border-l border-border pl-6">
+    <ol className="relative mt-8 border-l border-border pl-8 sm:pl-10">
       {entries.map((entry, idx) => (
         <li key={`${entry.title}-${entry.period}`} className="pb-10 last:pb-0">
           <Reveal delay={idx * 0.1}>
-            <div className="absolute -left-[30px] mt-1.5 flex size-4 items-center justify-center rounded-full bg-primary/20 text-primary ring-4 ring-background">
-              <Sparkles className="size-2" aria-hidden />
+            <div className="absolute -left-[30px] sm:-left-[32px] mt-1.5 flex size-5 sm:size-6 items-center justify-center rounded-full bg-primary/20 text-primary ring-4 ring-background">
+              <Sparkles className="size-2.5 sm:size-3" aria-hidden />
             </div>
             <span className="font-mono text-xs uppercase tracking-[0.2em] text-primary">{entry.period}</span>
             <h3 className="mt-2 text-xl font-semibold">{entry.title}</h3>
