@@ -335,8 +335,8 @@ function Home() {
                     className="pointer-events-none absolute -right-10 -top-10 size-40 rounded-full bg-primary/20 blur-3xl sm:opacity-60"
                     aria-hidden
                   />
-                  <div className={`inline-flex size-14 items-center justify-center rounded-2xl ${bgClass} ${colorClass} ring-1 ring-current/20 transition-transform group-hover:scale-110`}>
-                    <Icon className="size-7" aria-hidden />
+                  <div className={`inline-flex size-16 items-center justify-center rounded-2xl ${bgClass} ${colorClass} ring-1 ring-current/20 transition-transform group-hover:scale-110`}>
+                    <Icon className="size-8" aria-hidden />
                   </div>
                   <h3 className="mt-6 text-xl font-bold tracking-tight">{group.title}</h3>
                   <div className="mt-4 h-px w-full bg-gradient-to-r from-primary/50 to-transparent opacity-30" />
