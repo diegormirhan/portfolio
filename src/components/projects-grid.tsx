@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
 import { ProjectCard, ProjectCardSkeleton } from "@/components/project-card";
+import { Reveal } from "@/components/reveal";
 import { projectsQueryOptions } from "@/lib/github";
 import { useI18n } from "@/lib/i18n";
 import { profile } from "@/lib/site-data";
@@ -39,10 +40,10 @@ export function ProjectsGrid({ limit }: { limit?: number }) {
 
   return (
     <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {projects.map((project) => (
-        <div key={project.id} className="h-full">
+      {projects.map((project, idx) => (
+        <Reveal key={project.id} className="h-full" delay={idx * 0.1}>
           <ProjectCard project={project} />
-        </div>
+        </Reveal>
       ))}
     </div>
   );
