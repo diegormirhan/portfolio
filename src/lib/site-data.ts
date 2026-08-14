@@ -95,7 +95,7 @@ const pt: SiteContent = {
       org: "Comando Geek Marketplace",
       description:
         "Administração, manutenção e desenvolvimento de funcionalidades da plataforma de marketplace geek, com aumento e retenção de usuários em 50%. Otimizações de performance e melhorias de UI/UX.",
-      tags: ["WordPress", "PHP", "JavaScript", "UI/UX"],
+      tags: ["WordPress", "PHP", "JavaScript", "UI/UX", "Marketplace"],
     },
     {
       period: "Nov 2019 — Jun 2026",
@@ -103,7 +103,7 @@ const pt: SiteContent = {
       org: "Empreendimento Familiar",
       description:
         "Atendimento ao cliente online e presencial no ramo hoteleiro: comunicação direta, trabalho em equipe, gestão de tarefas e reservas e resolução de problemas.",
-      tags: ["Atendimento", "Gestão", "Resolução de problemas"],
+      tags: ["Atendimento", "Gestão", "Resolução de problemas", "Hospitalidade"],
     },
   ],
   education: [
@@ -112,8 +112,8 @@ const pt: SiteContent = {
       title: "Bacharelado em Ciência da Computação",
       org: "Universidade Cruzeiro do Sul Virtual (Polo UNIFRAN)",
       description:
-        "4º semestre. Cálculo 1 e 2, Álgebra Linear, Cálculo Numérico e Matemática Discreta, entre outras disciplinas.",
-      tags: ["Data Science", "Machine Learning", "Pesquisa em IA"],
+        "4º semestre. Foco em IA, Data Science e Machine Learning. Disciplinas: Cálculo 1 e 2, Álgebra Linear, Cálculo Numérico, Matemática Discreta, Algoritmos e Estruturas de Dados.",
+      tags: ["Data Science", "Machine Learning", "Pesquisa em IA", "Algoritmos"],
     },
   ],
   featuredProjects: [
@@ -212,7 +212,7 @@ const en: SiteContent = {
       org: "Comando Geek Marketplace",
       description:
         "Administration, maintenance and feature development for the geek marketplace platform, growing and retaining users by 50%. Performance optimizations and UI/UX improvements.",
-      tags: ["WordPress", "PHP", "JavaScript", "UI/UX"],
+      tags: ["WordPress", "PHP", "JavaScript", "UI/UX", "Marketplace"],
     },
     {
       period: "Nov 2019 — Jun 2026",
@@ -220,7 +220,7 @@ const en: SiteContent = {
       org: "Family Business",
       description:
         "Online and in-person customer service in the hospitality industry: direct communication, teamwork, task and booking management and problem solving.",
-      tags: ["Customer service", "Management", "Problem solving"],
+      tags: ["Customer service", "Management", "Problem solving", "Hospitality"],
     },
   ],
   education: [
@@ -229,8 +229,8 @@ const en: SiteContent = {
       title: "BSc in Computer Science",
       org: "Universidade Cruzeiro do Sul Virtual (UNIFRAN campus)",
       description:
-        "4th semester. Calculus 1 and 2, Linear Algebra, Numerical Methods and Discrete Mathematics, among other subjects.",
-      tags: ["Data Science", "Machine Learning", "AI research"],
+        "4th semester. Focus on AI, Data Science and Machine Learning. Subjects: Calculus 1 and 2, Linear Algebra, Numerical Methods, Discrete Mathematics, Algorithms and Data Structures.",
+      tags: ["Data Science", "Machine Learning", "AI research", "Algorithms"],
     },
   ],
   featuredProjects: [

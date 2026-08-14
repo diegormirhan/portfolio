@@ -79,21 +79,23 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
-function Timeline({ entries }: { entries: TimelineEntry[] }) {
+function Timeline({ entries, icon: Icon = Sparkles }: { entries: TimelineEntry[], icon?: any }) {
   return (
-    <ol className="relative mt-8 border-l border-border pl-6">
+    <ol className="relative mt-8 border-l border-border pl-8 sm:pl-10">
       {entries.map((entry, idx) => (
-        <li key={`${entry.title}-${entry.period}`} className="pb-10 last:pb-0">
+        <li key={`${entry.title}-${entry.period}`} className="group pb-10 last:pb-0">
           <Reveal delay={idx * 0.1}>
-            <span className="absolute -left-[7px] mt-2 size-3 rounded-full bg-primary" aria-hidden />
-            <span className="font-mono text-xs uppercase tracking-[0.2em] text-primary">{entry.period}</span>
+            <div className="absolute -left-[32px] sm:-left-[35px] mt-1.5 flex size-6 sm:size-7 items-center justify-center rounded-full bg-primary/10 text-primary ring-4 ring-background border border-primary/20 transition-transform group-hover:scale-110">
+              <Icon className="size-3 sm:size-3.5" aria-hidden />
+            </div>
+            <span className="font-mono text-xs uppercase tracking-[0.2em] text-primary/80">{entry.period}</span>
             <h3 className="mt-2 text-xl font-semibold">{entry.title}</h3>
             <p className="text-sm text-muted-foreground">{entry.org}</p>
             <p className="mt-3 max-w-2xl text-sm text-muted-foreground">{entry.description}</p>
             {entry.tags ? (
               <ul className="mt-4 flex flex-wrap gap-2">
                 {entry.tags.map((tag) => (
-                  <li key={tag} className="glass rounded-full px-3 py-1 font-mono text-[11px]">
+                  <li key={tag} className="glass rounded-full px-3 py-1 font-mono text-[11px] hover:border-primary/40 transition-colors">
                     {tag}
                   </li>
                 ))}
@@ -311,12 +313,8 @@ function Home() {
           title={t.skills.title}
           description={t.skills.description}
           action={
-            <div className="hidden lg:block">
-              <img 
-                src={logoAsset.url} 
-                alt="Logo" 
-                className="size-16 object-contain opacity-80" 
-              />
+            <div className="hidden sm:flex size-12 items-center justify-center rounded-2xl bg-amber-400/10 text-amber-400 ring-1 ring-amber-400/20 transition-transform hover:scale-110">
+              <Brain className="size-6" />
             </div>
           }
         />
@@ -330,9 +328,9 @@ function Home() {
                     className="pointer-events-none absolute -right-10 -top-10 size-28 rounded-full bg-primary/15 blur-2xl sm:opacity-60"
                     aria-hidden
                   />
-                  <span className={`inline-flex size-11 items-center justify-center rounded-2xl ${bgClass} ${colorClass}`}>
+                  <div className={`inline-flex size-11 items-center justify-center rounded-2xl ${bgClass} ${colorClass} transition-transform group-hover:scale-110`}>
                     <Icon className="size-5" aria-hidden />
-                  </span>
+                  </div>
                   <h3 className="mt-4 text-base font-semibold">{group.title}</h3>
                   <div className="mt-3 h-px w-full bg-gradient-to-r from-primary/50 to-transparent" />
                   <ul className="mt-4 flex flex-wrap gap-2">
@@ -362,13 +360,29 @@ function Home() {
           title={t.career.title}
           description={t.career.description}
         />
-        <div className="mt-8 grid gap-10 sm:mt-10 lg:grid-cols-2 lg:gap-12">
+        <div className="mt-8 grid gap-10 sm:mt-10 lg:grid-cols-2 lg:gap-16">
           <Reveal>
-            <Timeline entries={content.experience} />
-          </Reveal>
-          <Reveal delay={0.2}>
-            <Timeline entries={content.education} />
-          </Reveal>
+            <div className="relative">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="flex size-10 items-center justify-center rounded-xl bg-violet-400/10 text-violet-400">
+                  <Layers className="size-5" />
+                </div>
+              <h3 className="text-xl font-bold">{lang === 'pt' ? 'Experiência Profissional' : 'Professional Experience'}</h3>
+            </div>
+            <Timeline entries={content.experience} icon={Layers} />
+          </div>
+        </Reveal>
+        <Reveal delay={0.2}>
+          <div className="relative">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="flex size-10 items-center justify-center rounded-xl bg-blue-400/10 text-blue-400">
+                <Sparkles className="size-5" />
+              </div>
+              <h3 className="text-xl font-bold">{lang === 'pt' ? 'Formação Acadêmica' : 'Education'}</h3>
+            </div>
+            <Timeline entries={content.education} icon={Sparkles} />
+          </div>
+        </Reveal>
         </div>
       </section>
 
@@ -378,20 +392,30 @@ function Home() {
           title={t.projects.title}
           description={t.projects.description}
         />
-        <div className="mt-8 grid gap-5 sm:mt-10 md:grid-cols-2">
+        <div className="mt-8 grid gap-6 sm:mt-10 md:grid-cols-2">
           {content.featuredProjects.map((project, projectIdx) => (
             <Reveal key={project.name} delay={projectIdx * 0.1}>
               <a
                 href={project.url}
                 target="_blank"
                 rel="noreferrer"
-                className="card-modern group flex h-full flex-col rounded-3xl p-6"
+                className="card-modern group relative flex h-full flex-col overflow-hidden rounded-3xl p-6 transition-all hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5"
               >
-                <span className="font-mono text-xs uppercase tracking-[0.2em] text-primary">
-                  {project.year}
-                </span>
-                <h3 className="mt-3 text-xl font-semibold">{project.title}</h3>
-                <p className="mt-3 flex-1 text-sm text-muted-foreground">{project.description}</p>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="flex size-7 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                      <Cpu className="size-3.5" />
+                    </div>
+                    <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-primary/80 font-bold">
+                      {project.year}
+                    </span>
+                  </div>
+                  <div className="flex size-8 items-center justify-center rounded-lg bg-primary/5 text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Sparkles className="size-4" />
+                  </div>
+                </div>
+                <h3 className="mt-3 text-xl font-bold group-hover:text-primary transition-colors">{project.title}</h3>
+                <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">{project.description}</p>
                 <ul className="mt-5 flex flex-wrap gap-2">
                   {project.tags.map((tag) => (
                     <li key={tag} className="glass-pill rounded-full px-3 py-1 font-mono text-[11px]">
@@ -409,6 +433,11 @@ function Home() {
             eyebrow="GitHub"
             title={t.projects.pinnedTitle}
             description={t.projects.pinnedDescription}
+            action={
+              <div className="hidden sm:flex size-12 items-center justify-center rounded-2xl bg-slate-400/10 text-slate-400 ring-1 ring-slate-400/20 transition-transform hover:scale-110">
+                <Github className="size-6" />
+              </div>
+            }
           />
           <div className="mt-10">
             <ProjectsGrid limit={6} />
