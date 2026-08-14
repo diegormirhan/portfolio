@@ -399,7 +399,7 @@ function Home() {
                 href={project.url}
                 target="_blank"
                 rel="noreferrer"
-                className="card-modern group relative flex h-full flex-col overflow-hidden rounded-3xl p-6 transition-all hover:border-primary/40"
+                className="card-modern group relative flex h-full flex-col overflow-hidden rounded-3xl p-6 transition-all hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
