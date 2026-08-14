@@ -213,9 +213,10 @@
 .site-frame-rim::before {
   content: "";
   position: absolute;
-  /* Garante que o gradiente cubra toda a área mesmo ao rotacionar */
-  inset: -100%;
-  aspect-ratio: 1;
+  top: 50%;
+  left: 50%;
+  width: 250vmax;
+  height: 250vmax;
   background: conic-gradient(
     from 0deg,
     transparent 0deg,
@@ -225,7 +226,7 @@
     transparent 360deg
   );
   animation: frame-rotate 10s linear infinite;
-  transform-origin: center center;
+  transform: translate(-50%, -50%);
 }
 
 @keyframes frame-rotate {
