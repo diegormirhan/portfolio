@@ -1,0 +1,17 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - npm ci --legacy-peer-deps
+    build:
+      commands:
+        # NITRO_PRESET=static gera o site pré-renderizado (HTML estático) em dist/client
+        - NITRO_PRESET=static npm run build
+  artifacts:
+    baseDirectory: dist/client
+    files:
+      - "**/*"
+  cache:
+    paths:
+      - node_modules/**/*
