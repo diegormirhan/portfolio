@@ -201,11 +201,10 @@
 /* Frame estático ao redor do site */
 .site-frame {
   position: fixed;
-  inset: 4px;
-  border-radius: 0.75rem;
+  inset: 6px;
+  border-radius: 1rem;
   pointer-events: none;
   z-index: 9999;
-  overflow: hidden;
 }
 
 .site-frame::before {
@@ -213,7 +212,7 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  padding: 3px; /* Espessura da borda */
+  padding: 5px; /* Border thickness */
   background: conic-gradient(
     from var(--angle),
     transparent 0deg,
@@ -227,7 +226,7 @@
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   animation: frame-rotate 6s linear infinite;
-  opacity: 0.8;
+  opacity: 0.9;
 }
 
 .site-frame::after {
@@ -235,17 +234,15 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  box-shadow: inset 0 0 15px color-mix(in oklch, var(--color-primary) 20%, transparent);
-  opacity: 0.5;
+  box-shadow: 
+    inset 0 0 10px 1px color-mix(in oklch, var(--color-primary) 30%, transparent),
+    0 0 15px color-mix(in oklch, var(--color-primary) 15%, transparent);
+  opacity: 0.6;
 }
-
-
-/* Removido código legado do rim que foi consolidado no .site-frame */
 
 @media (min-width: 1024px) {
   .site-frame {
-    inset: 6px;
-    border-width: 4px;
+    inset: 10px;
   }
 }
 
