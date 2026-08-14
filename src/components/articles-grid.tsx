@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
 import { ArticleCard, ArticleCardSkeleton } from "@/components/article-card";
+import { Reveal } from "@/components/reveal";
 import { articlesQueryOptions } from "@/lib/medium";
 import { useI18n } from "@/lib/i18n";
 import { profile } from "@/lib/site-data";
@@ -39,10 +40,10 @@ export function ArticlesGrid({ limit }: { limit?: number }) {
 
   return (
     <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-      {articles.map((article) => (
-        <div key={article.id} className="h-full">
+      {articles.map((article, idx) => (
+        <Reveal key={article.id} className="h-full" delay={idx * 0.1}>
           <ArticleCard article={article} />
-        </div>
+        </Reveal>
       ))}
     </div>
   );

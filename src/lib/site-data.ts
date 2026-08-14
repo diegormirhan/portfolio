@@ -85,9 +85,8 @@ const pt: SiteContent = {
     },
   ],
   languages: [
-    "Inglês avançado (C1) — leitura, fala e escrita técnica",
-    "Francês iniciante (A1)",
-    "Português nativo",
+    "Inglês — Avançado (C1)",
+    "Francês — Iniciante (A1)",
   ],
   experience: [
     {
@@ -203,9 +202,8 @@ const en: SiteContent = {
     },
   ],
   languages: [
-    "Advanced English (C1) — reading, speaking and technical writing",
-    "Beginner French (A1)",
-    "Native Portuguese",
+    "English — Advanced (C1)",
+    "French — Beginner (A1)",
   ],
   experience: [
     {

@@ -84,9 +84,9 @@ export const Route = createFileRoute("/")({
 function Timeline({ entries }: { entries: TimelineEntry[] }) {
   return (
     <ol className="relative mt-8 border-l border-border pl-6">
-      {entries.map((entry) => (
+      {entries.map((entry, idx) => (
         <li key={`${entry.title}-${entry.period}`} className="pb-10 last:pb-0">
-          <Reveal>
+          <Reveal delay={idx * 0.1}>
             <span className="absolute -left-[7px] mt-2 size-3 rounded-full bg-primary" aria-hidden />
             <span className="font-mono text-xs uppercase tracking-[0.2em] text-primary">{entry.period}</span>
             <h3 className="mt-2 text-xl font-semibold">{entry.title}</h3>
@@ -255,12 +255,12 @@ function Home() {
                 {t.about.highlights.map((item) => {
                   const { icon: Icon, colorClass, bgClass } = highlightMeta(item.title);
                   return (
-                    <div key={item.title} className="glass-pill rounded-2xl p-4">
+                    <div key={item.title} className="glass-pill rounded-2xl p-4 transition-transform hover:scale-[1.02]">
                       <span className={`mb-2 inline-flex size-8 items-center justify-center rounded-xl ${bgClass} ${colorClass}`}>
                         <Icon className="size-4" aria-hidden />
                       </span>
                       <h3 className="text-sm font-semibold">{item.title}</h3>
-                      <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
+                      <p className="mt-1.5 text-[11px] leading-relaxed text-muted-foreground">
                         {item.description}
                       </p>
                     </div>
@@ -269,33 +269,35 @@ function Home() {
               </div>
             </div>
           </Reveal>
-          <Reveal>
+          <Reveal delay={0.1}>
             <div className="flex h-full flex-col gap-5">
               <div className="glass-liquid card-glow rounded-3xl p-6 sm:p-7">
                 <div className="flex items-center gap-3">
-                  <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-amber-400/10 text-amber-400">
+                  <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
                     <Sparkles className="size-4" aria-hidden />
                   </span>
                   <h3 className="font-mono text-xs uppercase tracking-[0.2em] text-primary">
                     {t.about.currently}
                   </h3>
                 </div>
-                <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
+                <p className="mt-4 text-sm leading-relaxed text-foreground/90">
                   {t.about.currentlyText}
                 </p>
               </div>
-              <div className="glass-liquid card-glow h-full rounded-3xl p-6 sm:p-7">
+              <div className="glass-liquid card-glow flex flex-col justify-center rounded-3xl p-6 sm:p-7">
                 <h3 className="font-mono text-xs uppercase tracking-[0.2em] text-primary">
                   {t.about.languages}
                 </h3>
-                <ul className="mt-4 space-y-2.5 text-sm text-muted-foreground">
+                <div className="mt-4 flex flex-wrap gap-2">
                   {content.languages.map((language) => (
-                    <li key={language} className="flex gap-2.5">
-                      <span className="mt-2 size-1.5 shrink-0 rounded-full bg-primary" aria-hidden />
-                      <span>{language}</span>
-                    </li>
+                    <span 
+                      key={language} 
+                      className="glass-pill inline-flex items-center rounded-full px-3 py-1.5 text-xs font-medium text-foreground/90 transition-colors hover:text-primary"
+                    >
+                      {language}
+                    </span>
                   ))}
-                </ul>
+                </div>
               </div>
             </div>
           </Reveal>
@@ -309,10 +311,10 @@ function Home() {
           description={t.skills.description}
         />
         <div className="mt-8 grid gap-5 sm:mt-10 sm:grid-cols-2 lg:grid-cols-4">
-          {content.skillGroups.map((group) => {
+          {content.skillGroups.map((group, groupIdx) => {
             const { icon: Icon, colorClass, bgClass } = skillGroupMeta[group.icon];
             return (
-              <Reveal key={group.title}>
+              <Reveal key={group.title} delay={groupIdx * 0.1}>
                 <div className="glass-liquid card-glow group relative h-full overflow-hidden rounded-3xl p-6">
                   <span
                     className="pointer-events-none absolute -right-10 -top-10 size-28 rounded-full bg-primary/15 blur-2xl sm:opacity-60"
@@ -351,12 +353,12 @@ function Home() {
           description={t.career.description}
         />
         <div className="mt-8 grid gap-10 sm:mt-10 lg:grid-cols-2 lg:gap-12">
-          <div>
+          <Reveal>
             <Timeline entries={content.experience} />
-          </div>
-          <div>
+          </Reveal>
+          <Reveal delay={0.2}>
             <Timeline entries={content.education} />
-          </div>
+          </Reveal>
         </div>
       </section>
 
@@ -367,8 +369,8 @@ function Home() {
           description={t.projects.description}
         />
         <div className="mt-8 grid gap-5 sm:mt-10 md:grid-cols-2">
-          {content.featuredProjects.map((project) => (
-            <Reveal key={project.name}>
+          {content.featuredProjects.map((project, projectIdx) => (
+            <Reveal key={project.name} delay={projectIdx * 0.1}>
               <a
                 href={project.url}
                 target="_blank"
@@ -422,10 +424,11 @@ function Home() {
           description={t.contact.description}
         />
         <div className="mt-8 grid gap-5 sm:mt-10 lg:grid-cols-[1fr_1.2fr]">
-          <Reveal>
+          <div>
             <ul className="space-y-3">
-              {channels.map(({ label, value, href, icon: Icon, colorClass, bgClass }) => (
+              {channels.map(({ label, value, href, icon: Icon, colorClass, bgClass }, channelIdx) => (
                 <li key={label}>
+                  <Reveal delay={channelIdx * 0.1}>
                   <a
                     href={href}
                     target={href.startsWith("http") ? "_blank" : undefined}
@@ -440,10 +443,11 @@ function Home() {
                       <span className="block text-sm text-muted-foreground">{value}</span>
                     </span>
                   </a>
+                  </Reveal>
                 </li>
               ))}
             </ul>
-          </Reveal>
+          </div>
           <Reveal>
             <ContactForm />
           </Reveal>
