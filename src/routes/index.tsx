@@ -11,6 +11,8 @@ import {
   Mail,
   PenLine,
   Sparkles,
+  Globe,
+  Zap,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -274,28 +276,33 @@ function Home() {
           </Reveal>
           <Reveal delay={0.1}>
             <div className="flex h-full flex-col gap-5">
-              <div className="card-modern rounded-3xl p-6 sm:p-7">
+              <div className="card-modern rounded-3xl p-6 sm:p-8">
                 <div className="flex items-center gap-3">
-                  <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary">
-                    <Sparkles className="size-4" aria-hidden />
+                  <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-amber-400/10 text-amber-400 ring-1 ring-amber-400/20">
+                    <Zap className="size-5" aria-hidden />
                   </span>
-                  <h3 className="font-mono text-xs uppercase tracking-[0.2em] text-primary">
+                  <h3 className="font-mono text-sm uppercase tracking-[0.2em] text-amber-400 font-bold">
                     {t.about.currently}
                   </h3>
                 </div>
-                <p className="mt-4 text-sm leading-relaxed text-foreground/90">
+                <p className="mt-5 text-base leading-relaxed text-foreground/90">
                   {t.about.currentlyText}
                 </p>
               </div>
-              <div className="card-modern flex flex-col justify-center rounded-3xl p-6 sm:p-7">
-                <h3 className="font-mono text-xs uppercase tracking-[0.2em] text-primary">
-                  {t.about.languages}
-                </h3>
-                <div className="mt-4 flex flex-wrap gap-2">
+              <div className="card-modern flex flex-col justify-center rounded-3xl p-6 sm:p-8">
+                <div className="flex items-center gap-3">
+                  <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-emerald-400/10 text-emerald-400 ring-1 ring-emerald-400/20">
+                    <Globe className="size-5" aria-hidden />
+                  </span>
+                  <h3 className="font-mono text-sm uppercase tracking-[0.2em] text-emerald-400 font-bold">
+                    {t.about.languages}
+                  </h3>
+                </div>
+                <div className="mt-5 flex flex-wrap gap-2.5">
                   {content.languages.map((language) => (
                     <span 
                       key={language} 
-                      className="glass-pill inline-flex items-center rounded-full px-3 py-1.5 text-xs font-medium text-foreground/90 transition-colors hover:text-primary"
+                      className="glass-pill inline-flex items-center rounded-full px-4 py-2 text-sm font-medium text-foreground/90 transition-colors hover:text-primary"
                     >
                       {language}
                     </span>
@@ -323,25 +330,25 @@ function Home() {
             const { icon: Icon, colorClass, bgClass } = skillGroupMeta[group.icon];
             return (
               <Reveal key={group.title} delay={groupIdx * 0.1}>
-                <div className="card-modern group relative h-full overflow-hidden rounded-3xl p-6">
+                <div className="card-modern group relative h-full overflow-hidden rounded-[2.5rem] p-8 sm:p-10 transition-all hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5">
                   <span
-                    className="pointer-events-none absolute -right-10 -top-10 size-28 rounded-full bg-primary/15 blur-2xl sm:opacity-60"
+                    className="pointer-events-none absolute -right-10 -top-10 size-40 rounded-full bg-primary/20 blur-3xl sm:opacity-60"
                     aria-hidden
                   />
-                  <div className={`inline-flex size-11 items-center justify-center rounded-2xl ${bgClass} ${colorClass} transition-transform group-hover:scale-110`}>
-                    <Icon className="size-5" aria-hidden />
+                  <div className={`inline-flex size-16 items-center justify-center rounded-2xl ${bgClass} ${colorClass} ring-1 ring-current/20 transition-transform group-hover:scale-110`}>
+                    <Icon className="size-8" aria-hidden />
                   </div>
-                  <h3 className="mt-4 text-base font-semibold">{group.title}</h3>
-                  <div className="mt-3 h-px w-full bg-gradient-to-r from-primary/50 to-transparent" />
-                  <ul className="mt-4 flex flex-wrap gap-2">
+                  <h3 className="mt-8 text-2xl font-bold tracking-tight">{group.title}</h3>
+                  <div className="mt-5 h-px w-full bg-gradient-to-r from-primary/50 to-transparent opacity-30" />
+                  <ul className="mt-8 flex flex-wrap gap-3">
                     {group.items.map((item) => {
                       const { icon: ItemIcon, iconClass, chipClass } = getSkillConfig(item);
                       return (
                         <li
                           key={item}
-                          className={`inline-flex items-center gap-1.5 rounded-full border border-border/70 ${chipClass} px-2.5 py-1 font-mono text-[11px] text-muted-foreground`}
+                          className={`inline-flex items-center gap-2.5 rounded-xl border border-border/70 ${chipClass} px-4 py-2 font-mono text-sm font-medium text-muted-foreground transition-colors hover:border-primary/40`}
                         >
-                          <ItemIcon className={`size-3.5 ${iconClass}`} aria-hidden />
+                          <ItemIcon className={`size-5 ${iconClass}`} aria-hidden />
                           {item}
                         </li>
                       );
