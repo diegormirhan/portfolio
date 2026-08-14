@@ -1,7 +1,7 @@
 import { motion, useScroll, useTransform, useReducedMotion, type Easing } from "framer-motion";
-import { useRef, memo } from "react";
+import { useRef } from "react";
 
-export const Background = memo(function Background() {
+export function Background() {
   const containerRef = useRef<HTMLDivElement>(null);
   const shouldReduceMotion = useReducedMotion();
   const { scrollYProgress } = useScroll();
@@ -104,4 +104,4 @@ export const Background = memo(function Background() {
       <div className="absolute inset-x-0 bottom-0 h-[40vh] bg-gradient-to-t from-background via-background/60 to-transparent" />
     </div>
   );
-});
+}

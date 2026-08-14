@@ -1,7 +1,7 @@
 import { motion, useReducedMotion } from "framer-motion";
-import { type ReactNode, memo } from "react";
+import { type ReactNode } from "react";
 
-export const Reveal = memo(function Reveal({
+export function Reveal({
   children,
   className,
   delay = 0,
@@ -27,4 +27,4 @@ export const Reveal = memo(function Reveal({
       {children}
     </motion.div>
   );
-});
+}
