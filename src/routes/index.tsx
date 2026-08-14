@@ -255,12 +255,12 @@ function Home() {
                 {t.about.highlights.map((item) => {
                   const { icon: Icon, colorClass, bgClass } = highlightMeta(item.title);
                   return (
-                    <div key={item.title} className="glass-pill rounded-2xl p-4">
+                    <div key={item.title} className="glass-pill rounded-2xl p-4 transition-transform hover:scale-[1.02]">
                       <span className={`mb-2 inline-flex size-8 items-center justify-center rounded-xl ${bgClass} ${colorClass}`}>
                         <Icon className="size-4" aria-hidden />
                       </span>
                       <h3 className="text-sm font-semibold">{item.title}</h3>
-                      <p className="mt-1.5 text-xs leading-relaxed text-muted-foreground">
+                      <p className="mt-1.5 text-[11px] leading-relaxed text-muted-foreground">
                         {item.description}
                       </p>
                     </div>
@@ -311,10 +311,10 @@ function Home() {
           description={t.skills.description}
         />
         <div className="mt-8 grid gap-5 sm:mt-10 sm:grid-cols-2 lg:grid-cols-4">
-          {content.skillGroups.map((group) => {
+          {content.skillGroups.map((group, groupIdx) => {
             const { icon: Icon, colorClass, bgClass } = skillGroupMeta[group.icon];
             return (
-              <Reveal key={group.title}>
+              <Reveal key={group.title} delay={groupIdx * 0.1}>
                 <div className="glass-liquid card-glow group relative h-full overflow-hidden rounded-3xl p-6">
                   <span
                     className="pointer-events-none absolute -right-10 -top-10 size-28 rounded-full bg-primary/15 blur-2xl sm:opacity-60"
@@ -369,8 +369,8 @@ function Home() {
           description={t.projects.description}
         />
         <div className="mt-8 grid gap-5 sm:mt-10 md:grid-cols-2">
-          {content.featuredProjects.map((project) => (
-            <Reveal key={project.name}>
+          {content.featuredProjects.map((project, projectIdx) => (
+            <Reveal key={project.name} delay={projectIdx * 0.1}>
               <a
                 href={project.url}
                 target="_blank"
@@ -424,10 +424,11 @@ function Home() {
           description={t.contact.description}
         />
         <div className="mt-8 grid gap-5 sm:mt-10 lg:grid-cols-[1fr_1.2fr]">
-          <Reveal>
+          <div>
             <ul className="space-y-3">
-              {channels.map(({ label, value, href, icon: Icon, colorClass, bgClass }) => (
+              {channels.map(({ label, value, href, icon: Icon, colorClass, bgClass }, channelIdx) => (
                 <li key={label}>
+                  <Reveal delay={channelIdx * 0.1}>
                   <a
                     href={href}
                     target={href.startsWith("http") ? "_blank" : undefined}
@@ -442,6 +443,7 @@ function Home() {
                       <span className="block text-sm text-muted-foreground">{value}</span>
                     </span>
                   </a>
+                  </Reveal>
                 </li>
               ))}
             </ul>
