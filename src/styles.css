@@ -165,11 +165,13 @@
 }
 
 @utility card-modern {
-  background: color-mix(in oklch, var(--color-card) 60%, transparent);
-  backdrop-filter: blur(16px);
-  border: 1px solid color-mix(in oklch, var(--color-border) 60%, transparent);
-  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-  box-shadow: 0 4px 6px -1px color-mix(in oklch, black 5%, transparent);
+  background: color-mix(in oklch, var(--color-card) 45%, transparent);
+  backdrop-filter: blur(20px) saturate(170%);
+  border: 1px solid color-mix(in oklch, var(--color-border) 40%, transparent);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 
+    0 4px 6px -1px color-mix(in oklch, black 3%, transparent),
+    inset 0 1px 1px color-mix(in oklch, white 5%, transparent);
   
   &:hover {
     transform: translateY(-4px) scale(1.005);
