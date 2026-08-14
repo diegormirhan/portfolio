@@ -353,12 +353,12 @@ function Home() {
           description={t.career.description}
         />
         <div className="mt-8 grid gap-10 sm:mt-10 lg:grid-cols-2 lg:gap-12">
-          <div>
+          <Reveal>
             <Timeline entries={content.experience} />
-          </div>
-          <div>
+          </Reveal>
+          <Reveal delay={0.2}>
             <Timeline entries={content.education} />
-          </div>
+          </Reveal>
         </div>
       </section>
 
