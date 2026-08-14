@@ -176,10 +176,11 @@
   &:hover {
     transform: translateY(-4px) scale(1.005);
     border-color: color-mix(in oklch, var(--color-primary) 40%, transparent);
-    background: color-mix(in oklch, var(--color-card) 80%, transparent);
+    background: color-mix(in oklch, var(--color-card) 65%, transparent);
     box-shadow: 
-      0 20px 40px -20px color-mix(in oklch, var(--color-primary) 25%, transparent),
-      0 0 0 1px color-mix(in oklch, var(--color-primary) 10%, transparent);
+      0 30px 60px -20px color-mix(in oklch, var(--color-primary) 20%, transparent),
+      0 0 0 1px color-mix(in oklch, var(--color-primary) 15%, transparent),
+      inset 0 1px 2px color-mix(in oklch, white 10%, transparent);
   }
 }
 
