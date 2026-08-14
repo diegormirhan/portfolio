@@ -338,9 +338,9 @@ function Home() {
                   <div className={`inline-flex size-16 items-center justify-center rounded-2xl ${bgClass} ${colorClass} ring-1 ring-current/20 transition-transform group-hover:scale-110`}>
                     <Icon className="size-8" aria-hidden />
                   </div>
-                  <h3 className="mt-6 text-xl font-bold tracking-tight">{group.title}</h3>
-                  <div className="mt-4 h-px w-full bg-gradient-to-r from-primary/50 to-transparent opacity-30" />
-                  <ul className="mt-6 flex flex-wrap gap-2.5">
+                  <h3 className="mt-8 text-2xl font-bold tracking-tight">{group.title}</h3>
+                  <div className="mt-5 h-px w-full bg-gradient-to-r from-primary/50 to-transparent opacity-30" />
+                  <ul className="mt-8 flex flex-wrap gap-3">
                     {group.items.map((item) => {
                       const { icon: ItemIcon, iconClass, chipClass } = getSkillConfig(item);
                       return (
