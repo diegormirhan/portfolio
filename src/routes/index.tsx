@@ -86,7 +86,7 @@ function Timeline({ entries, icon: Icon = Sparkles }: { entries: TimelineEntry[]
     <ol className="relative mt-8 border-l border-border pl-8 sm:pl-10">
       {entries.map((entry, idx) => (
         <li key={`${entry.title}-${entry.period}`} className="group pb-10 last:pb-0">
-          <div className="absolute -left-[44px] sm:-left-[35px] mt-1.5 flex size-8 sm:size-7 items-center justify-center rounded-full bg-primary text-primary-foreground ring-4 ring-background border border-primary/20 transition-transform group-hover:scale-110 !z-[9999]">
+          <div className="absolute -left-[16px] sm:-left-[35px] mt-1.5 flex size-8 sm:size-7 items-center justify-center rounded-full bg-primary text-primary-foreground ring-4 ring-background border border-primary/20 transition-transform group-hover:scale-110 z-[1]">
             <Icon className="size-4 sm:size-3.5" aria-hidden />
           </div>
           <Reveal delay={idx * 0.1}>
