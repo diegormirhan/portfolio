@@ -398,6 +398,11 @@ function Home() {
           eyebrow={t.projects.eyebrow}
           title={t.projects.title}
           description={t.projects.description}
+          action={
+            <div className="hidden sm:flex size-12 items-center justify-center rounded-2xl bg-indigo-400/10 text-indigo-400 ring-1 ring-indigo-400/20 transition-transform hover:scale-110">
+              <Layers className="size-6" />
+            </div>
+          }
         />
         <div className="mt-8 grid gap-6 sm:mt-10 md:grid-cols-2">
           {content.featuredProjects.map((project, projectIdx) => (
@@ -457,6 +462,11 @@ function Home() {
           eyebrow={t.articles.eyebrow}
           title={t.articles.title}
           description={t.articles.description}
+          action={
+            <div className="hidden sm:flex size-12 items-center justify-center rounded-2xl bg-rose-400/10 text-rose-400 ring-1 ring-rose-400/20 transition-transform hover:scale-110">
+              <PenLine className="size-6" />
+            </div>
+          }
         />
         <div className="mt-10">
           <ArticlesGrid limit={6} />
@@ -468,6 +478,11 @@ function Home() {
           eyebrow={t.contact.eyebrow}
           title={t.contact.title}
           description={t.contact.description}
+          action={
+            <div className="hidden sm:flex size-12 items-center justify-center rounded-2xl bg-emerald-400/10 text-emerald-400 ring-1 ring-emerald-400/20 transition-transform hover:scale-110">
+              <Mail className="size-6" />
+            </div>
+          }
         />
         <div className="mt-8 grid gap-5 sm:mt-10 lg:grid-cols-[1fr_1.2fr]">
           <div>
