@@ -312,7 +312,11 @@ function Home() {
           eyebrow={t.skills.eyebrow}
           title={t.skills.title}
           description={t.skills.description}
-          action={null}
+          action={
+            <div className="hidden sm:flex size-12 items-center justify-center rounded-2xl bg-amber-400/10 text-amber-400 ring-1 ring-amber-400/20">
+              <Brain className="size-6" />
+            </div>
+          }
         />
         <div className="mt-8 grid gap-5 sm:mt-10 sm:grid-cols-2 lg:grid-cols-4">
           {content.skillGroups.map((group, groupIdx) => {
@@ -357,24 +361,28 @@ function Home() {
           description={t.career.description}
         />
         <div className="mt-8 grid gap-10 sm:mt-10 lg:grid-cols-2 lg:gap-16">
-          <div className="relative">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="flex size-10 items-center justify-center rounded-xl bg-violet-400/10 text-violet-400">
-                <Layers className="size-5" />
+          <Reveal>
+            <div className="relative">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="flex size-10 items-center justify-center rounded-xl bg-violet-400/10 text-violet-400">
+                  <Layers className="size-5" />
+                </div>
+                <h3 className="text-xl font-bold">{lang === 'pt' ? 'Experiência Profissional' : 'Professional Experience'}</h3>
               </div>
-              <h3 className="text-xl font-bold">{lang === 'pt' ? 'Experiência Profissional' : 'Professional Experience'}</h3>
+              <Timeline entries={content.experience} />
             </div>
-            <Timeline entries={content.experience} />
-          </div>
-          <div className="relative">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="flex size-10 items-center justify-center rounded-xl bg-blue-400/10 text-blue-400">
-                <Sparkles className="size-5" />
+          </Reveal>
+          <Reveal delay={0.2}>
+            <div className="relative">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="flex size-10 items-center justify-center rounded-xl bg-blue-400/10 text-blue-400">
+                  <Sparkles className="size-5" />
+                </div>
+                <h3 className="text-xl font-bold">{lang === 'pt' ? 'Formação Acadêmica' : 'Education'}</h3>
               </div>
-              <h3 className="text-xl font-bold">{lang === 'pt' ? 'Formação Acadêmica' : 'Education'}</h3>
+              <Timeline entries={content.education} />
             </div>
-            <Timeline entries={content.education} />
-          </div>
+          </Reveal>
         </div>
       </section>
 
