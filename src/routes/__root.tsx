@@ -9,10 +9,10 @@ import {
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 
-import { SiteFooter } from "@/components/site-footer";
-import { SiteFrame } from "@/components/site-frame";
-import { SiteHeader } from "@/components/site-header";
-import { LanguageProvider } from "@/lib/i18n";
+import { SiteFooter } from "../components/site-footer";
+import { SiteFrame } from "../components/site-frame";
+import { SiteHeader } from "../components/site-header";
+import { LanguageProvider } from "../lib/i18n";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";

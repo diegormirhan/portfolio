@@ -1,11 +1,11 @@
 import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
 
-import { LanguageToggle } from "@/components/language-toggle";
-import { ThemeToggle } from "@/components/theme-toggle";
-import { useI18n } from "@/lib/i18n";
-import { profile } from "@/lib/site-data";
-import { cn } from "@/lib/utils";
+import { LanguageToggle } from "./language-toggle";
+import { ThemeToggle } from "./theme-toggle";
+import { useI18n } from "../lib/i18n";
+import { profile } from "../lib/site-data";
+import { cn } from "../lib/utils";
 
 export const sections = [
   { id: "inicio" },

@@ -1,6 +1,6 @@
 import { ArrowUpRight, Clock, BookOpen } from "lucide-react";
-import { useI18n } from "@/lib/i18n";
-import { formatDate, type Article } from "@/lib/medium";
+import { useI18n } from "../lib/i18n";
+import { formatDate, type Article } from "../lib/medium";
 import { motion } from "framer-motion";
 
 export function ArticleCard({ article }: { article: Article }) {

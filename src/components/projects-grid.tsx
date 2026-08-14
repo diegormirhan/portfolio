@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
-import { ProjectCard, ProjectCardSkeleton } from "@/components/project-card";
-import { Reveal } from "@/components/reveal";
-import { projectsQueryOptions } from "@/lib/github";
-import { useI18n } from "@/lib/i18n";
-import { profile } from "@/lib/site-data";
+import { ProjectCard, ProjectCardSkeleton } from "./project-card";
+import { Reveal } from "./reveal";
+import { projectsQueryOptions } from "../lib/github";
+import { useI18n } from "../lib/i18n";
+import { profile } from "../lib/site-data";
 
 export function ProjectsGrid({ limit }: { limit?: number }) {
   const { t } = useI18n();

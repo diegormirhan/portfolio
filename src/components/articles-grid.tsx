@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
-import { ArticleCard, ArticleCardSkeleton } from "@/components/article-card";
-import { Reveal } from "@/components/reveal";
-import { articlesQueryOptions } from "@/lib/medium";
-import { useI18n } from "@/lib/i18n";
-import { profile } from "@/lib/site-data";
+import { ArticleCard, ArticleCardSkeleton } from "./article-card";
+import { Reveal } from "./reveal";
+import { articlesQueryOptions } from "../lib/medium";
+import { useI18n } from "../lib/i18n";
+import { profile } from "../lib/site-data";
 
 export function ArticlesGrid({ limit }: { limit?: number }) {
   const { t } = useI18n();
