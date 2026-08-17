@@ -4,210 +4,238 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/*
- * Design system — portfólio Diego Mirhan.
- * Paleta base: #4F1271, #783F8E, #4A4063, #BFACC8, #C8C6D7.
- * Todas as cores em oklch e expostas como tokens semânticos.
- */
-
-@property --angle {
-  syntax: "<angle>";
-  initial-value: 0deg;
-  inherits: false;
-}
-
-@keyframes frame-rotate {
-  from { --angle: 0deg; }
-  to { --angle: 360deg; }
-}
-
-@theme inline {
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --radius-2xl: calc(var(--radius) + 8px);
-  --radius-3xl: calc(var(--radius) + 12px);
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
-  --color-surface: var(--surface);
-  --color-highlight: var(--highlight);
-  --color-highlight-foreground: var(--highlight-foreground);
-  --font-display: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: ui-monospace, "SFMono-Regular", Consolas, monospace;
-}
+/* Hallmark · macrostructure: Marquee Hero · tone: editorial · anchor hue: 30 */
 
 :root {
-  --radius: 0.5rem;
-  /* Hallmark · Genre: Editorial/Structural · Theme: Tally-inspired DNA */
-  --background: oklch(0.98 0.005 30);
-  --foreground: oklch(0.25 0.02 30);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.25 0.02 30);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.25 0.02 30);
-  --primary: oklch(0.5 0.2 320);
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.94 0.01 30);
-  --secondary-foreground: oklch(0.3 0.02 30);
-  --muted: oklch(0.92 0.01 30);
-  --muted-foreground: oklch(0.5 0.02 30);
-  --accent: oklch(0.94 0.03 320);
-  --accent-foreground: oklch(0.4 0.2 320);
-  --destructive: oklch(0.6 0.2 25);
-  --destructive-foreground: oklch(0.99 0.005 30);
-  --border: oklch(0.85 0.02 30);
-  --input: oklch(0.9 0.01 30);
-  --ring: oklch(0.5 0.2 320 / 30%);
-  --surface: oklch(0.96 0.01 30);
-  --highlight: oklch(0.5 0.2 320);
-  --highlight-foreground: oklch(1 0 0);
+  /* Typography Scale (Major Third - 1.25) */
+  --text-xs: 0.64rem;
+  --text-sm: 0.8rem;
+  --text-base: 1rem;
+  --text-md: 1.25rem;
+  --text-lg: 1.5625rem;
+  --text-xl: 1.9531rem;
+  --text-2xl: 2.4414rem;
+  --text-3xl: 3.0518rem;
+  --text-4xl: 3.8147rem;
+  --text-display: clamp(3.5rem, 8vw + 1rem, 7.5rem);
+  --text-display-s: clamp(2.25rem, 4vw + 1rem, 3.5rem);
 
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.06);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.08);
+  /* Spacing Scale (4pt) */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2.5rem;
+  --space-2xl: 4rem;
+  --space-3xl: 6rem;
+  
+  --page-gutter: clamp(1rem, 5vw, 2.5rem);
+  --page-max: 80rem;
+
+  /* Theme: Editorial (Tally-inspired) */
+  --color-paper: oklch(0.98 0.005 30);
+  --color-ink: oklch(0.18 0.01 30);
+  --color-accent: oklch(0.5 0.2 320);
+  --color-accent-soft: oklch(0.5 0.2 320 / 10%);
+  --color-rule: oklch(0.9 0.01 30);
+  --color-muted: oklch(0.5 0.01 30);
+  --color-surface: oklch(1 0 0);
+  --color-focus: var(--color-accent);
+
+  --font-display: "Fraunces", ui-serif, Georgia, serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-in: cubic-bezier(0.8, 0.2, 0.8, 0.2);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-fast: 160ms;
+  --dur-normal: 280ms;
 }
 
 .dark {
-  --background: oklch(0.12 0.015 280);
-  --foreground: oklch(0.95 0.01 280);
-  --card: oklch(0.18 0.02 280);
-  --card-foreground: oklch(0.95 0.01 280);
-  --popover: oklch(0.18 0.02 280);
-  --popover-foreground: oklch(0.95 0.01 280);
-  --primary: oklch(0.7 0.15 320);
-  --primary-foreground: oklch(0.1 0.02 280);
-  --secondary: oklch(0.22 0.02 280);
-  --secondary-foreground: oklch(0.9 0.02 280);
-  --muted: oklch(0.22 0.02 280);
-  --muted-foreground: oklch(0.7 0.02 280);
-  --accent: oklch(0.25 0.05 320);
-  --accent-foreground: oklch(0.85 0.1 320);
-  --destructive: oklch(0.65 0.2 25);
-  --destructive-foreground: oklch(0.95 0.01 30);
-  --border: oklch(0.32 0.02 280);
-  --input: oklch(0.25 0.02 280);
-  --ring: oklch(0.7 0.15 320 / 40%);
-  --surface: oklch(0.2 0.02 280);
-  --highlight: oklch(0.75 0.12 320);
-  --highlight-foreground: oklch(0.1 0.02 280);
+  --color-paper: oklch(0.12 0.01 30);
+  --color-ink: oklch(0.95 0.005 30);
+  --color-accent: oklch(0.7 0.15 320);
+  --color-accent-soft: oklch(0.7 0.15 320 / 15%);
+  --color-rule: oklch(0.25 0.01 30);
+  --color-muted: oklch(0.6 0.01 30);
+  --color-surface: oklch(0.18 0.02 30);
+}
 
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.4);
+@theme inline {
+  --color-background: var(--color-paper);
+  --color-foreground: var(--color-ink);
+  --color-primary: var(--color-accent);
+  --color-border: var(--color-rule);
+  --color-muted: var(--color-muted);
+  --color-card: var(--color-surface);
+  --font-display: var(--font-display);
+  --font-sans: var(--font-body);
+  --font-mono: var(--font-mono);
 }
 
 @layer base {
-  * {
-    border-color: var(--color-border);
-  }
-
   html {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
     scroll-behavior: smooth;
-    overflow-x: hidden;
-  }
-
-  html.dark {
-    color-scheme: dark;
-  }
-
-  section[id] {
-    scroll-margin-top: 6.5rem;
+    -webkit-font-smoothing: antialiased;
   }
 
   body {
-    background: var(--background);
-    color: var(--foreground);
-    font-family: var(--font-sans);
-    -webkit-font-smoothing: antialiased;
-    position: relative;
-    overflow-x: hidden;
+    margin: 0;
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    line-height: 1.6;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
     margin: 0;
   }
 
-  h1,
-  h2,
-  h3,
-  h4 {
-    font-family: var(--font-display);
-    color: var(--foreground);
-    letter-spacing: -0.02em;
+  a {
+    color: inherit;
+    text-decoration: none;
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+
+  section {
+    padding-block: var(--space-3xl);
   }
 }
 
-@utility glass {
-  background: color-mix(in oklch, var(--color-surface) 60%, transparent);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--color-border);
-  box-shadow: var(--shadow-sm);
+/* Macrostructure 03 · Marquee Hero */
+.hero-marquee {
+  min-height: 90dvh;
+  display: grid;
+  align-content: end;
+  padding: 0 var(--page-gutter) var(--space-3xl);
 }
 
-@utility glass-liquid {
-  background: color-mix(in oklch, var(--color-surface) 30%, transparent);
-  backdrop-filter: blur(12px);
-  border: 1px solid var(--color-border);
+.display-xxl {
+  font-size: var(--text-display);
+  line-height: 0.92;
+  font-weight: 700;
+  max-width: 15ch;
 }
 
-@utility glass-pill {
-  background: var(--color-accent);
-  border: 1px solid color-mix(in oklch, var(--color-primary) 20%, transparent);
-  color: var(--color-primary);
+.hero-marquee__sub {
+  margin-top: var(--space-lg);
+  font-size: var(--text-xl);
+  color: var(--color-muted);
+  max-width: 45ch;
   font-weight: 500;
 }
 
-@utility card-modern {
-  background: var(--color-card);
-  border: 1.5px solid var(--color-border);
-  box-shadow: var(--shadow-md);
-  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-  
-  &:hover {
-    transform: translateY(-2px);
-    border-color: var(--color-primary);
-    box-shadow: var(--shadow-lg);
+/* Component S1 · Left-margin numbered */
+.head-margin {
+  display: grid;
+  grid-template-columns: 8rem 1fr;
+  gap: var(--space-xl);
+  align-items: baseline;
+  margin-bottom: var(--space-xl);
+}
+
+.num-label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+  .head-margin {
+    grid-template-columns: 1fr;
+    gap: var(--space-xs);
   }
 }
 
-@utility glass-strong {
-  background: var(--color-card);
-  border: 1px solid var(--color-border);
+/* Component Ft5 · Statement */
+.foot-stmt {
+  padding: var(--space-3xl) var(--page-gutter) var(--space-xl);
+  display: grid;
+  gap: var(--space-xl);
+  border-top: 1px solid var(--color-rule);
 }
 
-@utility card-glow {
-  transition: all 0.2s ease-in-out;
-  &:hover {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 1px var(--color-primary);
-  }
+.foot-stmt__line {
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+  max-width: 25ch;
+  margin: 0;
 }
 
-/* Structural frame removed to prioritize Hallmark editorial cleanliness */
-.site-frame {
-  display: none;
+.foot-stmt__meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-block-start: var(--space-md);
+  border-top: 1px solid var(--color-rule);
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-@utility skeleton-block {
-  position: relative;
-  overflow: hidden;
-  border-radius: 0.5rem;
-  background: color-mix(in oklch, var(--color-foreground) 8%, transparent);
+/* Redesigned Grid Items */
+.grid-portfolio {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 24rem), 1fr));
+  gap: var(--space-lg);
 }
+
+.portfolio-card {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-lg);
+  border: 1px solid var(--color-rule);
+  background: var(--color-surface);
+  transition: all var(--dur-normal) var(--ease-out);
+}
+
+.portfolio-card:hover {
+  border-color: var(--color-accent);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px -12px oklch(0% 0 0 / 0.1);
+}
+
+.portfolio-card__meta {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-accent);
+  margin-bottom: var(--space-sm);
+  text-transform: uppercase;
+}
+
+.portfolio-card__title {
+  font-size: var(--text-xl);
+  margin-bottom: var(--space-md);
+}
+
+.portfolio-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  margin-top: auto;
+  padding-top: var(--space-lg);
+}
+
+.tag-monochrome {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 2px 6px;
+  border: 1px solid var(--color-rule);
+  color: var(--color-muted);
+  text-transform: uppercase;
+}
+
 
