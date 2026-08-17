@@ -96,6 +96,7 @@
   --radius-sm: calc(var(--radius-lg) - 4px);
 }
 
+@layer utilities {
   .site-frame {
     display: none;
   }
@@ -103,7 +104,8 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border;
+    outline-color: color-mix(in oklab, var(--primary) 50%, transparent);
   }
   
   html {
