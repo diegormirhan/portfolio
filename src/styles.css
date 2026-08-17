@@ -32,19 +32,19 @@
   --page-gutter: clamp(1rem, 5vw, 2.5rem);
   --page-max: 80rem;
 
-  /* Theme: Tally Evolution */
-  --color-paper: oklch(0.99 0.002 30);
-  --color-ink: oklch(0.12 0.005 30);
-  --color-accent: oklch(0.55 0.25 320);
-  --color-accent-soft: oklch(0.55 0.25 320 / 8%);
-  --color-rule: oklch(0.92 0.005 30);
-  --color-muted: oklch(0.45 0.01 30);
+  /* Theme: HUM-07 (Soft High-End) */
+  --color-paper: oklch(0.99 0.002 0);
+  --color-ink: oklch(0.12 0.005 0);
+  --color-accent: oklch(0.2 0.01 0);
+  --color-accent-soft: oklch(0.2 0.01 0 / 5%);
+  --color-rule: oklch(0.94 0.002 0);
+  --color-muted: oklch(0.4 0.005 0);
   --color-surface: oklch(1 0 0);
   --color-focus: var(--color-accent);
 
-  --font-display: "Fraunces", ui-serif, Georgia, serif;
-  --font-body: "Inter", system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-display: "Instrument Serif", ui-serif, Georgia, serif;
+  --font-body: "Geist", "Inter", system-ui, sans-serif;
+  --font-mono: "Geist Mono", "JetBrains Mono", ui-monospace, monospace;
 
   --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
   --ease-in: cubic-bezier(0.8, 0.2, 0.8, 0.2);
@@ -93,9 +93,9 @@
 
   h1, h2, h3, h4 {
     font-family: var(--font-display);
-    font-weight: 800;
-    line-height: 0.95;
-    letter-spacing: -0.04em;
+    font-weight: 400;
+    line-height: 1.0;
+    letter-spacing: -0.01em;
     margin: 0;
   }
 
@@ -116,8 +116,6 @@
   display: grid;
   align-content: center;
   padding: 0 var(--page-gutter) var(--space-3xl);
-  background-image: radial-gradient(var(--color-ink) 1.5px, transparent 1.5px);
-  background-size: 32px 32px;
 }
 
 .display-xxl {
@@ -209,15 +207,16 @@
   display: flex;
   flex-direction: column;
   padding: var(--space-xl);
-  border: 1.5px solid var(--color-ink);
+  border: 1px solid var(--color-rule);
   background: var(--color-surface);
-  box-shadow: 6px 6px 0px var(--color-ink);
+  border-radius: 2px;
   transition: all var(--dur-normal) var(--ease-out);
 }
 
 .portfolio-card:hover {
-  transform: translate(-4px, -4px);
-  box-shadow: 12px 12px 0px var(--color-accent);
+  border-color: var(--color-ink);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px -10px oklch(0% 0 0 / 0.05);
 }
 
 .portfolio-card__meta {
