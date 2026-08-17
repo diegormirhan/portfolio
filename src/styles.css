@@ -96,6 +96,11 @@
   --radius-sm: calc(var(--radius-lg) - 4px);
 }
 
+  .site-frame {
+    display: none;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
