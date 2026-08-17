@@ -9,65 +9,62 @@ export function ArticleCard({ article }: { article: Article }) {
   return (
     <motion.article 
       layout
-      className="card-modern group flex h-full flex-col overflow-hidden rounded-2xl"
+      className="portfolio-card group flex h-full flex-col overflow-hidden"
     >
-      <div className="relative aspect-[16/9] overflow-hidden">
+      <div className="relative aspect-[16/9] overflow-hidden -mx-[var(--space-lg)] -mt-[var(--space-lg)] mb-[var(--space-lg)] border-b border-rule">
         {article.thumbnail ? (
           <img
             src={article.thumbnail}
             alt={t.articles.cover(article.title)}
             loading="lazy"
-            className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
+            className="size-full object-cover grayscale opacity-80 transition-all duration-500 group-hover:scale-105 group-hover:grayscale-0 group-hover:opacity-100"
           />
         ) : (
-          <div className="flex size-full items-center justify-center bg-primary/5">
-            <BookOpen className="size-8 text-primary/20" />
+          <div className="flex size-full items-center justify-center bg-muted/20">
+            <BookOpen className="size-8 text-muted" />
           </div>
         )}
-        <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
       </div>
 
-      <div className="flex flex-1 flex-col p-6">
-        <div className="flex items-center justify-between text-[11px] font-medium uppercase tracking-wider text-muted-foreground/70">
-          <span>{formatDate(article.publishedAt)}</span>
-          <div className="flex items-center gap-1">
-            <Clock className="size-3" />
-            <span>{article.readingMinutes} min read</span>
-          </div>
-        </div>
+      <div className="portfolio-card__meta flex justify-between">
+        <span>{formatDate(article.publishedAt)}</span>
+        <span className="flex items-center gap-1">
+          <Clock className="size-3" />
+          {article.readingMinutes} min
+        </span>
+      </div>
 
-        <h3 className="mt-4 text-xl font-bold leading-tight group-hover:text-primary transition-colors">
-          <a href={article.link} target="_blank" rel="noreferrer">
-            {article.title}
-          </a>
-        </h3>
+      <h3 className="portfolio-card__title group-hover:text-primary transition-colors">
+        <a href={article.link} target="_blank" rel="noreferrer">
+          {article.title}
+        </a>
+      </h3>
 
-        <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground line-clamp-2">
-          {article.excerpt}
-        </p>
+      <p className="text-sm leading-relaxed text-muted-foreground line-clamp-2">
+        {article.excerpt}
+      </p>
 
-        <div className="mt-auto flex flex-col gap-4 border-t border-border/40 pt-4">
-          <div className="flex flex-wrap gap-2 overflow-hidden">
-            {article.categories.slice(0, 3).map((cat) => (
-              <span key={cat} className="inline-block truncate max-w-[100px] text-[10px] font-mono font-medium text-primary/70">
-                #{cat}
-              </span>
-            ))}
-          </div>
-          <div className="flex items-center justify-end">
-            <a
-              href={article.link}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex shrink-0 items-center gap-1.5 text-xs font-bold text-primary transition-all hover:gap-2"
-            >
-              {t.articles.read} <ArrowUpRight className="size-3.5" />
-            </a>
-          </div>
-        </div>
+      <div className="portfolio-card__tags">
+        {article.categories.slice(0, 3).map((cat) => (
+          <span key={cat} className="tag-monochrome">
+            #{cat}
+          </span>
+        ))}
+      </div>
+
+      <div className="mt-6 flex items-center justify-end border-t border-rule pt-4">
+        <a
+          href={article.link}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center gap-1.5 text-xs font-bold tracking-tight text-primary hover:gap-2 transition-all"
+        >
+          {t.articles.read} <ArrowUpRight className="size-3.5" />
+        </a>
       </div>
     </motion.article>
   );
+
 }
 
 export function ArticleCardSkeleton() {

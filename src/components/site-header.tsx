@@ -55,26 +55,23 @@ export function SiteHeader() {
   const { t } = useI18n();
 
   return (
-    <header className="pointer-events-none fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-4 sm:pt-4">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-3 px-2">
-        <a href="#inicio" className="card-modern pointer-events-auto flex items-center gap-2 rounded-full px-2 py-2 transition-transform hover:scale-105 active:scale-95">
-          <img src="/logo.png" alt="Logo" className="size-8 rounded-full object-cover" />
+    <header className="fixed inset-x-0 top-0 z-50 py-6 mix-blend-difference invert dark:invert-0">
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-5">
+        <a href="#inicio" className="text-sm font-bold tracking-tighter uppercase">
+          {profile.name}
         </a>
 
         <nav
-          className="card-modern pointer-events-auto hidden items-center gap-1 rounded-full px-2 py-2 lg:flex"
+          className="hidden items-center gap-8 lg:flex"
           aria-label={t.header.mainNav}
         >
           {sections.map((section) => (
             <a
               key={section.id}
               href={`#${section.id}`}
-              aria-current={active === section.id ? "true" : undefined}
               className={cn(
-                "rounded-full px-3.5 py-1.5 text-sm",
-                active === section.id
-                  ? "glass-pill font-medium text-foreground"
-                  : "text-muted-foreground hover:text-foreground",
+                "text-[10px] font-bold uppercase tracking-widest transition-opacity hover:opacity-100",
+                active === section.id ? "opacity-100" : "opacity-40",
               )}
             >
               {t.nav[section.id as SectionId]}
@@ -82,29 +79,21 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <div className="card-modern pointer-events-auto flex items-center gap-2 rounded-full px-2 py-2">
+        <div className="flex items-center gap-6">
           <ThemeToggle />
           <LanguageToggle />
-          <a
-            href={profile.github}
-            target="_blank"
-            rel="noreferrer"
-            className="glass-pill hidden items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium sm:inline-flex"
-          >
-            <Github className="size-3.5" />
-            GitHub
-          </a>
           <button
             type="button"
             aria-label={t.header.openMenu}
             aria-expanded={open}
             onClick={() => setOpen((value) => !value)}
-            className="glass-pill inline-flex size-9 items-center justify-center rounded-full lg:hidden"
+            className="lg:hidden"
           >
-            {open ? <X className="size-4" /> : <Menu className="size-4" />}
+            {open ? <X className="size-5" /> : <Menu className="size-5" />}
           </button>
         </div>
       </div>
+
 
       {open ? (
         <nav
