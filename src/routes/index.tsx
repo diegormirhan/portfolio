@@ -218,8 +218,8 @@ function Home() {
                 {content.location}
               </span>
             ) : null}
-            <h1 className="mt-6 max-w-4xl text-4xl font-semibold leading-[1.05] sm:text-6xl lg:text-7xl">
-              {profile.name} — <span className="text-primary">{content.role}</span>
+            <h1 className="mt-6 max-w-4xl text-5xl font-bold leading-[1.05] tracking-tight sm:text-7xl lg:text-8xl">
+              {profile.name} — <span className="text-primary drop-shadow-[0_0_20px_rgba(157,63,205,0.3)]">{content.role}</span>
             </h1>
             <p className="mt-6 max-w-2xl text-lg text-muted-foreground">{content.headline}</p>
             <div className="mt-9 flex flex-wrap gap-3">
@@ -245,7 +245,7 @@ function Home() {
         <SectionHeading eyebrow={t.about.eyebrow} title={t.about.title} />
         <div className="mt-8 grid gap-5 sm:mt-10 lg:grid-cols-[1.6fr_1fr]">
           <Reveal>
-            <div className="card-modern relative h-full overflow-hidden rounded-3xl p-6 sm:p-8">
+            <div className="card-modern relative h-full overflow-hidden rounded-3xl p-6 sm:p-10">
               <span
                 className="pointer-events-none absolute -right-16 -top-16 size-48 rounded-full bg-primary/20 blur-3xl"
                 aria-hidden
