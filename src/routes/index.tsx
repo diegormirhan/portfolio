@@ -124,7 +124,7 @@ function ContactForm() {
 
   return (
     <form
-      className="glass-liquid card-modern rounded-3xl p-6"
+      className="card-modern rounded-2xl p-6 sm:p-8"
       onSubmit={(event) => {
         event.preventDefault();
         window.location.href = mailto;
@@ -255,12 +255,8 @@ function Home() {
         <SectionHeading eyebrow={t.about.eyebrow} title={t.about.title} />
         <div className="mt-8 grid gap-5 sm:mt-10 lg:grid-cols-[1.6fr_1fr]">
           <Reveal>
-            <div className="card-modern relative h-full overflow-hidden rounded-3xl p-6 sm:p-8">
-              <span
-                className="pointer-events-none absolute -right-16 -top-16 size-48 rounded-full bg-primary/20 blur-3xl"
-                aria-hidden
-              />
-              <p className="text-base leading-relaxed text-foreground/90 sm:text-lg">
+            <div className="card-modern h-full rounded-2xl p-8">
+              <p className="text-lg leading-relaxed text-foreground/90 sm:text-xl font-medium tracking-tight">
                 {content.summary}
               </p>
               <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
@@ -286,7 +282,7 @@ function Home() {
           </Reveal>
           <Reveal delay={0.1}>
             <div className="flex h-full flex-col gap-5">
-              <div className="card-modern flex flex-col items-start rounded-3xl p-6 sm:p-8">
+              <div className="card-modern flex flex-col items-start rounded-2xl p-8">
                 <div className="flex items-center gap-3">
                   <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-amber-400/10 text-amber-400 ring-1 ring-amber-400/20">
                     <Zap className="size-5" aria-hidden />
@@ -299,7 +295,7 @@ function Home() {
                   {t.about.currentlyText}
                 </p>
               </div>
-              <div className="card-modern flex flex-col items-start rounded-3xl p-6 sm:p-8">
+              <div className="card-modern flex flex-col items-start rounded-2xl p-8">
                 <div className="flex items-center gap-3">
                   <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-emerald-400/10 text-emerald-400 ring-1 ring-emerald-400/20">
                     <Globe className="size-5" aria-hidden />
@@ -418,7 +414,7 @@ function Home() {
                 href={project.url}
                 target="_blank"
                 rel="noreferrer"
-                className="card-modern group relative flex h-full flex-col overflow-hidden rounded-3xl p-6 transition-all hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5"
+                className="card-modern group flex h-full flex-col rounded-2xl p-6 sm:p-8"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">

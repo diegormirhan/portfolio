@@ -19,11 +19,11 @@ export function SectionHeading({
     <div className={cn("flex flex-wrap items-end justify-between gap-4", className)}>
       <div className="max-w-2xl">
         {eyebrow ? (
-          <span className="glass-pill inline-flex rounded-full px-4 py-1.5 font-mono text-xs uppercase tracking-[0.25em] text-primary">
+          <span className="inline-flex rounded-md border border-primary/20 bg-primary/5 px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-primary">
             {eyebrow}
           </span>
         ) : null}
-        <h2 className="mt-2 text-3xl font-semibold sm:text-4xl">{title}</h2>
+        <h2 className="mt-4 text-3xl font-bold tracking-tight sm:text-5xl">{title}</h2>
         {description ? <p className="mt-3 text-muted-foreground">{description}</p> : null}
       </div>
       {action}
