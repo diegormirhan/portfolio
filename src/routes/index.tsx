@@ -212,7 +212,7 @@ function Home() {
   return (
     <div className="relative">
       <Background />
-      <section id="inicio">
+      <section id="inicio" className="relative">
         <div className="mx-auto max-w-6xl px-5 pb-24 pt-32 sm:pb-32 sm:pt-48 lg:pb-40 lg:pt-56 relative z-10">
           <Reveal>
             <div className="flex flex-col items-start">
