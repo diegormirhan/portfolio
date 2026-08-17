@@ -67,6 +67,7 @@
   --color-background: var(--color-paper);
   --color-foreground: var(--color-ink);
   --color-primary: var(--color-accent);
+  --color-highlight: var(--color-accent);
   --color-border: var(--color-rule);
   --color-muted: var(--color-muted);
   --color-card: var(--color-surface);
@@ -177,13 +178,22 @@
 .foot-stmt__meta {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+  align-items: center;
   padding-block-start: var(--space-md);
   border-top: 1px solid var(--color-rule);
+  font-family: var(--font-mono);
   font-size: var(--text-xs);
   color: var(--color-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
+}
+
+@media (max-width: 640px) {
+  .foot-stmt__meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-md);
+  }
 }
 
 /* Redesigned Grid Items */
