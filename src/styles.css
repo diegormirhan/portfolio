@@ -63,47 +63,55 @@
   --card-foreground: oklch(0.25 0.02 30);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.25 0.02 30);
-  --primary: oklch(0.45 0.2 330);
-  --primary-foreground: oklch(0.99 0.005 30);
+  --primary: oklch(0.5 0.2 320);
+  --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.94 0.01 30);
   --secondary-foreground: oklch(0.3 0.02 30);
   --muted: oklch(0.92 0.01 30);
   --muted-foreground: oklch(0.5 0.02 30);
-  --accent: oklch(0.96 0.01 330);
-  --accent-foreground: oklch(0.45 0.2 330);
+  --accent: oklch(0.94 0.03 320);
+  --accent-foreground: oklch(0.4 0.2 320);
   --destructive: oklch(0.6 0.2 25);
   --destructive-foreground: oklch(0.99 0.005 30);
-  --border: oklch(0.85 0.01 30);
+  --border: oklch(0.85 0.02 30);
   --input: oklch(0.9 0.01 30);
-  --ring: oklch(0.45 0.2 330 / 30%);
-  --surface: oklch(0.96 0.005 30);
-  --highlight: oklch(0.5 0.2 330);
-  --highlight-foreground: oklch(0.99 0.005 30);
+  --ring: oklch(0.5 0.2 320 / 30%);
+  --surface: oklch(0.96 0.01 30);
+  --highlight: oklch(0.5 0.2 320);
+  --highlight-foreground: oklch(1 0 0);
+
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.07), 0 2px 4px -2px rgb(0 0 0 / 0.06);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.08), 0 4px 6px -4px rgb(0 0 0 / 0.08);
 }
 
 .dark {
-  --background: oklch(0.18 0.01 30);
-  --foreground: oklch(0.92 0.01 30);
-  --card: oklch(0.22 0.01 30);
-  --card-foreground: oklch(0.92 0.01 30);
-  --popover: oklch(0.22 0.01 30);
-  --popover-foreground: oklch(0.92 0.01 30);
-  --primary: oklch(0.7 0.15 330);
-  --primary-foreground: oklch(0.15 0.01 30);
-  --secondary: oklch(0.26 0.01 30);
-  --secondary-foreground: oklch(0.85 0.01 30);
-  --muted: oklch(0.28 0.01 30);
-  --muted-foreground: oklch(0.65 0.01 30);
-  --accent: oklch(0.3 0.05 330);
-  --accent-foreground: oklch(0.85 0.1 330);
+  --background: oklch(0.12 0.015 280);
+  --foreground: oklch(0.95 0.01 280);
+  --card: oklch(0.18 0.02 280);
+  --card-foreground: oklch(0.95 0.01 280);
+  --popover: oklch(0.18 0.02 280);
+  --popover-foreground: oklch(0.95 0.01 280);
+  --primary: oklch(0.7 0.15 320);
+  --primary-foreground: oklch(0.1 0.02 280);
+  --secondary: oklch(0.22 0.02 280);
+  --secondary-foreground: oklch(0.9 0.02 280);
+  --muted: oklch(0.22 0.02 280);
+  --muted-foreground: oklch(0.7 0.02 280);
+  --accent: oklch(0.25 0.05 320);
+  --accent-foreground: oklch(0.85 0.1 320);
   --destructive: oklch(0.65 0.2 25);
   --destructive-foreground: oklch(0.95 0.01 30);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.7 0.15 330 / 40%);
-  --surface: oklch(0.24 0.01 30);
-  --highlight: oklch(0.75 0.12 330);
-  --highlight-foreground: oklch(0.15 0.01 30);
+  --border: oklch(0.28 0.02 280);
+  --input: oklch(0.25 0.02 280);
+  --ring: oklch(0.7 0.15 320 / 40%);
+  --surface: oklch(0.2 0.02 280);
+  --highlight: oklch(0.75 0.12 320);
+  --highlight-foreground: oklch(0.1 0.02 280);
+
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.4), 0 2px 4px -2px rgb(0 0 0 / 0.3);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.5), 0 4px 6px -4px rgb(0 0 0 / 0.4);
 }
 
 @layer base {
@@ -149,10 +157,9 @@
 
 @utility glass {
   background: color-mix(in oklch, var(--color-surface) 60%, transparent);
+  backdrop-filter: blur(12px);
   border: 1px solid var(--color-border);
-  box-shadow: 
-    0 1px 2px rgba(0,0,0,0.05),
-    inset 0 1px 0 rgba(255,255,255,0.05);
+  box-shadow: var(--shadow-sm);
 }
 
 @utility glass-liquid {
@@ -170,14 +177,14 @@
 
 @utility card-modern {
   background: var(--color-card);
-  border: 1px solid var(--color-border);
+  border: 1.5px solid var(--color-border);
+  box-shadow: var(--shadow-md);
   transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   
   &:hover {
     transform: translateY(-2px);
     border-color: var(--color-primary);
-    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    box-shadow: var(--shadow-lg);
   }
 }
 
