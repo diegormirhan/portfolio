@@ -96,6 +96,7 @@
   --radius-sm: calc(var(--radius-lg) - 4px);
 }
 
+@layer utilities {
   .site-frame {
     display: none;
   }
