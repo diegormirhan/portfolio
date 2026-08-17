@@ -78,7 +78,7 @@ export function ProjectCard({ project }: { project: Project }) {
 
 export function ProjectCardSkeleton() {
   return (
-    <Card className="glass-card h-[280px] opacity-50 animate-pulse">
+    <Card className="technical-card h-[280px] opacity-50 animate-pulse">
       <CardHeader className="space-y-2">
         <div className="h-3 w-20 bg-muted rounded" />
         <div className="h-6 w-3/4 bg-muted rounded" />
