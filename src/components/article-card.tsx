@@ -17,7 +17,7 @@ export function ArticleCard({ article }: { article: Article }) {
       transition={{ duration: 0.5 }}
       className="h-full"
     >
-      <Card className="glass-card group flex h-full flex-col overflow-hidden transition-all hover:scale-[1.02]">
+      <Card className="technical-card group flex h-full flex-col overflow-hidden">
         <div className="relative aspect-[16/9] overflow-hidden">
           {article.thumbnail ? (
             <img
@@ -40,8 +40,8 @@ export function ArticleCard({ article }: { article: Article }) {
 
         <CardHeader className="space-y-2 pb-2">
           <div className="flex justify-between items-center">
-            <span className="font-mono text-[10px] uppercase tracking-widest text-primary">
-              {formatDate(article.publishedAt)}
+            <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-muted-foreground">
+              {formatDate(article.publishedAt)} // LOG_{Math.floor(Math.random() * 1000)}
             </span>
           </div>
           <h3 className="text-lg font-bold leading-tight">
@@ -81,7 +81,7 @@ export function ArticleCard({ article }: { article: Article }) {
 
 export function ArticleCardSkeleton() {
   return (
-    <Card className="glass-card h-[400px] overflow-hidden opacity-50 animate-pulse">
+    <Card className="technical-card h-[400px] overflow-hidden opacity-50 animate-pulse">
       <div className="aspect-[16/9] w-full bg-muted" />
       <CardHeader className="space-y-2">
         <div className="h-3 w-20 bg-muted rounded" />

@@ -17,11 +17,11 @@ export function ProjectCard({ project }: { project: Project }) {
       transition={{ duration: 0.5 }}
       className="h-full"
     >
-      <Card className="glass-card flex h-full flex-col transition-all hover:scale-[1.02]">
+      <Card className="technical-card flex h-full flex-col">
         <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-4">
           <div className="flex flex-col gap-1">
-            <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-primary">
-              {t.projects.pinnedTitle}
+            <span className="font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+              {t.projects.pinnedTitle} // 0x{project.stars.toString(16).padStart(2, '0')}
             </span>
             <h3 className="text-lg font-bold leading-tight">
               <a href={project.url} target="_blank" rel="noreferrer" className="hover:text-primary transition-colors">
@@ -29,7 +29,7 @@ export function ProjectCard({ project }: { project: Project }) {
               </a>
             </h3>
           </div>
-          <Badge variant="secondary" className="font-mono text-[10px] gap-1 px-2 py-0">
+          <Badge variant="outline" className="font-mono text-[10px] gap-1 px-2 py-0 border-muted">
             <Star className="size-3 fill-primary text-primary" /> {project.stars}
           </Badge>
         </CardHeader>
@@ -40,7 +40,7 @@ export function ProjectCard({ project }: { project: Project }) {
           </p>
           <div className="mt-6 flex flex-wrap gap-2">
             {project.topics.slice(0, 3).map((topic) => (
-              <Badge key={topic} variant="outline" className="font-mono text-[9px] uppercase tracking-wider text-muted-foreground/80">
+              <Badge key={topic} variant="secondary" className="font-mono text-[9px] uppercase tracking-wider bg-muted text-muted-foreground">
                 {topic}
               </Badge>
             ))}
@@ -78,7 +78,7 @@ export function ProjectCard({ project }: { project: Project }) {
 
 export function ProjectCardSkeleton() {
   return (
-    <Card className="glass-card h-[280px] opacity-50 animate-pulse">
+    <Card className="technical-card h-[280px] opacity-50 animate-pulse">
       <CardHeader className="space-y-2">
         <div className="h-3 w-20 bg-muted rounded" />
         <div className="h-6 w-3/4 bg-muted rounded" />
