@@ -83,26 +83,28 @@ export const Route = createFileRoute("/")({
 
 function Timeline({ entries, icon: Icon = Sparkles }: { entries: TimelineEntry[], icon?: any }) {
   return (
-    <ol className="relative mt-8 border-l border-border ml-16 sm:ml-8 pl-8 sm:pl-10">
+    <ol className="relative mt-12 space-y-12 border-l-2 border-border ml-6 pl-10">
       {entries.map((entry, idx) => (
-        <li key={`${entry.title}-${entry.period}`} className="group pb-10 last:pb-0">
+        <li key={`${entry.title}-${entry.period}`} className="relative">
           <Reveal delay={idx * 0.1}>
-            <div className="absolute -left-[48px] sm:-left-[43px] mt-1.5 flex size-8 sm:size-7 items-center justify-center rounded-full bg-primary text-primary-foreground ring-4 ring-background border border-primary/20 transition-transform group-hover:scale-110">
-              <Icon className="size-4 sm:size-3.5" aria-hidden />
+            <div className="absolute -left-[51px] top-0 flex size-10 items-center justify-center rounded-xl bg-card border-2 border-border text-primary shadow-sm transition-transform group-hover:scale-110">
+              <Icon className="size-5" aria-hidden />
             </div>
-            <span className="font-mono text-xs uppercase tracking-[0.2em] text-primary/80">{entry.period}</span>
-            <h3 className="mt-2 text-xl font-semibold">{entry.title}</h3>
-            <p className="text-sm text-muted-foreground">{entry.org}</p>
-            <p className="mt-3 max-w-2xl text-sm text-muted-foreground">{entry.description}</p>
-            {entry.tags ? (
-              <ul className="mt-4 flex flex-wrap gap-2">
-                {entry.tags.map((tag) => (
-                  <li key={tag} className="glass rounded-full px-3 py-1 font-mono text-[11px] hover:border-primary/40 transition-colors">
-                    {tag}
-                  </li>
-                ))}
-              </ul>
-            ) : null}
+            <div className="flex flex-col gap-1">
+              <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground/80">{entry.period}</span>
+              <h3 className="text-xl font-bold tracking-tight">{entry.title}</h3>
+              <p className="font-medium text-primary/90">{entry.org}</p>
+              <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground">{entry.description}</p>
+              {entry.tags ? (
+                <ul className="mt-5 flex flex-wrap gap-2">
+                  {entry.tags.map((tag) => (
+                    <li key={tag} className="inline-flex items-center rounded-md border border-border bg-surface/50 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                      {tag}
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+            </div>
           </Reveal>
         </li>
       ))}
@@ -211,31 +213,39 @@ function Home() {
     <div className="relative">
       <Background />
       <section id="inicio">
-        <div className="mx-auto max-w-6xl px-5 pb-20 pt-32 sm:pb-28 sm:pt-40 lg:pb-32 lg:pt-44 relative z-10">
+        <div className="mx-auto max-w-6xl px-5 pb-24 pt-32 sm:pb-32 sm:pt-48 lg:pb-40 lg:pt-56 relative z-10">
           <Reveal>
-            {content.location ? (
-              <span className="glass inline-flex rounded-full px-4 py-1.5 font-mono text-xs uppercase tracking-[0.25em] text-primary">
-                {content.location}
-              </span>
-            ) : null}
-            <h1 className="mt-6 max-w-4xl text-4xl font-semibold leading-[1.05] sm:text-6xl lg:text-7xl">
-              {profile.name} — <span className="text-primary">{content.role}</span>
-            </h1>
-            <p className="mt-6 max-w-2xl text-lg text-muted-foreground">{content.headline}</p>
-            <div className="mt-9 flex flex-wrap gap-3">
-              <a
-                href="#projetos"
-                className="glass-pill inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium"
-              >
-                {t.hero.projects} <ArrowRight className="size-4" aria-hidden />
-              </a>
-              <a
-                href={profile.resume}
-                download
-                className="glass inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium"
-              >
-                <Download className="size-4 text-sky-400" aria-hidden /> {t.hero.resume}
-              </a>
+            <div className="flex flex-col items-start">
+              {content.location ? (
+                <span className="inline-flex rounded-md border border-primary/20 bg-primary/5 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-primary mb-8">
+                  {content.location}
+                </span>
+              ) : null}
+              <h1 className="max-w-4xl text-5xl font-bold leading-[0.95] tracking-tighter sm:text-7xl lg:text-8xl">
+                {profile.name.split(' ').map((word, i) => (
+                  <span key={i} className={i === 1 ? "text-primary block" : "block"}>{word}</span>
+                ))}
+              </h1>
+              <div className="mt-12 flex flex-col sm:flex-row sm:items-center gap-8">
+                <p className="max-w-md text-xl leading-relaxed text-muted-foreground font-medium">
+                  {content.headline}
+                </p>
+                <div className="flex flex-wrap gap-4">
+                  <a
+                    href="#projetos"
+                    className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/20 transition-transform hover:-translate-y-0.5"
+                  >
+                    {t.hero.projects} <ArrowRight className="size-4" aria-hidden />
+                  </a>
+                  <a
+                    href={profile.resume}
+                    download
+                    className="inline-flex items-center gap-2 rounded-xl border-2 border-border bg-card px-6 py-3 text-sm font-bold transition-all hover:bg-surface hover:border-primary/30"
+                  >
+                    <Download className="size-4 text-primary" aria-hidden /> {t.hero.resume}
+                  </a>
+                </div>
+              </div>
             </div>
           </Reveal>
         </div>
