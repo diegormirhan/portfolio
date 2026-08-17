@@ -340,25 +340,21 @@ function Home() {
             const { icon: Icon, colorClass, bgClass } = skillGroupMeta[group.icon];
             return (
               <Reveal key={group.title} delay={groupIdx * 0.1}>
-                <div className="card-modern group relative flex h-full items-start gap-6 overflow-hidden rounded-3xl p-6 transition-all hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5 sm:p-7">
-                  <span
-                    className="pointer-events-none absolute -right-6 -top-6 size-32 rounded-full bg-primary/20 blur-3xl opacity-40"
-                    aria-hidden
-                  />
-                  <div className={`inline-flex size-14 shrink-0 items-center justify-center rounded-2xl ${bgClass} ${colorClass} ring-1 ring-current/20 transition-transform group-hover:scale-110`}>
+                <div className="card-modern group flex h-full items-start gap-6 rounded-2xl p-6 sm:p-8">
+                  <div className={`inline-flex size-14 shrink-0 items-center justify-center rounded-xl ${bgClass} ${colorClass} border border-current/20 transition-transform group-hover:scale-110`}>
                     <Icon className="size-7" aria-hidden />
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-xl font-bold tracking-tight text-foreground/90">{group.title}</h3>
-                    <ul className="mt-4 flex flex-wrap gap-2">
+                    <h3 className="text-xl font-bold tracking-tight">{group.title}</h3>
+                    <ul className="mt-5 flex flex-wrap gap-2">
                       {group.items.map((item) => {
                         const { icon: ItemIcon, iconClass, chipClass } = getSkillConfig(item);
                         return (
                           <li
                             key={item}
-                            className={`inline-flex items-center gap-2 rounded-lg border border-border/50 ${chipClass} px-3.5 py-2 font-mono text-[13px] font-medium text-muted-foreground/90 transition-colors hover:border-primary/40`}
+                            className={`inline-flex items-center gap-2 rounded-lg border border-border bg-surface/30 px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-wider text-muted-foreground transition-all hover:border-primary/40 hover:bg-surface`}
                           >
-                            <ItemIcon className={`size-4.5 ${iconClass}`} aria-hidden />
+                            <ItemIcon className={`size-3.5 ${iconClass}`} aria-hidden />
                             {item}
                           </li>
                         );
@@ -382,10 +378,10 @@ function Home() {
           <Reveal>
             <div className="relative">
               <div className="flex items-center gap-3 mb-6">
-                <div className="flex size-10 items-center justify-center rounded-xl bg-violet-400/10 text-violet-400">
+                <div className="flex size-10 items-center justify-center rounded-lg bg-violet-400/10 text-violet-400 border border-violet-400/20">
                   <Layers className="size-5" />
                 </div>
-              <h3 className="text-xl font-bold">{lang === 'pt' ? 'Experiência Profissional' : 'Professional Experience'}</h3>
+                <h3 className="text-2xl font-bold tracking-tight">{lang === 'pt' ? 'Experiência Profissional' : 'Professional Experience'}</h3>
             </div>
             <Timeline entries={content.experience} icon={Layers} />
           </div>
@@ -393,10 +389,10 @@ function Home() {
         <Reveal delay={0.2}>
           <div className="relative">
             <div className="flex items-center gap-3 mb-6">
-              <div className="flex size-10 items-center justify-center rounded-xl bg-blue-400/10 text-blue-400">
-                <Sparkles className="size-5" />
-              </div>
-              <h3 className="text-xl font-bold">{lang === 'pt' ? 'Formação Acadêmica' : 'Education'}</h3>
+                <div className="flex size-10 items-center justify-center rounded-lg bg-blue-400/10 text-blue-400 border border-blue-400/20">
+                  <Sparkles className="size-5" />
+                </div>
+                <h3 className="text-2xl font-bold tracking-tight">{lang === 'pt' ? 'Formação Acadêmica' : 'Education'}</h3>
             </div>
             <Timeline entries={content.education} icon={Sparkles} />
           </div>
