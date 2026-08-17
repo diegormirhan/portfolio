@@ -218,9 +218,7 @@ function Home() {
         <Reveal>
           <div className="num-label mb-8">01 — Início</div>
           <h1 className="display-xxl">
-            {profile.name.split(' ').map((word, i) => (
-              <span key={i} className={i === 1 ? "text-primary block" : "block"}>{word}</span>
-            ))}
+            {profile.name}
           </h1>
           <p className="hero-marquee__sub">
             {content.headline}
