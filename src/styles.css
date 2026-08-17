@@ -5,7 +5,7 @@
 
 /*
  * Design system — portfólio Diego Mirhan.
- * Paleta base: #4F1271, #783F8E, #4A4063, #BFACC8, #C8C6D7.
+ * Paleta base: Emerald Night (Deep Greens & Slates).
  * Todas as cores em oklch e expostas como tokens semânticos.
  */
 
@@ -56,55 +56,55 @@
 
 :root {
   --radius: 0.875rem;
-  /* Tema claro: agora alinhado com a paleta do site */
-  --background: oklch(0.92 0.015 300);
-  --foreground: oklch(0.24 0.05 300);
-  --card: oklch(0.96 0.01 300);
-  --card-foreground: oklch(0.24 0.05 300);
-  --popover: oklch(0.96 0.01 300);
-  --popover-foreground: oklch(0.24 0.05 300);
-  --primary: oklch(0.45 0.16 313);
-  --primary-foreground: oklch(0.98 0.005 300);
-  --secondary: oklch(0.88 0.02 300);
-  --secondary-foreground: oklch(0.32 0.08 305);
-  --muted: oklch(0.85 0.015 300);
-  --muted-foreground: oklch(0.48 0.035 300);
-  --accent: oklch(0.82 0.04 305);
-  --accent-foreground: oklch(0.28 0.09 310);
+  /* Tema claro: Emerald Mist */
+  --background: oklch(0.96 0.01 160);
+  --foreground: oklch(0.25 0.04 165);
+  --card: oklch(0.98 0.005 160);
+  --card-foreground: oklch(0.25 0.04 165);
+  --popover: oklch(0.98 0.005 160);
+  --popover-foreground: oklch(0.25 0.04 165);
+  --primary: oklch(0.48 0.14 155);
+  --primary-foreground: oklch(0.98 0.005 160);
+  --secondary: oklch(0.92 0.02 160);
+  --secondary-foreground: oklch(0.35 0.08 160);
+  --muted: oklch(0.88 0.015 160);
+  --muted-foreground: oklch(0.5 0.03 160);
+  --accent: oklch(0.85 0.04 165);
+  --accent-foreground: oklch(0.3 0.07 160);
   --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.98 0.005 300);
-  --border: oklch(0.8 0.02 300 / 15%);
-  --input: oklch(0.8 0.02 300 / 20%);
-  --ring: oklch(0.45 0.16 313);
-  --surface: oklch(0.9 0.01 300);
-  --highlight: oklch(0.55 0.19 316);
-  --highlight-foreground: oklch(0.98 0.005 300);
+  --destructive-foreground: oklch(0.98 0.005 160);
+  --border: oklch(0.2 0.04 165 / 10%);
+  --input: oklch(0.2 0.04 165 / 15%);
+  --ring: oklch(0.48 0.14 155);
+  --surface: oklch(0.94 0.01 160);
+  --highlight: oklch(0.55 0.15 165);
+  --highlight-foreground: oklch(0.98 0.005 160);
 }
 
 .dark {
-  /* Tema escuro (padrão): ardósia arroxeada mais profunda */
-  --background: oklch(0.165 0.03 300);
-  --foreground: oklch(0.94 0.015 300);
-  --card: oklch(0.22 0.04 300);
-  --card-foreground: oklch(0.94 0.015 300);
-  --popover: oklch(0.22 0.04 300);
-  --popover-foreground: oklch(0.94 0.015 300);
-  --primary: oklch(0.62 0.16 315);
-  --primary-foreground: oklch(0.14 0.04 305);
-  --secondary: oklch(0.28 0.045 300);
-  --secondary-foreground: oklch(0.92 0.02 300);
-  --muted: oklch(0.26 0.04 300);
-  --muted-foreground: oklch(0.72 0.03 300);
-  --accent: oklch(0.34 0.09 310);
-  --accent-foreground: oklch(0.93 0.02 300);
+  /* Tema escuro: Emerald Night */
+  --background: oklch(0.14 0.02 160);
+  --foreground: oklch(0.96 0.01 160);
+  --card: oklch(0.18 0.03 160);
+  --card-foreground: oklch(0.96 0.01 160);
+  --popover: oklch(0.18 0.03 160);
+  --popover-foreground: oklch(0.96 0.01 160);
+  --primary: oklch(0.65 0.18 155);
+  --primary-foreground: oklch(0.12 0.03 160);
+  --secondary: oklch(0.22 0.04 160);
+  --secondary-foreground: oklch(0.94 0.015 160);
+  --muted: oklch(0.2 0.03 160);
+  --muted-foreground: oklch(0.75 0.02 160);
+  --accent: oklch(0.35 0.08 160);
+  --accent-foreground: oklch(0.95 0.01 160);
   --destructive: oklch(0.68 0.19 22);
-  --destructive-foreground: oklch(0.98 0.005 300);
-  --border: oklch(1 0 0 / 12%);
-  --input: oklch(1 0 0 / 16%);
-  --ring: oklch(0.68 0.15 316);
-  --surface: oklch(0.2 0.04 300);
-  --highlight: oklch(0.72 0.13 312);
-  --highlight-foreground: oklch(0.16 0.04 305);
+  --destructive-foreground: oklch(0.98 0.005 160);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 14%);
+  --ring: oklch(0.65 0.18 155);
+  --surface: oklch(0.16 0.03 160);
+  --highlight: oklch(0.75 0.15 170);
+  --highlight-foreground: oklch(0.12 0.03 160);
 }
 
 @layer base {
