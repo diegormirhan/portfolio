@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "tailwindcss/preflight";
 @source "../src";
 
 @custom-variant dark (&:is(.dark *));
@@ -133,16 +134,12 @@
   }
 
   body {
-    background: var(--color-background);
-    color: var(--color-foreground);
+    background: var(--background);
+    color: var(--foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     position: relative;
     overflow-x: hidden;
-  }
-
-  html, body {
-    height: 100%;
     margin: 0;
   }
 
@@ -151,6 +148,7 @@
   h3,
   h4 {
     font-family: var(--font-display);
+    color: var(--foreground);
     letter-spacing: -0.02em;
   }
 }
