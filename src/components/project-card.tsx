@@ -1,4 +1,4 @@
-import { ExternalLink, GitFork, Star, Folder } from "lucide-react";
+import { ExternalLink, Star } from "lucide-react";
 import { languageColors, type Project } from "../lib/github";
 import { useI18n } from "../lib/i18n";
 import { motion } from "framer-motion";
@@ -16,8 +16,8 @@ export function ProjectCard({ project }: { project: Project }) {
           <div className="portfolio-card__meta">
             Project
           </div>
-          <h3 className="portfolio-card__title group-hover:text-primary transition-colors">
-            <a href={project.url} target="_blank" rel="noreferrer">
+          <h3 className="portfolio-card__title">
+            <a href={project.url} target="_blank" rel="noreferrer" className="hover:text-primary transition-colors">
               {project.name}
             </a>
           </h3>
@@ -74,21 +74,21 @@ export function ProjectCard({ project }: { project: Project }) {
 
 export function ProjectCardSkeleton() {
   return (
-    <div className="card-modern h-[280px] rounded-2xl p-6 opacity-50">
+    <div className="portfolio-card h-[280px] opacity-50">
       <div className="flex justify-between">
         <div className="space-y-3 flex-1">
-          <div className="skeleton-block h-3 w-20" />
-          <div className="skeleton-block h-6 w-3/4" />
+          <div className="h-3 w-20 bg-muted/20 animate-pulse rounded" />
+          <div className="h-6 w-3/4 bg-muted/20 animate-pulse rounded" />
         </div>
-        <div className="skeleton-block h-6 w-12 rounded-full" />
+        <div className="h-6 w-12 rounded-full bg-muted/20 animate-pulse" />
       </div>
       <div className="mt-6 space-y-2">
-        <div className="skeleton-block h-4 w-full" />
-        <div className="skeleton-block h-4 w-5/6" />
+        <div className="h-4 w-full bg-muted/20 animate-pulse rounded" />
+        <div className="h-4 w-5/6 bg-muted/20 animate-pulse rounded" />
       </div>
       <div className="mt-auto pt-6 flex justify-between">
-        <div className="skeleton-block h-4 w-16" />
-        <div className="skeleton-block h-4 w-20" />
+        <div className="h-4 w-16 bg-muted/20 animate-pulse rounded" />
+        <div className="h-4 w-20 bg-muted/20 animate-pulse rounded" />
       </div>
     </div>
   );

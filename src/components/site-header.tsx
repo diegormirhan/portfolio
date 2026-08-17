@@ -55,7 +55,7 @@ export function SiteHeader() {
   const { t } = useI18n();
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 py-6 mix-blend-difference invert dark:invert-0">
+    <header className="fixed inset-x-0 top-0 z-50 py-6 mix-blend-difference">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-5">
         <a href="#inicio" className="text-sm font-bold tracking-tighter uppercase">
           {profile.name}

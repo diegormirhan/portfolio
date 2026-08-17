@@ -337,10 +337,10 @@ function Home() {
               <div className="mt-16 grid gap-16 lg:grid-cols-2">
                 <div>
                   <h3 className="num-label mb-8">Experiência Profissional</h3>
-                  <div className="space-y-12 border-l border-rule pl-8">
+                  <div className="space-y-12 border-l border-rule ml-4 sm:ml-0 pl-8 sm:pl-8">
                     {content.experience.map((exp) => (
                       <div key={exp.title} className="relative">
-                        <div className="absolute -left-[33px] top-1.5 size-2 rounded-full bg-primary" />
+                        <div className="absolute -left-[37px] sm:-left-[33px] top-1.5 size-2 rounded-full bg-primary" />
                         <span className="num-label block mb-2">{exp.period}</span>
                         <h4 className="text-xl font-bold mb-1">{exp.title}</h4>
                         <p className="text-primary font-bold text-sm mb-4">{exp.org}</p>
@@ -351,10 +351,10 @@ function Home() {
                 </div>
                 <div>
                   <h3 className="num-label mb-8">Formação Acadêmica</h3>
-                  <div className="space-y-12 border-l border-rule pl-8">
+                  <div className="space-y-12 border-l border-rule ml-4 sm:ml-0 pl-8 sm:pl-8">
                     {content.education.map((edu) => (
                       <div key={edu.title} className="relative">
-                        <div className="absolute -left-[33px] top-1.5 size-2 rounded-full bg-primary" />
+                        <div className="absolute -left-[37px] sm:-left-[33px] top-1.5 size-2 rounded-full bg-primary" />
                         <span className="num-label block mb-2">{edu.period}</span>
                         <h4 className="text-xl font-bold mb-1">{edu.title}</h4>
                         <p className="text-primary font-bold text-sm mb-4">{edu.org}</p>

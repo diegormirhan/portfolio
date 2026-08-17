@@ -67,6 +67,7 @@
   --color-background: var(--color-paper);
   --color-foreground: var(--color-ink);
   --color-primary: var(--color-accent);
+  --color-highlight: var(--color-accent);
   --color-border: var(--color-rule);
   --color-muted: var(--color-muted);
   --color-card: var(--color-surface);

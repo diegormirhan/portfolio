@@ -34,8 +34,8 @@ export function ArticleCard({ article }: { article: Article }) {
         </span>
       </div>
 
-      <h3 className="portfolio-card__title group-hover:text-primary transition-colors">
-        <a href={article.link} target="_blank" rel="noreferrer">
+      <h3 className="portfolio-card__title">
+        <a href={article.link} target="_blank" rel="noreferrer" className="hover:text-primary transition-colors">
           {article.title}
         </a>
       </h3>
@@ -69,18 +69,18 @@ export function ArticleCard({ article }: { article: Article }) {
 
 export function ArticleCardSkeleton() {
   return (
-    <div className="card-modern h-[400px] overflow-hidden rounded-2xl opacity-50">
-      <div className="skeleton-block aspect-[16/9] w-full rounded-none" />
+    <div className="portfolio-card h-[400px] overflow-hidden opacity-50">
+      <div className="aspect-[16/9] w-full bg-muted/20 animate-pulse rounded-none" />
       <div className="p-6 space-y-4">
         <div className="flex justify-between">
-          <div className="skeleton-block h-3 w-20" />
-          <div className="skeleton-block h-3 w-16" />
+          <div className="h-3 w-20 bg-muted/20 animate-pulse rounded" />
+          <div className="h-3 w-16 bg-muted/20 animate-pulse rounded" />
         </div>
-        <div className="skeleton-block h-6 w-full" />
-        <div className="skeleton-block h-4 w-5/6" />
+        <div className="h-6 w-full bg-muted/20 animate-pulse rounded" />
+        <div className="h-4 w-5/6 bg-muted/20 animate-pulse rounded" />
         <div className="mt-auto flex justify-between pt-2">
-          <div className="skeleton-block h-3 w-24" />
-          <div className="skeleton-block h-3 w-12" />
+          <div className="h-3 w-24 bg-muted/20 animate-pulse rounded" />
+          <div className="h-3 w-12 bg-muted/20 animate-pulse rounded" />
         </div>
       </div>
     </div>
