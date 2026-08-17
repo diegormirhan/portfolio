@@ -62,8 +62,8 @@ export function SiteHeader() {
   return (
     <header 
       className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-all duration-300",
-        scrolled ? "glass-header py-3" : "bg-transparent py-6"
+        "fixed inset-x-0 top-0 z-50 transition-all duration-300 foundry-header",
+        scrolled ? "py-3" : "py-6"
       )}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-5">
@@ -80,8 +80,8 @@ export function SiteHeader() {
               key={section.id}
               href={`#${section.id}`}
               className={cn(
-                "ios-pill",
-                active === section.id && "ios-pill-active"
+                "foundry-pill",
+                active === section.id && "foundry-pill-active"
               )}
             >
               {t.nav[section.id as SectionId]}
@@ -106,7 +106,7 @@ export function SiteHeader() {
 
       {open && (
         <nav
-          className="glass-header mt-2 mx-4 rounded-2xl p-4 lg:hidden animate-in slide-in-from-top-2"
+          className="foundry-header mt-2 mx-4 p-4 lg:hidden animate-in slide-in-from-top-2"
           aria-label={t.header.mobileNav}
         >
           <ul className="flex flex-col gap-2">
