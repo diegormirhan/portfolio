@@ -82,35 +82,33 @@ export const Route = createFileRoute("/")({
 
 function Timeline({ entries, icon: Icon = Sparkles }: { entries: TimelineEntry[], icon?: any }) {
  return (
-  <div className="relative mt-8 space-y-6">
-   {entries.map((entry, idx) => (
-    <Reveal key={`${entry.title}-${entry.period}`} delay={idx * 0.1}>
-     <div className="group relative flex gap-6 rounded-2xl border border-transparent p-4 transition-all hover:bg-muted/50 hover:border-border/50">
-      <div className="flex-none">
-       <div className="flex size-12 items-center justify-center rounded-xl bg-muted text-primary transition-transform group-hover:scale-110">
-        <Icon className="size-6" aria-hidden />
-       </div>
-      </div>
-      <div className="flex flex-col gap-1">
-       <div className="flex items-center gap-3">
-         <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-primary">{entry.period}</span>
-       </div>
-       <h3 className="text-lg font-bold leading-tight">{entry.title}</h3>
-       <p className="text-sm font-medium text-muted-foreground">{entry.org}</p>
-       <p className="mt-2 text-sm leading-relaxed text-muted-foreground/80">{entry.description}</p>
-       {entry.tags ? (
-        <div className="mt-4 flex flex-wrap gap-2">
-         {entry.tags.map((tag) => (
-          <Badge key={tag} variant="outline" className="font-mono text-[9px] uppercase tracking-wider">
-           {tag}
-          </Badge>
-         ))}
+  <div className="relative mt-12 space-y-12 border-l border-border pl-8">
+    {entries.map((entry, idx) => (
+     <Reveal key={`${entry.title}-${entry.period}`} delay={idx * 0.1}>
+      <div className="group relative">
+       {/* Timeline Marker */}
+       <div className="absolute -left-[41px] top-1 size-4 border-2 border-primary bg-background transition-transform group-hover:scale-125 group-hover:bg-primary" />
+       
+       <div className="flex flex-col gap-1">
+        <div className="flex items-center gap-3">
+          <span className="font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-primary">{entry.period}</span>
         </div>
-       ) : null}
+        <h3 className="text-lg font-bold leading-tight">{entry.title}</h3>
+        <p className="text-sm font-medium text-muted-foreground uppercase tracking-wider">{entry.org}</p>
+        <p className="mt-4 text-sm leading-relaxed text-muted-foreground/80 max-w-xl">{entry.description}</p>
+        {entry.tags ? (
+         <div className="mt-4 flex flex-wrap gap-2">
+          {entry.tags.map((tag) => (
+           <Badge key={tag} variant="secondary" className="font-mono text-[9px] uppercase tracking-wider bg-muted text-muted-foreground">
+            {tag}
+           </Badge>
+          ))}
+         </div>
+        ) : null}
+       </div>
       </div>
-     </div>
-    </Reveal>
-   ))}
+     </Reveal>
+    ))}
   </div>
  );
 }
@@ -126,7 +124,7 @@ function ContactForm() {
  )}&body=${encodeURIComponent(`${message}\n\n— ${name}`)}`;
 
  return (
-  <Card className="glass-card rounded-2xl border-border/40">
+  <Card className="technical-card border-border/40">
    <CardHeader>
      <h3 className="text-xl font-bold">{t.contact.title}</h3>
    </CardHeader>
@@ -147,7 +145,7 @@ function ContactForm() {
        value={name}
        onChange={(event) => setName(event.target.value)}
        required
-       className="w-full rounded-xl border border-border bg-background/50 px-4 py-2.5 outline-none focus:ring-2 focus:ring-primary/20"
+       className="w-full border border-border bg-background px-4 py-2.5 outline-none focus:border-primary transition-colors"
       />
      </div>
      <div className="grid gap-2">
@@ -158,7 +156,7 @@ function ContactForm() {
        id="subject"
        value={subject}
        onChange={(event) => setSubject(event.target.value)}
-       className="w-full rounded-xl border border-border bg-background/50 px-4 py-2.5 outline-none focus:ring-2 focus:ring-primary/20"
+       className="w-full border border-border bg-background px-4 py-2.5 outline-none focus:border-primary transition-colors"
       />
      </div>
      <div className="grid gap-2">
@@ -171,12 +169,12 @@ function ContactForm() {
        onChange={(event) => setMessage(event.target.value)}
        required
        rows={5}
-       className="w-full rounded-xl border border-border bg-background/50 px-4 py-2.5 outline-none focus:ring-2 focus:ring-primary/20"
+       className="w-full border border-border bg-background px-4 py-2.5 outline-none focus:border-primary transition-colors"
       />
      </div>
-     <Button type="submit" size="lg" className="mt-2 rounded-full font-bold uppercase tracking-widest">
+     <button type="submit" className="foundry-btn mt-2">
       {t.contact.send}
-     </Button>
+     </button>
      <p className="text-center text-[10px] text-muted-foreground">{t.contact.hint}</p>
     </form>
    </CardContent>
@@ -226,10 +224,10 @@ function Home() {
           <div className="mb-6 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">
             <span>01 — INÍCIO</span>
           </div>
-          <h1 className="text-display font-black leading-[0.9] tracking-tighter italic">
+          <h1 className="text-display font-black leading-[0.85] tracking-tighter">
             {profile.name}
           </h1>
-          <p className="mt-8 max-w-2xl text-xl font-medium text-muted-foreground/80 md:text-2xl lg:text-3xl leading-tight italic">
+          <p className="mt-8 max-w-2xl text-editorial text-xl md:text-2xl lg:text-3xl leading-tight">
             {content.headline}
           </p>
           <div className="mt-12 flex flex-wrap gap-6">
@@ -267,13 +265,13 @@ function Home() {
         {t.about.highlights.map((item) => {
          const { icon: Icon } = highlightMeta(item.title);
          return (
-          <Card key={item.title} className="glass-card group border-border/40 transition-all hover:border-primary/40">
+          <Card key={item.title} className="technical-card group border-border/40 transition-all">
            <CardHeader className="pb-2">
             <Icon className="size-6 text-primary mb-2 transition-transform group-hover:scale-110" />
-            <h3 className="text-sm font-bold uppercase tracking-tight">{item.title}</h3>
+            <h3 className="text-sm font-bold uppercase tracking-widest">{item.title}</h3>
            </CardHeader>
            <CardContent>
-            <p className="text-xs leading-relaxed text-muted-foreground">
+            <p className="text-xs leading-relaxed text-muted-foreground font-mono">
              {item.description}
             </p>
            </CardContent>
@@ -299,9 +297,9 @@ function Home() {
         {content.skillGroups.map((group) => {
          const { icon: Icon } = skillGroupMeta[group.icon];
          return (
-          <Card key={group.title} className="glass-card flex flex-col border-border/40 transition-all hover:scale-[1.02]">
+          <Card key={group.title} className="technical-card flex flex-col border-border/40">
            <CardHeader className="pb-4">
-            <div className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary mb-4">
+            <div className="flex size-10 items-center justify-center bg-primary/10 text-primary mb-4 border border-primary/20">
               <Icon className="size-5" />
             </div>
             <h3 className="text-sm font-bold uppercase tracking-widest">{group.title}</h3>
@@ -406,10 +404,10 @@ function Home() {
         
         <div className="grid gap-6 sm:grid-cols-2">
          {channels.map((chan) => (
-          <a key={chan.label} href={chan.href} className="group relative overflow-hidden rounded-2xl border border-border/40 p-6 transition-all hover:bg-muted/50 hover:border-primary/40">
+          <a key={chan.label} href={chan.href} className="technical-card group relative overflow-hidden p-6 transition-all">
            <chan.icon className="size-6 text-primary mb-4 transition-transform group-hover:scale-110" />
            <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{chan.label}</span>
-           <span className="mt-1 block text-lg font-bold">{chan.value}</span>
+           <span className="mt-1 block text-lg font-bold font-mono tracking-tight">{chan.value}</span>
           </a>
          ))}
         </div>
