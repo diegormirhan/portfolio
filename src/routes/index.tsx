@@ -220,32 +220,26 @@ function Home() {
    <Background />
    
    {/* Hero Section */}
-   <section id="inicio" className="flex min-h-[90dvh] flex-col justify-center px-5 pt-20">
-    <Reveal>
-     <div className="mx-auto max-w-6xl">
-      <div className="inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-[10px] font-bold uppercase tracking-widest text-primary mb-8">
-        <span className="relative flex size-2">
-         <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75"></span>
-         <span className="relative inline-flex size-2 rounded-full bg-primary"></span>
-        </span>
-        Available for work
-      </div>
-      <h1 className="text-display font-black leading-[0.9] tracking-tighter">
-       {profile.name}
-      </h1>
-      <p className="mt-8 max-w-2xl text-xl font-medium text-muted-foreground md:text-2xl lg:text-3xl leading-tight">
-       {content.headline}
-      </p>
-      <div className="mt-12 flex flex-wrap gap-4">
-       <Button asChild size="lg" className="rounded-full font-bold uppercase tracking-widest">
-        <a href="#projetos">{t.hero.projects}</a>
-       </Button>
-       <Button asChild variant="outline" size="lg" className="rounded-full font-bold uppercase tracking-widest bg-background/50 backdrop-blur-sm">
-        <a href={profile.resume} download>
-          <Download className="mr-2 size-4" /> {t.hero.resume}
-        </a>
-       </Button>
-      </div>
+    <section id="inicio" className="flex min-h-[90dvh] flex-col justify-center px-5 pt-20">
+      <Reveal>
+        <div className="mx-auto max-w-6xl">
+          <div className="mb-6 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-primary/60">
+            <span>01 — INÍCIO</span>
+          </div>
+          <h1 className="text-display font-black leading-[0.9] tracking-tighter italic">
+            {profile.name}
+          </h1>
+          <p className="mt-8 max-w-2xl text-xl font-medium text-muted-foreground/80 md:text-2xl lg:text-3xl leading-tight italic">
+            {content.headline}
+          </p>
+          <div className="mt-12 flex flex-wrap gap-6">
+            <a href="#projetos" className="group inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest transition-colors hover:text-primary">
+              {t.hero.projects} <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" />
+            </a>
+            <a href={profile.resume} download className="group inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest transition-colors hover:text-primary">
+              <Download className="size-4" /> {t.hero.resume}
+            </a>
+          </div>
      </div>
     </Reveal>
    </section>
