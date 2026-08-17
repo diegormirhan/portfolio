@@ -212,311 +212,251 @@ function Home() {
   return (
     <div className="relative">
       <Background />
-      <section id="inicio" className="relative min-h-[90vh] flex flex-col justify-center">
-        <div className="mx-auto max-w-6xl px-5 pb-24 pt-32 sm:pb-32 sm:pt-48 lg:pb-40 lg:pt-56 relative z-10">
-          <Reveal>
-            <div className="flex flex-col items-start">
-              {content.location ? (
-                <span className="inline-flex rounded-md border border-primary/20 bg-primary/5 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-primary mb-8">
-                  {content.location}
-                </span>
-              ) : null}
-              <h1 className="max-w-4xl text-5xl font-bold leading-[0.95] tracking-tighter sm:text-7xl lg:text-8xl">
-                {profile.name.split(' ').map((word, i) => (
-                  <span key={i} className={i === 1 ? "text-primary block" : "block"}>{word}</span>
-                ))}
-              </h1>
-              <div className="mt-12 flex flex-col sm:flex-row sm:items-center gap-8">
-                <p className="max-w-md text-xl leading-relaxed text-muted-foreground font-medium">
-                  {content.headline}
-                </p>
-                <div className="flex flex-wrap gap-4">
-                  <a
-                    href="#projetos"
-                    className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/20 transition-transform hover:-translate-y-0.5"
-                  >
-                    {t.hero.projects} <ArrowRight className="size-4" aria-hidden />
-                  </a>
-                  <a
-                    href={profile.resume}
-                    download
-                    className="inline-flex items-center gap-2 rounded-xl border-2 border-border bg-card px-6 py-3 text-sm font-bold transition-all hover:bg-surface hover:border-primary/30"
-                  >
-                    <Download className="size-4 text-primary" aria-hidden /> {t.hero.resume}
-                  </a>
+      
+      {/* Macrostructure: Marquee Hero */}
+      <section id="inicio" className="hero-marquee">
+        <Reveal>
+          <div className="num-label mb-8">01 — Início</div>
+          <h1 className="display-xxl">
+            {profile.name.split(' ').map((word, i) => (
+              <span key={i} className={i === 1 ? "text-primary block" : "block"}>{word}</span>
+            ))}
+          </h1>
+          <p className="hero-marquee__sub">
+            {content.headline}
+          </p>
+          <div className="mt-12 flex flex-wrap gap-6">
+            <a
+              href="#projetos"
+              className="inline-flex items-center gap-2 border-b-2 border-primary pb-1 text-sm font-bold tracking-tight hover:text-primary transition-all"
+            >
+              {t.hero.projects} <ArrowRight className="size-4" />
+            </a>
+            <a
+              href={profile.resume}
+              download
+              className="inline-flex items-center gap-2 border-b-2 border-rule pb-1 text-sm font-bold tracking-tight hover:border-primary transition-all"
+            >
+              <Download className="size-4 text-primary" /> {t.hero.resume}
+            </a>
+          </div>
+        </Reveal>
+      </section>
+
+      {/* S1 Left-margin numbered sections */}
+      <section id="sobre" className="mx-auto max-w-6xl px-5">
+        <Reveal>
+          <header className="head-margin">
+            <p className="num-label">02 — Sobre</p>
+            <div>
+              <h2 className="text-4xl sm:text-6xl">{t.about.title}</h2>
+              <div className="mt-12 grid gap-12 lg:grid-cols-[1.6fr_1fr]">
+                <div className="space-y-6">
+                  <p className="text-xl leading-relaxed font-medium">
+                    {content.summary}
+                  </p>
+                  <p className="text-muted-foreground">
+                    {t.about.extra}
+                  </p>
+                  
+                  <div className="grid gap-6 pt-8 sm:grid-cols-3">
+                    {t.about.highlights.map((item) => {
+                      const { icon: Icon } = highlightMeta(item.title);
+                      return (
+                        <div key={item.title} className="group">
+                          <Icon className="size-5 mb-3 text-primary" />
+                          <h3 className="text-sm font-bold uppercase tracking-tight mb-2">{item.title}</h3>
+                          <p className="text-xs leading-relaxed text-muted-foreground">
+                            {item.description}
+                          </p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                <div className="space-y-12">
+                  <div>
+                    <h3 className="num-label mb-4">{t.about.currently}</h3>
+                    <p className="text-lg font-medium">{t.about.currentlyText}</p>
+                  </div>
+                  <div>
+                    <h3 className="num-label mb-4">{t.about.languages}</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {content.languages.map((language) => (
+                        <span key={language} className="tag-monochrome">{language}</span>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </Reveal>
-        </div>
+          </header>
+        </Reveal>
       </section>
 
-      <section id="sobre" className="mx-auto max-w-6xl px-5 py-16 sm:py-20 lg:py-24">
-        <SectionHeading eyebrow={t.about.eyebrow} title={t.about.title} />
-        <div className="mt-8 grid gap-5 sm:mt-10 lg:grid-cols-[1.6fr_1fr]">
-          <Reveal>
-            <div className="card-modern h-full rounded-2xl p-8">
-              <p className="text-lg leading-relaxed text-foreground/90 sm:text-xl font-medium tracking-tight">
-                {content.summary}
-              </p>
-              <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
-                {t.about.extra}
-              </p>
-              <div className="mt-7 grid gap-3 sm:grid-cols-3">
-                {t.about.highlights.map((item) => {
-                  const { icon: Icon, colorClass, bgClass } = highlightMeta(item.title);
+      <section id="skills" className="mx-auto max-w-6xl px-5">
+        <Reveal>
+          <header className="head-margin">
+            <p className="num-label">03 — Skills</p>
+            <div>
+              <h2 className="text-4xl sm:text-6xl">{t.skills.title}</h2>
+              <p className="mt-4 text-muted-foreground max-w-2xl">{t.skills.description}</p>
+              
+              <div className="mt-12 grid gap-8 md:grid-cols-2">
+                {content.skillGroups.map((group) => {
+                  const { icon: Icon } = skillGroupMeta[group.icon];
                   return (
-                    <div key={item.title} className="glass flex flex-col items-start rounded-2xl p-4 transition-all hover:border-primary/30">
-                      <span className={`mb-2 inline-flex size-8 items-center justify-center rounded-xl ${bgClass} ${colorClass}`}>
-                        <Icon className="size-4" aria-hidden />
-                      </span>
-                      <h3 className="text-sm font-semibold">{item.title}</h3>
-                      <p className="mt-1.5 text-[11px] leading-relaxed text-muted-foreground">
-                        {item.description}
-                      </p>
+                    <div key={group.title} className="portfolio-card">
+                      <div className="flex items-center gap-3 mb-6">
+                        <Icon className="size-6 text-primary" />
+                        <h3 className="text-xl font-bold">{group.title}</h3>
+                      </div>
+                      <ul className="flex flex-wrap gap-2">
+                        {group.items.map((item) => (
+                          <li key={item} className="tag-monochrome">
+                            {item}
+                          </li>
+                        ))}
+                      </ul>
                     </div>
                   );
                 })}
               </div>
             </div>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <div className="flex h-full flex-col gap-5">
-              <div className="card-modern flex flex-col items-start rounded-2xl p-8">
-                <div className="flex items-center gap-3">
-                  <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-amber-400/10 text-amber-400 ring-1 ring-amber-400/20">
-                    <Zap className="size-5" aria-hidden />
-                  </span>
-                  <h3 className="font-mono text-sm uppercase tracking-[0.2em] text-amber-400 font-bold">
-                    {t.about.currently}
-                  </h3>
-                </div>
-                <p className="mt-5 text-base leading-relaxed text-foreground/90">
-                  {t.about.currentlyText}
-                </p>
-              </div>
-              <div className="card-modern flex flex-col items-start rounded-2xl p-8">
-                <div className="flex items-center gap-3">
-                  <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-emerald-400/10 text-emerald-400 ring-1 ring-emerald-400/20">
-                    <Globe className="size-5" aria-hidden />
-                  </span>
-                  <h3 className="font-mono text-sm uppercase tracking-[0.2em] text-emerald-400 font-bold">
-                    {t.about.languages}
-                  </h3>
-                </div>
-                <div className="mt-5 flex flex-wrap gap-2.5">
-                  {content.languages.map((language) => (
-                    <span 
-                      key={language} 
-                      className="glass-pill inline-flex items-center rounded-full px-4 py-2 text-sm font-medium text-foreground/90 transition-colors hover:text-primary"
-                    >
-                      {language}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </Reveal>
-        </div>
+          </header>
+        </Reveal>
       </section>
 
-      <section id="skills" className="mx-auto max-w-6xl px-5 py-16 sm:py-20 lg:py-24">
-        <SectionHeading
-          eyebrow={t.skills.eyebrow}
-          title={t.skills.title}
-          description={t.skills.description}
-          action={
-            <div className="hidden sm:flex size-12 items-center justify-center rounded-2xl bg-amber-400/10 text-amber-400 ring-1 ring-amber-400/20 transition-transform hover:scale-110">
-              <Brain className="size-6" />
-            </div>
-          }
-        />
-        <div className="mt-8 grid gap-4 sm:mt-10 lg:grid-cols-2">
-          {content.skillGroups.map((group, groupIdx) => {
-            const { icon: Icon, colorClass, bgClass } = skillGroupMeta[group.icon];
-            return (
-              <Reveal key={group.title} delay={groupIdx * 0.1}>
-                <div className="card-modern group flex h-full items-start gap-6 rounded-2xl p-6 sm:p-8">
-                  <div className={`inline-flex size-14 shrink-0 items-center justify-center rounded-xl ${bgClass} ${colorClass} border border-current/20 transition-transform group-hover:scale-110`}>
-                    <Icon className="size-7" aria-hidden />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-xl font-bold tracking-tight">{group.title}</h3>
-                    <ul className="mt-5 flex flex-wrap gap-2">
-                      {group.items.map((item) => {
-                        const { icon: ItemIcon, iconClass, chipClass } = getSkillConfig(item);
-                        return (
-                          <li
-                            key={item}
-                            className={`inline-flex items-center gap-2 rounded-lg border border-border bg-surface/30 px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-wider text-muted-foreground transition-all hover:border-primary/40 hover:bg-surface`}
-                          >
-                            <ItemIcon className={`size-3.5 ${iconClass}`} aria-hidden />
-                            {item}
-                          </li>
-                        );
-                      })}
-                    </ul>
+      <section id="experiencia" className="mx-auto max-w-6xl px-5">
+        <Reveal>
+          <header className="head-margin">
+            <p className="num-label">04 — Carreira</p>
+            <div>
+              <h2 className="text-4xl sm:text-6xl">{t.career.title}</h2>
+              <p className="mt-4 text-muted-foreground max-w-2xl">{t.career.description}</p>
+
+              <div className="mt-16 grid gap-16 lg:grid-cols-2">
+                <div>
+                  <h3 className="num-label mb-8">Experiência Profissional</h3>
+                  <div className="space-y-12 border-l border-rule pl-8">
+                    {content.experience.map((exp) => (
+                      <div key={exp.title} className="relative">
+                        <div className="absolute -left-[33px] top-1.5 size-2 rounded-full bg-primary" />
+                        <span className="num-label block mb-2">{exp.period}</span>
+                        <h4 className="text-xl font-bold mb-1">{exp.title}</h4>
+                        <p className="text-primary font-bold text-sm mb-4">{exp.org}</p>
+                        <p className="text-muted-foreground text-sm leading-relaxed">{exp.description}</p>
+                      </div>
+                    ))}
                   </div>
                 </div>
-              </Reveal>
-            );
-          })}
-        </div>
+                <div>
+                  <h3 className="num-label mb-8">Formação Acadêmica</h3>
+                  <div className="space-y-12 border-l border-rule pl-8">
+                    {content.education.map((edu) => (
+                      <div key={edu.title} className="relative">
+                        <div className="absolute -left-[33px] top-1.5 size-2 rounded-full bg-primary" />
+                        <span className="num-label block mb-2">{edu.period}</span>
+                        <h4 className="text-xl font-bold mb-1">{edu.title}</h4>
+                        <p className="text-primary font-bold text-sm mb-4">{edu.org}</p>
+                        <p className="text-muted-foreground text-sm leading-relaxed">{edu.description}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </header>
+        </Reveal>
       </section>
 
-      <section id="experiencia" className="mx-auto max-w-6xl px-5 py-16 sm:py-20 lg:py-24">
-        <SectionHeading
-          eyebrow={t.career.eyebrow}
-          title={t.career.title}
-          description={t.career.description}
-        />
-        <div className="mt-8 grid gap-10 sm:mt-10 lg:grid-cols-2 lg:gap-16">
-          <Reveal>
-            <div className="relative">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="flex size-10 items-center justify-center rounded-lg bg-violet-400/10 text-violet-400 border border-violet-400/20">
-                  <Layers className="size-5" />
-                </div>
-                <h3 className="text-2xl font-bold tracking-tight">{lang === 'pt' ? 'Experiência Profissional' : 'Professional Experience'}</h3>
-            </div>
-            <Timeline entries={content.experience} icon={Layers} />
-          </div>
-        </Reveal>
-        <Reveal delay={0.2}>
-          <div className="relative">
-            <div className="flex items-center gap-3 mb-6">
-                <div className="flex size-10 items-center justify-center rounded-lg bg-blue-400/10 text-blue-400 border border-blue-400/20">
-                  <Sparkles className="size-5" />
-                </div>
-                <h3 className="text-2xl font-bold tracking-tight">{lang === 'pt' ? 'Formação Acadêmica' : 'Education'}</h3>
-            </div>
-            <Timeline entries={content.education} icon={Sparkles} />
-          </div>
-        </Reveal>
-        </div>
-      </section>
-
-      <section id="projetos" className="mx-auto max-w-6xl px-5 py-16 sm:py-20 lg:py-24">
-        <SectionHeading
-          eyebrow={t.projects.eyebrow}
-          title={t.projects.title}
-          description={t.projects.description}
-          action={
-            <div className="hidden sm:flex size-12 items-center justify-center rounded-2xl bg-indigo-400/10 text-indigo-400 ring-1 ring-indigo-400/20 transition-transform hover:scale-110">
-              <Layers className="size-6" />
-            </div>
-          }
-        />
-        <div className="mt-8 grid gap-6 sm:mt-10 md:grid-cols-2">
-          {content.featuredProjects.map((project, projectIdx) => (
-            <Reveal key={project.name} delay={projectIdx * 0.1}>
-              <a
-                href={project.url}
-                target="_blank"
-                rel="noreferrer"
-                className="card-modern group flex h-full flex-col rounded-2xl p-6 sm:p-8"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className="flex size-7 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                      <Cpu className="size-3.5" />
+      <section id="projetos" className="mx-auto max-w-6xl px-5">
+        <Reveal>
+          <header className="head-margin">
+            <p className="num-label">05 — Projetos</p>
+            <div>
+              <h2 className="text-4xl sm:text-6xl">{t.projects.title}</h2>
+              <p className="mt-4 text-muted-foreground max-w-2xl">{t.projects.description}</p>
+              
+              <div className="mt-12 grid-portfolio">
+                {content.featuredProjects.map((project) => (
+                  <a key={project.name} href={project.url} target="_blank" rel="noreferrer" className="portfolio-card">
+                    <span className="portfolio-card__meta">{project.year}</span>
+                    <h3 className="portfolio-card__title font-bold leading-tight">{project.title}</h3>
+                    <p className="text-sm text-muted-foreground line-clamp-3 mb-6">{project.description}</p>
+                    <div className="portfolio-card__tags">
+                      {project.tags.map(tag => (
+                        <span key={tag} className="tag-monochrome">{tag}</span>
+                      ))}
                     </div>
-                    <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-primary/80 font-bold">
-                      {project.year}
-                    </span>
-                  </div>
-                  <div className="flex size-8 items-center justify-center rounded-lg bg-primary/5 text-primary opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Sparkles className="size-4" />
-                  </div>
-                </div>
-                <h3 className="mt-3 text-xl font-bold group-hover:text-primary transition-colors">{project.title}</h3>
-                <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">{project.description}</p>
-                <ul className="mt-5 flex flex-wrap gap-2">
-                  {project.tags.map((tag) => (
-                    <li key={tag} className="glass-pill rounded-full px-3 py-1 font-mono text-[11px]">
-                      {tag}
-                    </li>
-                  ))}
-                </ul>
-              </a>
-            </Reveal>
-          ))}
-        </div>
-
-        <div className="mt-14 sm:mt-16">
-          <SectionHeading
-            eyebrow="GitHub"
-            title={t.projects.pinnedTitle}
-            description={t.projects.pinnedDescription}
-            action={
-              <div className="hidden sm:flex size-12 items-center justify-center rounded-2xl bg-slate-400/10 text-slate-400 ring-1 ring-slate-400/20 transition-transform hover:scale-110">
-                <Github className="size-6" />
-              </div>
-            }
-          />
-          <div className="mt-10">
-            <ProjectsGrid limit={6} />
-          </div>
-        </div>
-      </section>
-
-      <section id="artigos" className="mx-auto max-w-6xl px-5 py-16 sm:py-20 lg:py-24">
-        <SectionHeading
-          eyebrow={t.articles.eyebrow}
-          title={t.articles.title}
-          description={t.articles.description}
-          action={
-            <div className="hidden sm:flex size-12 items-center justify-center rounded-2xl bg-rose-400/10 text-rose-400 ring-1 ring-rose-400/20 transition-transform hover:scale-110">
-              <PenLine className="size-6" />
-            </div>
-          }
-        />
-        <div className="mt-10">
-          <ArticlesGrid limit={6} />
-        </div>
-      </section>
-
-      <section id="contato" className="mx-auto max-w-6xl px-5 py-16 sm:py-20 lg:py-24">
-        <SectionHeading
-          eyebrow={t.contact.eyebrow}
-          title={t.contact.title}
-          description={t.contact.description}
-          action={
-            <div className="hidden sm:flex size-12 items-center justify-center rounded-2xl bg-emerald-400/10 text-emerald-400 ring-1 ring-emerald-400/20 transition-transform hover:scale-110">
-              <Mail className="size-6" />
-            </div>
-          }
-        />
-        <div className="mt-8 grid gap-5 sm:mt-10 lg:grid-cols-[1fr_1.2fr]">
-          <div>
-            <ul className="space-y-3">
-              {channels.map(({ label, value, href, icon: Icon, colorClass, bgClass }, channelIdx) => (
-                <li key={label}>
-                  <Reveal delay={channelIdx * 0.1}>
-                  <a
-                    href={href}
-                    target={href.startsWith("http") ? "_blank" : undefined}
-                    rel="noreferrer"
-                    className="card-modern flex items-center gap-4 rounded-2xl p-4"
-                  >
-                    <span className={`inline-flex size-10 items-center justify-center rounded-full ${bgClass} ${colorClass}`}>
-                      <Icon className="size-4" aria-hidden />
-                    </span>
-                    <span>
-                      <span className="block text-sm font-medium">{label}</span>
-                      <span className="block text-sm text-muted-foreground">{value}</span>
-                    </span>
                   </a>
-                  </Reveal>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <Reveal>
-            <ContactForm />
-          </Reveal>
-        </div>
+                ))}
+              </div>
+
+              <div className="mt-20">
+                <h3 className="num-label mb-8">{t.projects.pinnedTitle}</h3>
+                <ProjectsGrid />
+              </div>
+            </div>
+          </header>
+        </Reveal>
       </section>
+
+      <section id="artigos" className="mx-auto max-w-6xl px-5">
+        <Reveal>
+          <header className="head-margin">
+            <p className="num-label">06 — Artigos</p>
+            <div>
+              <h2 className="text-4xl sm:text-6xl">{t.articles.title}</h2>
+              <p className="mt-4 text-muted-foreground max-w-2xl">{t.articles.description}</p>
+              <div className="mt-12">
+                <ArticlesGrid />
+              </div>
+            </div>
+          </header>
+        </Reveal>
+      </section>
+
+      <section id="contato" className="mx-auto max-w-6xl px-5 pb-32">
+        <Reveal>
+          <header className="head-margin">
+            <p className="num-label">07 — Contato</p>
+            <div>
+              <h2 className="text-4xl sm:text-6xl">{t.contact.title}</h2>
+              <p className="mt-4 text-muted-foreground max-w-2xl mb-12">{t.contact.description}</p>
+              
+              <div className="grid gap-12 lg:grid-cols-[1fr_1.5fr]">
+                <div className="space-y-8">
+                  {channels.map((chan) => (
+                    <a key={chan.label} href={chan.href} className="group block">
+                      <span className="num-label group-hover:text-primary transition-colors">{chan.label}</span>
+                      <span className="block text-xl font-bold mt-1 group-hover:translate-x-1 transition-transform inline-flex items-center gap-2">
+                        {chan.value} <ArrowRight className="size-4" />
+                      </span>
+                    </a>
+                  ))}
+                </div>
+                <ContactForm />
+              </div>
+            </div>
+          </header>
+        </Reveal>
+      </section>
+
+      {/* Ft5 · Statement Footer */}
+      <footer className="foot-stmt">
+        <Reveal>
+          <p className="foot-stmt__line">
+            Building local AI for the real world.
+          </p>
+          <div className="foot-stmt__meta mt-20">
+            <span className="font-bold tracking-tighter text-ink">{profile.name}</span>
+            <span>© {new Date().getFullYear()} · {t.footer}</span>
+          </div>
+        </Reveal>
+      </footer>
     </div>
   );
 }
+
