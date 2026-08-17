@@ -214,13 +214,13 @@ function Home() {
       <Background />
       
       {/* Macrostructure: Marquee Hero */}
-      <section id="inicio" className="hero-marquee">
+      <section id="inicio" className="hero-marquee border-b-[1.5px] border-ink">
         <Reveal>
-          <div className="num-label mb-8">01 — Início</div>
-          <h1 className="display-xxl">
+          <div className="num-label mb-12 bg-ink text-paper inline-block px-3 py-1 rotate-[-2deg]">01 — Início</div>
+          <h1 className="display-xxl uppercase italic">
             {profile.name}
           </h1>
-          <p className="hero-marquee__sub">
+          <p className="hero-marquee__sub font-bold text-ink">
             {content.headline}
           </p>
           <div className="mt-12 flex flex-wrap gap-6">
@@ -247,7 +247,7 @@ function Home() {
           <header className="head-margin">
             <p className="num-label">02 — Sobre</p>
             <div>
-              <h2 className="text-4xl sm:text-6xl">{t.about.title}</h2>
+              <h2 className="text-display-s uppercase italic leading-none">{t.about.title}</h2>
               <div className="mt-12 grid gap-12 lg:grid-cols-[1.6fr_1fr]">
                 <div className="space-y-6">
                   <p className="text-xl leading-relaxed font-medium">
@@ -298,7 +298,7 @@ function Home() {
           <header className="head-margin">
             <p className="num-label">03 — Skills</p>
             <div>
-              <h2 className="text-4xl sm:text-6xl">{t.skills.title}</h2>
+              <h2 className="text-display-s uppercase italic leading-none">{t.skills.title}</h2>
               <p className="mt-4 text-muted-foreground max-w-2xl">{t.skills.description}</p>
               
               <div className="mt-12 grid gap-8 md:grid-cols-2">
@@ -331,7 +331,7 @@ function Home() {
           <header className="head-margin">
             <p className="num-label">04 — Carreira</p>
             <div>
-              <h2 className="text-4xl sm:text-6xl">{t.career.title}</h2>
+              <h2 className="text-display-s uppercase italic leading-none">{t.career.title}</h2>
               <p className="mt-4 text-muted-foreground max-w-2xl">{t.career.description}</p>
 
               <div className="mt-16 grid gap-16 lg:grid-cols-2">
@@ -374,7 +374,7 @@ function Home() {
           <header className="head-margin">
             <p className="num-label">05 — Projetos</p>
             <div>
-              <h2 className="text-4xl sm:text-6xl">{t.projects.title}</h2>
+              <h2 className="text-display-s uppercase italic leading-none">{t.projects.title}</h2>
               <p className="mt-4 text-muted-foreground max-w-2xl">{t.projects.description}</p>
               
               <div className="mt-12 grid-portfolio">
@@ -406,7 +406,7 @@ function Home() {
           <header className="head-margin">
             <p className="num-label">06 — Artigos</p>
             <div>
-              <h2 className="text-4xl sm:text-6xl">{t.articles.title}</h2>
+              <h2 className="text-display-s uppercase italic leading-none">{t.articles.title}</h2>
               <p className="mt-4 text-muted-foreground max-w-2xl">{t.articles.description}</p>
               <div className="mt-12">
                 <ArticlesGrid />
@@ -421,7 +421,7 @@ function Home() {
           <header className="head-margin">
             <p className="num-label">07 — Contato</p>
             <div>
-              <h2 className="text-4xl sm:text-6xl">{t.contact.title}</h2>
+              <h2 className="text-display-s uppercase italic leading-none">{t.contact.title}</h2>
               <p className="mt-4 text-muted-foreground max-w-2xl mb-12">{t.contact.description}</p>
               
               <div className="grid gap-12 lg:grid-cols-[1fr_1.5fr]">
