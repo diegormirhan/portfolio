@@ -67,8 +67,8 @@ export function SiteHeader() {
       )}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-5">
-        <a href="#inicio" className="text-sm font-bold tracking-tighter uppercase font-mono">
-          {profile.name}
+        <a href="#inicio" className="text-sm font-bold tracking-[0.2em] uppercase font-mono">
+          {profile.name} <span className="text-primary opacity-50">//</span> LAB
         </a>
 
         <nav

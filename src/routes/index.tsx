@@ -87,7 +87,7 @@ function Timeline({ entries, icon: Icon = Sparkles }: { entries: TimelineEntry[]
      <Reveal key={`${entry.title}-${entry.period}`} delay={idx * 0.1}>
       <div className="group relative">
        {/* Timeline Marker */}
-       <div className="absolute -left-[41px] top-1 size-4 border-2 border-primary bg-background transition-transform group-hover:scale-125 group-hover:bg-primary" />
+       <div className="absolute -left-[41px] top-1 size-4 border border-primary bg-background transition-transform group-hover:scale-125 group-hover:bg-primary" />
        
        <div className="flex flex-col gap-1">
         <div className="flex items-center gap-3">
@@ -421,8 +421,8 @@ function Home() {
    <footer className="border-t border-border/40 py-12">
     <div className="mx-auto max-w-6xl px-5 flex flex-col md:flex-row items-center justify-between gap-8">
       <div className="flex flex-col items-center md:items-start gap-2">
-       <span className="font-mono text-sm font-bold tracking-tighter uppercase">{profile.name}</span>
-       <p className="text-xs text-muted-foreground">© {new Date().getFullYear()} — Made with love & data.</p>
+       <span className="font-mono text-sm font-bold tracking-tighter uppercase">{profile.name} // {profile.role}</span>
+       <p className="text-[10px] text-muted-foreground uppercase tracking-widest">© {new Date().getFullYear()} — Built for performance.</p>
       </div>
       <div className="flex gap-8 font-mono text-[10px] font-bold uppercase tracking-widest">
        <a href={profile.github} target="_blank" rel="noreferrer" className="hover:text-primary transition-colors">Github</a>
