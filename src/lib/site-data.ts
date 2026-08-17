@@ -1,7 +1,7 @@
 import type { Lang } from "@/lib/i18n";
 
 export const profile = {
-  name: "Diego R. Mirhan",
+  name: "Diego Mirhan",
   role: "IA & Desenvolvimento de Software",
   headline:
     "Estudante de Ciência da Computação com foco em Data Science e Machine Learning, construindo soluções de IA local de ponta a ponta.",

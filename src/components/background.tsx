@@ -1,39 +1,34 @@
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
+import { useRef } from "react";
 
-export const Background = () => {
+export function Background() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const shouldReduceMotion = useReducedMotion();
+  const { scrollYProgress } = useScroll();
+  
+  const y1 = useTransform(scrollYProgress, [0, 1], [0, -100]);
+  const y2 = useTransform(scrollYProgress, [0, 1], [0, 100]);
+
   return (
-    <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-      <div className="absolute inset-0 bg-background" />
-      
-      {/* Grid Pattern Overlay */}
-      <div 
-        className="absolute inset-0 opacity-[0.03]"
-        style={{
-          backgroundImage: `
-            linear-gradient(to right, var(--foreground) 1px, transparent 1px),
-            linear-gradient(to bottom, var(--foreground) 1px, transparent 1px)
-          `,
-          backgroundSize: '4rem 4rem'
-        }}
-      />
-
-      {/* Static Technical Accents (Hardware look) */}
-      <div className="absolute top-0 left-0 w-full h-[1px] bg-primary/20" />
-      <div className="absolute top-0 left-0 w-[1px] h-full bg-primary/20" />
-      
-      {/* Subtle Glows (Neural Network pulse) */}
-      <motion.div
-        animate={{
-          opacity: [0.05, 0.1, 0.05],
-          scale: [0.8, 1.2, 0.8],
-        }}
-        transition={{
-          duration: 10,
-          repeat: Infinity,
-          ease: "linear"
-        }}
-        className="absolute -left-1/4 -top-1/4 size-[150%] bg-primary/5 blur-[160px] rounded-full"
-      />
+    <div ref={containerRef} className="fixed inset-0 -z-10 overflow-hidden pointer-events-none bg-background">
+      <div className="absolute inset-0 overflow-hidden">
+        <motion.div
+          style={{ y: y1 }}
+          animate={shouldReduceMotion ? {} : {
+            opacity: [0.2, 0.3, 0.2],
+          }}
+          transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+          className="absolute -top-[10%] -left-[10%] size-[80%] rounded-full bg-primary/10 blur-[100px]"
+        />
+        <motion.div
+          style={{ y: y2 }}
+          animate={shouldReduceMotion ? {} : {
+            opacity: [0.1, 0.2, 0.1],
+          }}
+          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+          className="absolute top-[20%] -right-[15%] size-[70%] rounded-full bg-highlight/10 blur-[120px]"
+        />
+      </div>
     </div>
   );
-};
+}
