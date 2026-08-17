@@ -83,26 +83,28 @@ export const Route = createFileRoute("/")({
 
 function Timeline({ entries, icon: Icon = Sparkles }: { entries: TimelineEntry[], icon?: any }) {
   return (
-    <ol className="relative mt-8 border-l border-border ml-16 sm:ml-8 pl-8 sm:pl-10">
+    <ol className="relative mt-12 space-y-12 border-l-2 border-border ml-6 pl-10">
       {entries.map((entry, idx) => (
-        <li key={`${entry.title}-${entry.period}`} className="group pb-10 last:pb-0">
+        <li key={`${entry.title}-${entry.period}`} className="relative">
           <Reveal delay={idx * 0.1}>
-            <div className="absolute -left-[48px] sm:-left-[43px] mt-1.5 flex size-8 sm:size-7 items-center justify-center rounded-full bg-primary text-primary-foreground ring-4 ring-background border border-primary/20 transition-transform group-hover:scale-110">
-              <Icon className="size-4 sm:size-3.5" aria-hidden />
+            <div className="absolute -left-[51px] top-0 flex size-10 items-center justify-center rounded-xl bg-card border-2 border-border text-primary shadow-sm transition-transform group-hover:scale-110">
+              <Icon className="size-5" aria-hidden />
             </div>
-            <span className="font-mono text-xs uppercase tracking-[0.2em] text-primary/80">{entry.period}</span>
-            <h3 className="mt-2 text-xl font-semibold">{entry.title}</h3>
-            <p className="text-sm text-muted-foreground">{entry.org}</p>
-            <p className="mt-3 max-w-2xl text-sm text-muted-foreground">{entry.description}</p>
-            {entry.tags ? (
-              <ul className="mt-4 flex flex-wrap gap-2">
-                {entry.tags.map((tag) => (
-                  <li key={tag} className="glass rounded-full px-3 py-1 font-mono text-[11px] hover:border-primary/40 transition-colors">
-                    {tag}
-                  </li>
-                ))}
-              </ul>
-            ) : null}
+            <div className="flex flex-col gap-1">
+              <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground/80">{entry.period}</span>
+              <h3 className="text-xl font-bold tracking-tight">{entry.title}</h3>
+              <p className="font-medium text-primary/90">{entry.org}</p>
+              <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground">{entry.description}</p>
+              {entry.tags ? (
+                <ul className="mt-5 flex flex-wrap gap-2">
+                  {entry.tags.map((tag) => (
+                    <li key={tag} className="inline-flex items-center rounded-md border border-border bg-surface/50 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                      {tag}
+                    </li>
+                  ))}
+                </ul>
+              ) : null}
+            </div>
           </Reveal>
         </li>
       ))}
@@ -122,7 +124,7 @@ function ContactForm() {
 
   return (
     <form
-      className="glass-liquid card-modern rounded-3xl p-6"
+      className="card-modern rounded-2xl p-6 sm:p-8"
       onSubmit={(event) => {
         event.preventDefault();
         window.location.href = mailto;
@@ -210,32 +212,40 @@ function Home() {
   return (
     <div className="relative">
       <Background />
-      <section id="inicio">
-        <div className="mx-auto max-w-6xl px-5 pb-20 pt-32 sm:pb-28 sm:pt-40 lg:pb-32 lg:pt-44 relative z-10">
+      <section id="inicio" className="relative min-h-[90vh] flex flex-col justify-center">
+        <div className="mx-auto max-w-6xl px-5 pb-24 pt-32 sm:pb-32 sm:pt-48 lg:pb-40 lg:pt-56 relative z-10">
           <Reveal>
-            {content.location ? (
-              <span className="glass inline-flex rounded-full px-4 py-1.5 font-mono text-xs uppercase tracking-[0.25em] text-primary">
-                {content.location}
-              </span>
-            ) : null}
-            <h1 className="mt-6 max-w-4xl text-4xl font-semibold leading-[1.05] sm:text-6xl lg:text-7xl">
-              {profile.name} — <span className="text-primary">{content.role}</span>
-            </h1>
-            <p className="mt-6 max-w-2xl text-lg text-muted-foreground">{content.headline}</p>
-            <div className="mt-9 flex flex-wrap gap-3">
-              <a
-                href="#projetos"
-                className="glass-pill inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium"
-              >
-                {t.hero.projects} <ArrowRight className="size-4" aria-hidden />
-              </a>
-              <a
-                href={profile.resume}
-                download
-                className="glass inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium"
-              >
-                <Download className="size-4 text-sky-400" aria-hidden /> {t.hero.resume}
-              </a>
+            <div className="flex flex-col items-start">
+              {content.location ? (
+                <span className="inline-flex rounded-md border border-primary/20 bg-primary/5 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-primary mb-8">
+                  {content.location}
+                </span>
+              ) : null}
+              <h1 className="max-w-4xl text-5xl font-bold leading-[0.95] tracking-tighter sm:text-7xl lg:text-8xl">
+                {profile.name.split(' ').map((word, i) => (
+                  <span key={i} className={i === 1 ? "text-primary block" : "block"}>{word}</span>
+                ))}
+              </h1>
+              <div className="mt-12 flex flex-col sm:flex-row sm:items-center gap-8">
+                <p className="max-w-md text-xl leading-relaxed text-muted-foreground font-medium">
+                  {content.headline}
+                </p>
+                <div className="flex flex-wrap gap-4">
+                  <a
+                    href="#projetos"
+                    className="inline-flex items-center gap-2 rounded-xl bg-primary px-6 py-3 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/20 transition-transform hover:-translate-y-0.5"
+                  >
+                    {t.hero.projects} <ArrowRight className="size-4" aria-hidden />
+                  </a>
+                  <a
+                    href={profile.resume}
+                    download
+                    className="inline-flex items-center gap-2 rounded-xl border-2 border-border bg-card px-6 py-3 text-sm font-bold transition-all hover:bg-surface hover:border-primary/30"
+                  >
+                    <Download className="size-4 text-primary" aria-hidden /> {t.hero.resume}
+                  </a>
+                </div>
+              </div>
             </div>
           </Reveal>
         </div>
@@ -245,12 +255,8 @@ function Home() {
         <SectionHeading eyebrow={t.about.eyebrow} title={t.about.title} />
         <div className="mt-8 grid gap-5 sm:mt-10 lg:grid-cols-[1.6fr_1fr]">
           <Reveal>
-            <div className="card-modern relative h-full overflow-hidden rounded-3xl p-6 sm:p-8">
-              <span
-                className="pointer-events-none absolute -right-16 -top-16 size-48 rounded-full bg-primary/20 blur-3xl"
-                aria-hidden
-              />
-              <p className="text-base leading-relaxed text-foreground/90 sm:text-lg">
+            <div className="card-modern h-full rounded-2xl p-8">
+              <p className="text-lg leading-relaxed text-foreground/90 sm:text-xl font-medium tracking-tight">
                 {content.summary}
               </p>
               <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
@@ -276,7 +282,7 @@ function Home() {
           </Reveal>
           <Reveal delay={0.1}>
             <div className="flex h-full flex-col gap-5">
-              <div className="card-modern flex flex-col items-start rounded-3xl p-6 sm:p-8">
+              <div className="card-modern flex flex-col items-start rounded-2xl p-8">
                 <div className="flex items-center gap-3">
                   <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-amber-400/10 text-amber-400 ring-1 ring-amber-400/20">
                     <Zap className="size-5" aria-hidden />
@@ -289,7 +295,7 @@ function Home() {
                   {t.about.currentlyText}
                 </p>
               </div>
-              <div className="card-modern flex flex-col items-start rounded-3xl p-6 sm:p-8">
+              <div className="card-modern flex flex-col items-start rounded-2xl p-8">
                 <div className="flex items-center gap-3">
                   <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-emerald-400/10 text-emerald-400 ring-1 ring-emerald-400/20">
                     <Globe className="size-5" aria-hidden />
@@ -330,25 +336,21 @@ function Home() {
             const { icon: Icon, colorClass, bgClass } = skillGroupMeta[group.icon];
             return (
               <Reveal key={group.title} delay={groupIdx * 0.1}>
-                <div className="card-modern group relative flex h-full items-start gap-6 overflow-hidden rounded-3xl p-6 transition-all hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5 sm:p-7">
-                  <span
-                    className="pointer-events-none absolute -right-6 -top-6 size-32 rounded-full bg-primary/20 blur-3xl opacity-40"
-                    aria-hidden
-                  />
-                  <div className={`inline-flex size-14 shrink-0 items-center justify-center rounded-2xl ${bgClass} ${colorClass} ring-1 ring-current/20 transition-transform group-hover:scale-110`}>
+                <div className="card-modern group flex h-full items-start gap-6 rounded-2xl p-6 sm:p-8">
+                  <div className={`inline-flex size-14 shrink-0 items-center justify-center rounded-xl ${bgClass} ${colorClass} border border-current/20 transition-transform group-hover:scale-110`}>
                     <Icon className="size-7" aria-hidden />
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-xl font-bold tracking-tight text-foreground/90">{group.title}</h3>
-                    <ul className="mt-4 flex flex-wrap gap-2">
+                    <h3 className="text-xl font-bold tracking-tight">{group.title}</h3>
+                    <ul className="mt-5 flex flex-wrap gap-2">
                       {group.items.map((item) => {
                         const { icon: ItemIcon, iconClass, chipClass } = getSkillConfig(item);
                         return (
                           <li
                             key={item}
-                            className={`inline-flex items-center gap-2 rounded-lg border border-border/50 ${chipClass} px-3.5 py-2 font-mono text-[13px] font-medium text-muted-foreground/90 transition-colors hover:border-primary/40`}
+                            className={`inline-flex items-center gap-2 rounded-lg border border-border bg-surface/30 px-3 py-1.5 font-mono text-[11px] font-bold uppercase tracking-wider text-muted-foreground transition-all hover:border-primary/40 hover:bg-surface`}
                           >
-                            <ItemIcon className={`size-4.5 ${iconClass}`} aria-hidden />
+                            <ItemIcon className={`size-3.5 ${iconClass}`} aria-hidden />
                             {item}
                           </li>
                         );
@@ -372,10 +374,10 @@ function Home() {
           <Reveal>
             <div className="relative">
               <div className="flex items-center gap-3 mb-6">
-                <div className="flex size-10 items-center justify-center rounded-xl bg-violet-400/10 text-violet-400">
+                <div className="flex size-10 items-center justify-center rounded-lg bg-violet-400/10 text-violet-400 border border-violet-400/20">
                   <Layers className="size-5" />
                 </div>
-              <h3 className="text-xl font-bold">{lang === 'pt' ? 'Experiência Profissional' : 'Professional Experience'}</h3>
+                <h3 className="text-2xl font-bold tracking-tight">{lang === 'pt' ? 'Experiência Profissional' : 'Professional Experience'}</h3>
             </div>
             <Timeline entries={content.experience} icon={Layers} />
           </div>
@@ -383,10 +385,10 @@ function Home() {
         <Reveal delay={0.2}>
           <div className="relative">
             <div className="flex items-center gap-3 mb-6">
-              <div className="flex size-10 items-center justify-center rounded-xl bg-blue-400/10 text-blue-400">
-                <Sparkles className="size-5" />
-              </div>
-              <h3 className="text-xl font-bold">{lang === 'pt' ? 'Formação Acadêmica' : 'Education'}</h3>
+                <div className="flex size-10 items-center justify-center rounded-lg bg-blue-400/10 text-blue-400 border border-blue-400/20">
+                  <Sparkles className="size-5" />
+                </div>
+                <h3 className="text-2xl font-bold tracking-tight">{lang === 'pt' ? 'Formação Acadêmica' : 'Education'}</h3>
             </div>
             <Timeline entries={content.education} icon={Sparkles} />
           </div>
@@ -412,7 +414,7 @@ function Home() {
                 href={project.url}
                 target="_blank"
                 rel="noreferrer"
-                className="card-modern group relative flex h-full flex-col overflow-hidden rounded-3xl p-6 transition-all hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5"
+                className="card-modern group flex h-full flex-col rounded-2xl p-6 sm:p-8"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">

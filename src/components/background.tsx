@@ -1,34 +1,45 @@
-import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
-import { useRef } from "react";
+import { motion } from "framer-motion";
 
-export function Background() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const shouldReduceMotion = useReducedMotion();
-  const { scrollYProgress } = useScroll();
-  
-  const y1 = useTransform(scrollYProgress, [0, 1], [0, -100]);
-  const y2 = useTransform(scrollYProgress, [0, 1], [0, 100]);
-
+export const Background = () => {
   return (
-    <div ref={containerRef} className="fixed inset-0 -z-10 overflow-hidden pointer-events-none bg-background">
-      <div className="absolute inset-0 overflow-hidden">
-        <motion.div
-          style={{ y: y1 }}
-          animate={shouldReduceMotion ? {} : {
-            opacity: [0.2, 0.3, 0.2],
-          }}
-          transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-          className="absolute -top-[10%] -left-[10%] size-[80%] rounded-full bg-primary/10 blur-[100px]"
-        />
-        <motion.div
-          style={{ y: y2 }}
-          animate={shouldReduceMotion ? {} : {
-            opacity: [0.1, 0.2, 0.1],
-          }}
-          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-          className="absolute top-[20%] -right-[15%] size-[70%] rounded-full bg-highlight/10 blur-[120px]"
-        />
-      </div>
+    <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+      <div className="absolute inset-0 bg-background" />
+      
+      {/* Subtle Grid */}
+      <div 
+        className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05]" 
+        style={{ 
+          backgroundImage: `linear-gradient(var(--color-border) 1px, transparent 1px), linear-gradient(90deg, var(--color-border) 1px, transparent 1px)`,
+          backgroundSize: '60px 60px'
+        }} 
+      />
+
+      {/* Hallmark Blobs */}
+      <motion.div
+        animate={{
+          x: [-50, 50, -50],
+          y: [-30, 30, -30],
+        }}
+        transition={{
+          duration: 30,
+          repeat: Infinity,
+          ease: "linear"
+        }}
+        className="absolute -left-1/4 -top-1/4 size-[100%] rounded-full bg-primary/5 dark:bg-primary/10 blur-[120px]"
+      />
+      
+      <motion.div
+        animate={{
+          x: [50, -50, 50],
+          y: [30, -30, 30],
+        }}
+        transition={{
+          duration: 35,
+          repeat: Infinity,
+          ease: "linear"
+        }}
+        className="absolute -right-1/4 -bottom-1/4 size-[100%] rounded-full bg-highlight/5 dark:bg-highlight/10 blur-[120px]"
+      />
     </div>
   );
-}
+};

@@ -9,7 +9,7 @@ export function ArticleCard({ article }: { article: Article }) {
   return (
     <motion.article 
       layout
-      className="card-modern group flex h-full flex-col overflow-hidden rounded-3xl"
+      className="card-modern group flex h-full flex-col overflow-hidden rounded-2xl"
     >
       <div className="relative aspect-[16/9] overflow-hidden">
         {article.thumbnail ? (
@@ -72,7 +72,7 @@ export function ArticleCard({ article }: { article: Article }) {
 
 export function ArticleCardSkeleton() {
   return (
-    <div className="card-modern h-[400px] overflow-hidden rounded-3xl opacity-50">
+    <div className="card-modern h-[400px] overflow-hidden rounded-2xl opacity-50">
       <div className="skeleton-block aspect-[16/9] w-full rounded-none" />
       <div className="p-6 space-y-4">
         <div className="flex justify-between">
