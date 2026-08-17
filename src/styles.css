@@ -113,6 +113,11 @@
 
   html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
+  }
+
+  html.dark {
+    color-scheme: dark;
   }
 
   section[id] {
