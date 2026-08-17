@@ -1,6 +1,5 @@
-import { Menu, X, Github } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { useEffect, useState } from "react";
-
 import { LanguageToggle } from "./language-toggle";
 import { ThemeToggle } from "./theme-toggle";
 import { useI18n } from "../lib/i18n";
@@ -31,9 +30,6 @@ function useActiveSection() {
         if (!el) continue;
         if (el.offsetTop <= line + 10) current = section.id;
       }
-      if (window.innerHeight + window.scrollY >= document.body.scrollHeight - 4) {
-        current = "contato";
-      }
       setActive(current);
     };
 
@@ -51,18 +47,32 @@ function useActiveSection() {
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const active = useActiveSection();
   const { t } = useI18n();
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <header className="fixed inset-x-0 top-0 z-50 py-6 mix-blend-difference">
+    <header 
+      className={cn(
+        "fixed inset-x-0 top-0 z-50 transition-all duration-300",
+        scrolled ? "glass-header py-3" : "bg-transparent py-6"
+      )}
+    >
       <div className="mx-auto flex max-w-6xl items-center justify-between px-5">
-        <a href="#inicio" className="text-sm font-bold tracking-tighter uppercase">
+        <a href="#inicio" className="text-sm font-bold tracking-tighter uppercase font-mono">
           {profile.name}
         </a>
 
         <nav
-          className="hidden items-center gap-8 lg:flex"
+          className="hidden items-center gap-2 lg:flex"
           aria-label={t.header.mainNav}
         >
           {sections.map((section) => (
@@ -70,8 +80,8 @@ export function SiteHeader() {
               key={section.id}
               href={`#${section.id}`}
               className={cn(
-                "text-[10px] font-bold uppercase tracking-widest transition-opacity hover:opacity-100",
-                active === section.id ? "opacity-100" : "opacity-40",
+                "ios-pill",
+                active === section.id && "ios-pill-active"
               )}
             >
               {t.nav[section.id as SectionId]}
@@ -79,7 +89,7 @@ export function SiteHeader() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-4">
           <ThemeToggle />
           <LanguageToggle />
           <button
@@ -87,28 +97,27 @@ export function SiteHeader() {
             aria-label={t.header.openMenu}
             aria-expanded={open}
             onClick={() => setOpen((value) => !value)}
-            className="lg:hidden"
+            className="lg:hidden rounded-full p-2 hover:bg-muted"
           >
             {open ? <X className="size-5" /> : <Menu className="size-5" />}
           </button>
         </div>
       </div>
 
-
-      {open ? (
+      {open && (
         <nav
-          className="glass-strong pointer-events-auto mx-auto mt-2 max-w-6xl rounded-3xl px-4 py-3 lg:hidden"
+          className="glass-header mt-2 mx-4 rounded-2xl p-4 lg:hidden animate-in slide-in-from-top-2"
           aria-label={t.header.mobileNav}
         >
-          <ul className="flex flex-col gap-1">
+          <ul className="flex flex-col gap-2">
             {sections.map((section) => (
               <li key={section.id}>
                 <a
                   href={`#${section.id}`}
                   onClick={() => setOpen(false)}
                   className={cn(
-                    "block rounded-full px-4 py-2 text-sm",
-                    active === section.id ? "glass-pill text-foreground" : "text-muted-foreground",
+                    "block rounded-full px-4 py-2 text-sm font-medium",
+                    active === section.id ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted"
                   )}
                 >
                   {t.nav[section.id as SectionId]}
@@ -117,7 +126,7 @@ export function SiteHeader() {
             ))}
           </ul>
         </nav>
-      ) : null}
+      )}
     </header>
   );
 }

@@ -100,7 +100,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://pinned.berrysauce.dev", crossOrigin: "anonymous" },
       { rel: "preconnect", href: "https://api.rss2json.com", crossOrigin: "anonymous" },
       { rel: "dns-prefetch", href: "https://api.github.com" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap" },
+      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap" },
     ],
   }),
   shellComponent: RootShell,
