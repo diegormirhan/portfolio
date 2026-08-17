@@ -250,7 +250,7 @@ function Home() {
           <header className="head-margin">
             <p className="num-label">02 — Sobre</p>
             <div>
-              <h2 className="text-display-s uppercase italic leading-none">{t.about.title}</h2>
+              <h2 className="text-display-s italic leading-none">{t.about.title}</h2>
               <div className="mt-12 grid gap-12 lg:grid-cols-[1.6fr_1fr]">
                 <div className="space-y-6">
                   <p className="text-xl leading-relaxed font-medium">
