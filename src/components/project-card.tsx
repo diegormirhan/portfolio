@@ -9,7 +9,7 @@ export function ProjectCard({ project }: { project: Project }) {
   return (
     <motion.article 
       layout
-      className="card-modern group flex h-full flex-col rounded-3xl p-6"
+      className="card-modern group flex h-full flex-col rounded-2xl p-6 sm:p-8"
     >
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1">
@@ -94,7 +94,7 @@ export function ProjectCard({ project }: { project: Project }) {
 
 export function ProjectCardSkeleton() {
   return (
-    <div className="card-modern h-[280px] rounded-3xl p-6 opacity-50">
+    <div className="card-modern h-[280px] rounded-2xl p-6 opacity-50">
       <div className="flex justify-between">
         <div className="space-y-3 flex-1">
           <div className="skeleton-block h-3 w-20" />

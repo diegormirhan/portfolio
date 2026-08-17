@@ -10,7 +10,7 @@ export function Background() {
   const y2 = useTransform(scrollYProgress, [0, 1], [0, 100]);
 
   return (
-    <div ref={containerRef} className="fixed inset-0 -z-10 overflow-hidden pointer-events-none bg-background">
+    <div ref={containerRef} className="fixed inset-0 -z-10 overflow-hidden pointer-events-none bg-background/50 backdrop-blur-[2px]">
       <div className="absolute inset-0 overflow-hidden">
         <motion.div
           style={{ y: y1 }}
