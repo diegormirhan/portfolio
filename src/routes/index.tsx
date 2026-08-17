@@ -445,12 +445,17 @@ function Home() {
       {/* Ft5 · Statement Footer */}
       <footer className="foot-stmt">
         <Reveal>
-          <p className="foot-stmt__line">
-            Building local AI for the real world.
-          </p>
-          <div className="foot-stmt__meta mt-20">
-            <span className="font-bold tracking-tighter text-ink">{profile.name}</span>
-            <span>© {new Date().getFullYear()} · {t.footer}</span>
+          <div className="flex flex-col gap-12">
+            <p className="foot-stmt__line">
+              Building local AI for the real world.
+            </p>
+            <div className="foot-stmt__meta">
+              <p>© {new Date().getFullYear()} — {profile.name}</p>
+              <div className="flex gap-6">
+                <a href={profile.github} target="_blank" rel="noreferrer" className="hover:text-primary transition-colors">Github</a>
+                <a href={profile.linkedin} target="_blank" rel="noreferrer" className="hover:text-primary transition-colors">Linkedin</a>
+              </div>
+            </div>
           </div>
         </Reveal>
       </footer>
