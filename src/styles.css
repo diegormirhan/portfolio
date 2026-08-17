@@ -125,12 +125,17 @@
   }
 
   body {
-    background-color: var(--color-background);
+    background: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     position: relative;
     overflow-x: hidden;
+  }
+
+  html, body {
+    height: 100%;
+    margin: 0;
   }
 
   h1,
