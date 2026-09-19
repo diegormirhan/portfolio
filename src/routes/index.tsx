@@ -83,12 +83,12 @@ export const Route = createFileRoute("/")({
 
 function Timeline({ entries, icon: Icon = Sparkles }: { entries: TimelineEntry[], icon?: any }) {
   return (
-    <ol className="relative mt-8 border-l border-border pl-8 sm:pl-10">
+    <ol className="relative mt-8 border-l border-border ml-16 sm:ml-8 pl-8 sm:pl-10">
       {entries.map((entry, idx) => (
         <li key={`${entry.title}-${entry.period}`} className="group pb-10 last:pb-0">
           <Reveal delay={idx * 0.1}>
-            <div className="absolute -left-[32px] sm:-left-[35px] mt-1.5 flex size-6 sm:size-7 items-center justify-center rounded-full bg-primary/10 text-primary ring-4 ring-background border border-primary/20 transition-transform group-hover:scale-110">
-              <Icon className="size-3 sm:size-3.5" aria-hidden />
+            <div className="absolute -left-[48px] sm:-left-[43px] mt-1.5 flex size-8 sm:size-7 items-center justify-center rounded-full bg-primary text-primary-foreground ring-4 ring-background border border-primary/20 transition-transform group-hover:scale-110">
+              <Icon className="size-4 sm:size-3.5" aria-hidden />
             </div>
             <span className="font-mono text-xs uppercase tracking-[0.2em] text-primary/80">{entry.period}</span>
             <h3 className="mt-2 text-xl font-semibold">{entry.title}</h3>
@@ -218,8 +218,8 @@ function Home() {
                 {content.location}
               </span>
             ) : null}
-            <h1 className="mt-6 max-w-4xl text-4xl font-semibold leading-[1.05] sm:text-6xl lg:text-7xl">
-              {profile.name} — <span className="text-primary">{content.role}</span>
+            <h1 className="mt-6 max-w-4xl text-5xl font-bold leading-[1.05] tracking-tight sm:text-7xl lg:text-8xl">
+              {profile.name} — <span className="text-primary drop-shadow-[0_0_20px_rgba(157,63,205,0.3)]">{content.role}</span>
             </h1>
             <p className="mt-6 max-w-2xl text-lg text-muted-foreground">{content.headline}</p>
             <div className="mt-9 flex flex-wrap gap-3">
@@ -245,7 +245,7 @@ function Home() {
         <SectionHeading eyebrow={t.about.eyebrow} title={t.about.title} />
         <div className="mt-8 grid gap-5 sm:mt-10 lg:grid-cols-[1.6fr_1fr]">
           <Reveal>
-            <div className="card-modern relative h-full overflow-hidden rounded-3xl p-6 sm:p-8">
+            <div className="card-modern relative h-full overflow-hidden rounded-3xl p-6 sm:p-10">
               <span
                 className="pointer-events-none absolute -right-16 -top-16 size-48 rounded-full bg-primary/20 blur-3xl"
                 aria-hidden
