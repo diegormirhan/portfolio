@@ -30,3 +30,22 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# AI agent files (local only)
+.lovable/
+.claude/
+.cursor/
+.codex/
+.gemini/
+.windsurf/
+.agents/
+AGENTS.md
+CLAUDE.md
+GEMINI.md
+DESIGN.md
+PRODUCT.md
+src/routes/README.md
+
+# npm is the package manager (see amplify.yml)
+bun.lock
+bunfig.toml
