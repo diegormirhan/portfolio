@@ -33,6 +33,11 @@ export type FeaturedProject = {
   title: string;
   description: string;
   url: string;
+  demo?: string;
+  image?: string;
+  imageAlt?: string;
+  /** "window": mostra o print inteiro, como uma janela flutuando no card */
+  imageFit?: "bleed" | "window";
   tags: string[];
 };
 
@@ -81,13 +86,19 @@ const pt: SiteContent = {
     {
       title: "Infra & Dados",
       icon: "infra",
-      items: ["Docker", "Git / CI-CD", "AWS", "PostgreSQL", "MongoDB", "Redis", "Tauri", "Electron"],
+      items: [
+        "Docker",
+        "Git / CI-CD",
+        "AWS",
+        "PostgreSQL",
+        "MongoDB",
+        "Redis",
+        "Tauri",
+        "Electron",
+      ],
     },
   ],
-  languages: [
-    "Inglês — Avançado (C1)",
-    "Francês — Iniciante (A1)",
-  ],
+  languages: ["Inglês — Avançado (C1)", "Francês — Iniciante (A1)"],
   experience: [
     {
       period: "Jul 2024 — Mar 2025",
@@ -118,49 +129,74 @@ const pt: SiteContent = {
   ],
   featuredProjects: [
     {
+      name: "toolhaven-desktop",
+      year: "2026",
+      title: "ToolHaven — central de ferramentas para Windows",
+      description:
+        "App desktop que reúne FFmpeg, yt-dlp, ImageMagick e mais 22 ferramentas numa interface só: baixar e converter mídia, editar imagens e PDFs, reconhecer músicas — sem linha de comando.",
+      url: "https://github.com/diegormirhan/toolhaven-desktop",
+      image: "/projects/toolhaven.webp",
+      imageAlt: "Catálogo do ToolHaven no tema escuro",
+      demo: "https://toolhaven-kohl.vercel.app/",
+      tags: ["Tauri", "Rust", "React", "FFmpeg"],
+    },
+    {
+      name: "polyrag",
+      year: "2026",
+      title: "PolyRAG — RAG federado e local",
+      description:
+        "Escolhe o armazenamento certo (grafo, vetorial ou relacional) por cálculo, não por agente, e mostra a rota e cada etapa do pipeline. Roda localmente em GPU AMD via Vulkan.",
+      url: "https://github.com/diegormirhan/polyrag",
+      image: "/projects/polyrag.webp",
+      imageAlt: "Chat do PolyRAG com o placar de rotas e a cascata de spans",
+      tags: ["FastAPI", "Qdrant", "llama.cpp", "SvelteKit"],
+    },
+    {
+      name: "rasterscope",
+      year: "2026",
+      title: "RasterScope — mudança de cobertura do solo por satélite",
+      description:
+        "Workbench local de segmentação com U-Net e ONNX Runtime: mapas de incerteza, inspeção por pixel, benchmark de modelos, matriz de transição e relatórios offline.",
+      url: "https://github.com/diegormirhan/rasterscope",
+      image: "/projects/rasterscope.webp",
+      imageAlt: "Comparação antes e depois no RasterScope",
+      demo: "https://rasterscope.onrender.com/",
+      tags: ["U-Net", "ONNX", "FastAPI", "React"],
+    },
+    {
+      name: "aeropulse",
+      year: "2026",
+      title: "AeroPulse — manutenção preditiva de turbinas",
+      description:
+        "Previsão de vida útil restante para os motores turbofan NASA C-MAPSS com XGBoost, incerteza calibrada e IA explicável, de ponta a ponta e totalmente local.",
+      url: "https://github.com/diegormirhan/aeropulse",
+      image: "/projects/aeropulse.webp",
+      imageAlt: "Dashboard de frota do AeroPulse",
+      tags: ["XGBoost", "FastAPI", "React", "Docker"],
+    },
+    {
+      name: "manim-editor",
+      year: "2026",
+      title: "Manim Editor — animações matemáticas visuais",
+      description:
+        "Editor desktop para criar animações matemáticas com Manim sem escrever código: biblioteca de elementos, inspetor de propriedades, linha do tempo e renderização local.",
+      url: "https://github.com/diegormirhan/manim-editor",
+      image: "/projects/manim-editor.webp",
+      imageAlt: "Editor com uma integral renderizada e a linha do tempo",
+      demo: "https://manim-editor-alpha.vercel.app/",
+      tags: ["Tauri", "React", "Python", "Manim"],
+    },
+    {
       name: "voice-assistant",
       year: "2026",
       title: "Voice Assistant — IA de voz 100% local",
       description:
         "Assistente de voz full-duplex com visão de tela para Windows: conversa com interrupção e respostas conscientes do que está na tela, totalmente offline, sem nuvem e sem API keys.",
       url: "https://github.com/diegormirhan/voice-assistant",
-      tags: ["GGML", "Vulkan", "LLM local", "Speech"],
-    },
-    {
-      name: "llm-inference-benchmark",
-      year: "2026",
-      title: "LLM Inference Benchmark — GPU AMD/ROCm",
-      description:
-        "Benchmark comparativo de 4 engines de inferência de LLMs (HuggingFace, vLLM, AWQ e speculative decoding) em hardware AMD, com telemetria de throughput, latência e VRAM em tempo real e dashboard em Streamlit.",
-      url: "https://github.com/diegormirhan/llm-inference-benchmark",
-      tags: ["vLLM", "ROCm", "AWQ", "Streamlit"],
-    },
-    {
-      name: "intelligence-ocr",
-      year: "2026",
-      title: "Intelligence OCR — pipeline local de documentos com IA",
-      description:
-        "Pipeline assíncrono que extrai dados estruturados de notas, contratos e recibos com visão + LLMs locais (GLM-OCR, Qwen 2.5 via Ollama), cache instantâneo em PostgreSQL/JSONB e Docker.",
-      url: "https://github.com/diegormirhan/intelligence-ocr",
-      tags: ["asyncio", "Ollama", "PostgreSQL", "Docker"],
-    },
-    {
-      name: "all-in-one-downloader-bot",
-      year: "2023 — 2025",
-      title: "All-in-One Downloader Bot — bot de Telegram",
-      description:
-        "Bot de Telegram para download de mídia de múltiplas redes sociais, com 61 estrelas no GitHub.",
-      url: "https://github.com/diegormirhan/all-in-one-downloader-bot",
-      tags: ["Python", "Telegram API"],
-    },
-    {
-      name: "all-in-one-download-app",
-      year: "2024",
-      title: "Best Media Tool — website React/Next.js",
-      description:
-        "Ferramenta web gratuita para download de vídeos, fotos e músicas de redes sociais; front-end em React e Next.js hospedado na AWS Amplify.",
-      url: "https://github.com/diegormirhan/all-in-one-download-app",
-      tags: ["React", "Next.js", "AWS Amplify"],
+      image: "/projects/voice-assistant.webp",
+      imageFit: "window",
+      imageAlt: "Interface do assistente de voz",
+      tags: ["GGML", "Vulkan", "whisper.cpp", "llama.cpp"],
     },
   ],
 };
@@ -198,13 +234,19 @@ const en: SiteContent = {
     {
       title: "Infra & Data",
       icon: "infra",
-      items: ["Docker", "Git / CI-CD", "AWS", "PostgreSQL", "MongoDB", "Redis", "Tauri", "Electron"],
+      items: [
+        "Docker",
+        "Git / CI-CD",
+        "AWS",
+        "PostgreSQL",
+        "MongoDB",
+        "Redis",
+        "Tauri",
+        "Electron",
+      ],
     },
   ],
-  languages: [
-    "English — Advanced (C1)",
-    "French — Beginner (A1)",
-  ],
+  languages: ["English — Advanced (C1)", "French — Beginner (A1)"],
   experience: [
     {
       period: "Jul 2024 — Mar 2025",
@@ -235,49 +277,74 @@ const en: SiteContent = {
   ],
   featuredProjects: [
     {
+      name: "toolhaven-desktop",
+      year: "2026",
+      title: "ToolHaven — a toolbox app for Windows",
+      description:
+        "Desktop app that brings FFmpeg, yt-dlp, ImageMagick and 22 more tools into one interface: download and convert media, edit images and PDFs, recognize music — no command line.",
+      url: "https://github.com/diegormirhan/toolhaven-desktop",
+      image: "/projects/toolhaven.webp",
+      imageAlt: "The ToolHaven catalog in its dark theme",
+      demo: "https://toolhaven-kohl.vercel.app/",
+      tags: ["Tauri", "Rust", "React", "FFmpeg"],
+    },
+    {
+      name: "polyrag",
+      year: "2026",
+      title: "PolyRAG — local federated RAG",
+      description:
+        "Picks the right store (graph, vector or relational) with arithmetic, not an agent, and shows the route and every pipeline step. Runs locally on AMD GPUs via Vulkan.",
+      url: "https://github.com/diegormirhan/polyrag",
+      image: "/projects/polyrag.webp",
+      imageAlt: "PolyRAG chat with the route scoreboard and span waterfall",
+      tags: ["FastAPI", "Qdrant", "llama.cpp", "SvelteKit"],
+    },
+    {
+      name: "rasterscope",
+      year: "2026",
+      title: "RasterScope — satellite land-cover change",
+      description:
+        "Local segmentation workbench with U-Net and ONNX Runtime: uncertainty maps, pixel inspection, model benchmarking, transition matrices and offline reports.",
+      url: "https://github.com/diegormirhan/rasterscope",
+      image: "/projects/rasterscope.webp",
+      imageAlt: "Before and after comparison in RasterScope",
+      demo: "https://rasterscope.onrender.com/",
+      tags: ["U-Net", "ONNX", "FastAPI", "React"],
+    },
+    {
+      name: "aeropulse",
+      year: "2026",
+      title: "AeroPulse — turbofan predictive maintenance",
+      description:
+        "Remaining-useful-life forecasting for NASA C-MAPSS turbofan engines with XGBoost, calibrated uncertainty and explainable AI — end to end and fully local.",
+      url: "https://github.com/diegormirhan/aeropulse",
+      image: "/projects/aeropulse.webp",
+      imageAlt: "AeroPulse fleet dashboard",
+      tags: ["XGBoost", "FastAPI", "React", "Docker"],
+    },
+    {
+      name: "manim-editor",
+      year: "2026",
+      title: "Manim Editor — visual math animations",
+      description:
+        "Desktop editor for building mathematical animations with Manim without writing code: element library, property inspector, timeline and local rendering.",
+      url: "https://github.com/diegormirhan/manim-editor",
+      image: "/projects/manim-editor.webp",
+      imageAlt: "The editor with a rendered integral and the timeline",
+      demo: "https://manim-editor-alpha.vercel.app/",
+      tags: ["Tauri", "React", "Python", "Manim"],
+    },
+    {
       name: "voice-assistant",
       year: "2026",
       title: "Voice Assistant — 100% local voice AI",
       description:
         "Full-duplex voice assistant with screen vision for Windows: interruptible conversation and screen-aware answers, fully offline, no cloud and no API keys.",
       url: "https://github.com/diegormirhan/voice-assistant",
-      tags: ["GGML", "Vulkan", "Local LLM", "Speech"],
-    },
-    {
-      name: "llm-inference-benchmark",
-      year: "2026",
-      title: "LLM Inference Benchmark — AMD/ROCm GPU",
-      description:
-        "Comparative benchmark of 4 LLM inference engines (HuggingFace, vLLM, AWQ and speculative decoding) on AMD hardware, with real-time throughput, latency and VRAM telemetry and a Streamlit dashboard.",
-      url: "https://github.com/diegormirhan/llm-inference-benchmark",
-      tags: ["vLLM", "ROCm", "AWQ", "Streamlit"],
-    },
-    {
-      name: "intelligence-ocr",
-      year: "2026",
-      title: "Intelligence OCR — local AI document pipeline",
-      description:
-        "Async pipeline that extracts structured data from invoices, contracts and receipts using vision + local LLMs (GLM-OCR, Qwen 2.5 via Ollama), instant PostgreSQL/JSONB cache and Docker.",
-      url: "https://github.com/diegormirhan/intelligence-ocr",
-      tags: ["asyncio", "Ollama", "PostgreSQL", "Docker"],
-    },
-    {
-      name: "all-in-one-downloader-bot",
-      year: "2023 — 2025",
-      title: "All-in-One Downloader Bot — Telegram bot",
-      description:
-        "Telegram bot for downloading media from multiple social networks, with 61 stars on GitHub.",
-      url: "https://github.com/diegormirhan/all-in-one-downloader-bot",
-      tags: ["Python", "Telegram API"],
-    },
-    {
-      name: "all-in-one-download-app",
-      year: "2024",
-      title: "Best Media Tool — React/Next.js website",
-      description:
-        "Free web tool to download videos, photos and music from social networks; React and Next.js front-end hosted on AWS Amplify.",
-      url: "https://github.com/diegormirhan/all-in-one-download-app",
-      tags: ["React", "Next.js", "AWS Amplify"],
+      image: "/projects/voice-assistant.webp",
+      imageFit: "window",
+      imageAlt: "The voice assistant interface",
+      tags: ["GGML", "Vulkan", "whisper.cpp", "llama.cpp"],
     },
   ],
 };

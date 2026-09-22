@@ -14,14 +14,14 @@ export function Reveal({
 
   return (
     <motion.div
-      initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 10 }}
-      whileInView={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-20px" }}
-      transition={{
-        duration: 0.4,
-        delay: delay,
-        ease: "easeOut",
-      }}
+      initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "0px 0px -8% 0px" }}
+      transition={
+        shouldReduceMotion
+          ? { duration: 0.2, ease: "easeOut" }
+          : { type: "spring", bounce: 0, duration: 0.7, delay: Math.min(delay, 0.15) }
+      }
       className={className}
     >
       {children}

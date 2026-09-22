@@ -1,56 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
-import {
-  ArrowRight,
-  Brain,
-  Cpu,
-  Database,
-  Download,
-  Github,
-  Layers,
-  Linkedin,
-  Mail,
-  PenLine,
-  Sparkles,
-  Globe,
-  Zap,
-} from "lucide-react";
+import { ArrowRight, ArrowUpRight, Download } from "lucide-react";
 import { useState } from "react";
 
-
 import { ArticlesGrid } from "../components/articles-grid";
+import { FeaturedProjectCard } from "../components/featured-project-card";
 import { ProjectsGrid } from "../components/projects-grid";
 import { Reveal } from "../components/reveal";
 import { SectionHeading } from "../components/section-heading";
-import { Background } from "../components/background";
 import { useI18n } from "../lib/i18n";
-import { getSkillConfig } from "../lib/skill-icons";
-import { contentByLang, profile, type SkillIcon, type TimelineEntry } from "../lib/site-data";
-
-const skillGroupMeta: Record<
-  SkillIcon,
-  { icon: typeof Brain; colorClass: string; bgClass: string }
-> = {
-  ai: { icon: Brain, colorClass: "text-violet-400", bgClass: "bg-violet-400/10" },
-  code: { icon: Cpu, colorClass: "text-blue-400", bgClass: "bg-blue-400/10" },
-  web: { icon: Layers, colorClass: "text-cyan-400", bgClass: "bg-cyan-400/10" },
-  infra: { icon: Database, colorClass: "text-amber-400", bgClass: "bg-amber-400/10" },
-};
-
-function highlightMeta(title: string) {
-  switch (title) {
-    case "IA aplicada":
-    case "Applied AI":
-      return { icon: Brain, colorClass: "text-violet-400", bgClass: "bg-violet-400/10" };
-    case "Engenharia de dados":
-    case "Data engineering":
-      return { icon: Database, colorClass: "text-blue-400", bgClass: "bg-blue-400/10" };
-    case "Produto ponta a ponta":
-    case "End-to-end product":
-      return { icon: Layers, colorClass: "text-emerald-400", bgClass: "bg-emerald-400/10" };
-    default:
-      return { icon: Sparkles, colorClass: "text-primary", bgClass: "bg-primary/10" };
-  }
-}
+import { contentByLang, profile, type TimelineEntry } from "../lib/site-data";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -81,34 +39,37 @@ export const Route = createFileRoute("/")({
   component: Home,
 });
 
-function Timeline({ entries, icon: Icon = Sparkles }: { entries: TimelineEntry[], icon?: any }) {
+const sectionClass = "mx-auto max-w-5xl px-5 py-14 sm:px-8 sm:py-20";
+const labelClass = "text-caption font-semibold uppercase tracking-[0.06em] text-muted-foreground";
+
+function Timeline({ title, entries }: { title: string; entries: TimelineEntry[] }) {
   return (
-    <ol className="relative mt-8 border-l border-border ml-16 sm:ml-8 pl-8 sm:pl-10">
-      {entries.map((entry, idx) => (
-        <li key={`${entry.title}-${entry.period}`} className="group pb-10 last:pb-0">
-          <Reveal delay={idx * 0.1}>
-            <div className="absolute -left-[48px] sm:-left-[43px] mt-1.5 flex size-8 sm:size-7 items-center justify-center rounded-full bg-primary text-primary-foreground ring-4 ring-background border border-primary/20 transition-transform group-hover:scale-110">
-              <Icon className="size-4 sm:size-3.5" aria-hidden />
-            </div>
-            <span className="font-mono text-xs uppercase tracking-[0.2em] text-primary/80">{entry.period}</span>
-            <h3 className="mt-2 text-xl font-semibold">{entry.title}</h3>
-            <p className="text-sm text-muted-foreground">{entry.org}</p>
-            <p className="mt-3 max-w-2xl text-sm text-muted-foreground">{entry.description}</p>
+    <div>
+      <h3 className={labelClass}>{title}</h3>
+      <ol className="mt-4">
+        {entries.map((entry) => (
+          <li
+            key={`${entry.title}-${entry.period}`}
+            className="border-t border-border py-7 first:border-t-0 first:pt-3"
+          >
+            <p className="text-caption tabular-nums text-muted-foreground">{entry.period}</p>
+            <h4 className="text-headline mt-1.5">{entry.title}</h4>
+            <p className="mt-0.5 text-muted-foreground">{entry.org}</p>
+            <p className="mt-3 max-w-xl text-[0.9375rem] leading-relaxed text-foreground/80">
+              {entry.description}
+            </p>
             {entry.tags ? (
-              <ul className="mt-4 flex flex-wrap gap-2">
-                {entry.tags.map((tag) => (
-                  <li key={tag} className="glass rounded-full px-3 py-1 font-mono text-[11px] hover:border-primary/40 transition-colors">
-                    {tag}
-                  </li>
-                ))}
-              </ul>
+              <p className="text-caption mt-4 text-muted-foreground">{entry.tags.join(" · ")}</p>
             ) : null}
-          </Reveal>
-        </li>
-      ))}
-    </ol>
+          </li>
+        ))}
+      </ol>
+    </div>
   );
 }
+
+const fieldClass =
+  "w-full rounded-xl bg-input px-4 py-3 text-base text-foreground outline-none ring-1 ring-transparent transition-[box-shadow,background-color] duration-200 focus:bg-transparent focus:ring-2 focus:ring-ring";
 
 function ContactForm() {
   const { t } = useI18n();
@@ -122,47 +83,53 @@ function ContactForm() {
 
   return (
     <form
-      className="glass-liquid card-modern rounded-3xl p-6"
+      className="surface-card p-6 sm:p-8"
       onSubmit={(event) => {
         event.preventDefault();
         window.location.href = mailto;
       }}
     >
-      <div className="grid gap-4">
-        <label className="text-sm">
-          <span className="mb-1.5 block text-muted-foreground">{t.contact.name}</span>
+      <div className="grid gap-5">
+        <label className="block">
+          <span className="text-caption mb-2 block font-medium text-muted-foreground">
+            {t.contact.name}
+          </span>
           <input
             value={name}
             onChange={(event) => setName(event.target.value)}
             required
-            className="w-full rounded-lg border border-input bg-background/60 px-3 py-2 outline-none focus:border-primary"
+            autoComplete="name"
+            className={fieldClass}
           />
         </label>
-        <label className="text-sm">
-          <span className="mb-1.5 block text-muted-foreground">{t.contact.subject}</span>
+        <label className="block">
+          <span className="text-caption mb-2 block font-medium text-muted-foreground">
+            {t.contact.subject}
+          </span>
           <input
             value={subject}
             onChange={(event) => setSubject(event.target.value)}
-            className="w-full rounded-lg border border-input bg-background/60 px-3 py-2 outline-none focus:border-primary"
+            className={fieldClass}
           />
         </label>
-        <label className="text-sm">
-          <span className="mb-1.5 block text-muted-foreground">{t.contact.message}</span>
+        <label className="block">
+          <span className="text-caption mb-2 block font-medium text-muted-foreground">
+            {t.contact.message}
+          </span>
           <textarea
             value={message}
             onChange={(event) => setMessage(event.target.value)}
             required
             rows={5}
-            className="w-full rounded-lg border border-input bg-background/60 px-3 py-2 outline-none focus:border-primary"
+            className={`${fieldClass} resize-none`}
           />
         </label>
-        <button
-          type="submit"
-          className="glass-pill mt-2 inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-medium"
-        >
-          {t.contact.send}
-        </button>
-        <p className="text-xs text-muted-foreground">{t.contact.hint}</p>
+        <div className="mt-1 flex flex-wrap items-center gap-x-5 gap-y-3">
+          <button type="submit" className="btn-primary pressable">
+            {t.contact.send}
+          </button>
+          <p className="text-caption max-w-xs text-muted-foreground">{t.contact.hint}</p>
+        </div>
       </div>
     </form>
   );
@@ -173,284 +140,129 @@ function Home() {
   const content = contentByLang[lang];
 
   const channels = [
-    {
-      label: t.contact.email,
-      value: profile.email,
-      href: `mailto:${profile.email}`,
-      icon: Mail,
-      colorClass: "text-red-400",
-      bgClass: "bg-red-400/10",
-    },
-    {
-      label: "LinkedIn",
-      value: "/in/diegomirhan",
-      href: profile.linkedin,
-      icon: Linkedin,
-      colorClass: "text-blue-500",
-      bgClass: "bg-blue-500/10",
-    },
-    {
-      label: "GitHub",
-      value: `@${profile.githubUser}`,
-      href: profile.github,
-      icon: Github,
-      colorClass: "text-slate-300",
-      bgClass: "bg-slate-300/10",
-    },
-    {
-      label: "Medium",
-      value: profile.mediumUser,
-      href: profile.medium,
-      icon: PenLine,
-      colorClass: "text-green-500",
-      bgClass: "bg-green-500/10",
-    },
+    { label: t.contact.email, value: profile.email, href: `mailto:${profile.email}` },
+    { label: "LinkedIn", value: "/in/diegomirhan", href: profile.linkedin },
+    { label: "GitHub", value: `@${profile.githubUser}`, href: profile.github },
+    { label: "Medium", value: profile.mediumUser, href: profile.medium },
   ];
 
   return (
     <div className="relative">
-      <Background />
       <section id="inicio">
-        <div className="mx-auto max-w-6xl px-5 pb-20 pt-32 sm:pb-28 sm:pt-40 lg:pb-32 lg:pt-44 relative z-10">
+        <div className="mx-auto max-w-5xl px-5 pb-10 pt-36 sm:px-8 sm:pb-14 sm:pt-44">
           <Reveal>
-            {content.location ? (
-              <span className="glass inline-flex rounded-full px-4 py-1.5 font-mono text-xs uppercase tracking-[0.25em] text-primary">
-                {content.location}
-              </span>
-            ) : null}
-            <h1 className="mt-6 max-w-4xl text-5xl font-bold leading-[1.05] tracking-tight sm:text-7xl lg:text-8xl">
-              {profile.name} — <span className="text-primary drop-shadow-[0_0_20px_rgba(157,63,205,0.3)]">{content.role}</span>
+            <h1 className="text-display">
+              {profile.name}.<span className="block text-muted-foreground">{content.role}.</span>
             </h1>
-            <p className="mt-6 max-w-2xl text-lg text-muted-foreground">{content.headline}</p>
-            <div className="mt-9 flex flex-wrap gap-3">
-              <a
-                href="#projetos"
-                className="glass-pill inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium"
-              >
-                {t.hero.projects} <ArrowRight className="size-4" aria-hidden />
+            <p className="text-lede mt-8 max-w-2xl text-foreground/80">{content.headline}</p>
+            <div className="mt-10 flex flex-wrap items-center gap-3">
+              <a href="#projetos" className="btn-primary pressable">
+                {t.hero.projects}
+                <ArrowRight className="size-[18px]" aria-hidden />
               </a>
-              <a
-                href={profile.resume}
-                download
-                className="glass inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-medium"
-              >
-                <Download className="size-4 text-sky-400" aria-hidden /> {t.hero.resume}
+              <a href={profile.resume} download className="btn-secondary pressable">
+                <Download className="size-[18px]" aria-hidden />
+                {t.hero.resume}
               </a>
             </div>
           </Reveal>
         </div>
       </section>
 
-      <section id="sobre" className="mx-auto max-w-6xl px-5 py-16 sm:py-20 lg:py-24">
+      <section id="sobre" className={sectionClass}>
         <SectionHeading eyebrow={t.about.eyebrow} title={t.about.title} />
-        <div className="mt-8 grid gap-5 sm:mt-10 lg:grid-cols-[1.6fr_1fr]">
-          <Reveal>
-            <div className="card-modern relative h-full overflow-hidden rounded-3xl p-6 sm:p-10">
-              <span
-                className="pointer-events-none absolute -right-16 -top-16 size-48 rounded-full bg-primary/20 blur-3xl"
-                aria-hidden
-              />
-              <p className="text-base leading-relaxed text-foreground/90 sm:text-lg">
-                {content.summary}
-              </p>
-              <p className="mt-4 text-sm leading-relaxed text-muted-foreground sm:text-base">
-                {t.about.extra}
-              </p>
-              <div className="mt-7 grid gap-3 sm:grid-cols-3">
-                {t.about.highlights.map((item) => {
-                  const { icon: Icon, colorClass, bgClass } = highlightMeta(item.title);
-                  return (
-                    <div key={item.title} className="glass flex flex-col items-start rounded-2xl p-4 transition-all hover:border-primary/30">
-                      <span className={`mb-2 inline-flex size-8 items-center justify-center rounded-xl ${bgClass} ${colorClass}`}>
-                        <Icon className="size-4" aria-hidden />
-                      </span>
-                      <h3 className="text-sm font-semibold">{item.title}</h3>
-                      <p className="mt-1.5 text-[11px] leading-relaxed text-muted-foreground">
-                        {item.description}
-                      </p>
-                    </div>
-                  );
-                })}
-              </div>
+        <Reveal className="mt-10 grid gap-4 lg:grid-cols-[1.55fr_1fr]">
+          <div className="surface-card p-7 sm:p-10">
+            <p className="text-lede text-foreground">{content.summary}</p>
+            <p className="mt-5 leading-relaxed text-muted-foreground">{t.about.extra}</p>
+          </div>
+          <div className="flex flex-col gap-4">
+            <div className="surface-card flex-1 p-7 sm:p-8">
+              <h3 className={labelClass}>{t.about.currently}</h3>
+              <p className="text-headline mt-3 font-medium">{t.about.currentlyText}</p>
             </div>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <div className="flex h-full flex-col gap-5">
-              <div className="card-modern flex flex-col items-start rounded-3xl p-6 sm:p-8">
-                <div className="flex items-center gap-3">
-                  <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-amber-400/10 text-amber-400 ring-1 ring-amber-400/20">
-                    <Zap className="size-5" aria-hidden />
-                  </span>
-                  <h3 className="font-mono text-sm uppercase tracking-[0.2em] text-amber-400 font-bold">
-                    {t.about.currently}
-                  </h3>
-                </div>
-                <p className="mt-5 text-base leading-relaxed text-foreground/90">
-                  {t.about.currentlyText}
-                </p>
-              </div>
-              <div className="card-modern flex flex-col items-start rounded-3xl p-6 sm:p-8">
-                <div className="flex items-center gap-3">
-                  <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-emerald-400/10 text-emerald-400 ring-1 ring-emerald-400/20">
-                    <Globe className="size-5" aria-hidden />
-                  </span>
-                  <h3 className="font-mono text-sm uppercase tracking-[0.2em] text-emerald-400 font-bold">
-                    {t.about.languages}
-                  </h3>
-                </div>
-                <div className="mt-5 flex flex-wrap gap-2.5">
-                  {content.languages.map((language) => (
-                    <span 
-                      key={language} 
-                      className="glass-pill inline-flex items-center rounded-full px-4 py-2 text-sm font-medium text-foreground/90 transition-colors hover:text-primary"
-                    >
-                      {language}
-                    </span>
-                  ))}
-                </div>
-              </div>
+            <div className="surface-card p-7 sm:p-8">
+              <h3 className={labelClass}>{t.about.languages}</h3>
+              <ul className="mt-3 space-y-1.5">
+                {content.languages.map((language) => (
+                  <li key={language}>{language}</li>
+                ))}
+              </ul>
             </div>
-          </Reveal>
-        </div>
+          </div>
+        </Reveal>
+        <Reveal className="mt-12 grid gap-10 sm:grid-cols-3 sm:gap-8">
+          {t.about.highlights.map((item) => (
+            <div key={item.title} className="border-t border-border pt-6">
+              <h3 className="text-headline">{item.title}</h3>
+              <p className="mt-2 leading-relaxed text-muted-foreground">{item.description}</p>
+            </div>
+          ))}
+        </Reveal>
       </section>
 
-      <section id="skills" className="mx-auto max-w-6xl px-5 py-16 sm:py-20 lg:py-24">
+      <section id="skills" className={sectionClass}>
         <SectionHeading
           eyebrow={t.skills.eyebrow}
           title={t.skills.title}
           description={t.skills.description}
-          action={
-            <div className="hidden sm:flex size-12 items-center justify-center rounded-2xl bg-amber-400/10 text-amber-400 ring-1 ring-amber-400/20 transition-transform hover:scale-110">
-              <Brain className="size-6" />
-            </div>
-          }
         />
-        <div className="mt-8 grid gap-4 sm:mt-10 lg:grid-cols-2">
-          {content.skillGroups.map((group, groupIdx) => {
-            const { icon: Icon, colorClass, bgClass } = skillGroupMeta[group.icon];
-            return (
-              <Reveal key={group.title} delay={groupIdx * 0.1}>
-                <div className="card-modern group relative flex h-full items-start gap-6 overflow-hidden rounded-3xl p-6 transition-all hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5 sm:p-7">
-                  <span
-                    className="pointer-events-none absolute -right-6 -top-6 size-32 rounded-full bg-primary/20 blur-3xl opacity-40"
-                    aria-hidden
-                  />
-                  <div className={`inline-flex size-14 shrink-0 items-center justify-center rounded-2xl ${bgClass} ${colorClass} ring-1 ring-current/20 transition-transform group-hover:scale-110`}>
-                    <Icon className="size-7" aria-hidden />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-xl font-bold tracking-tight text-foreground/90">{group.title}</h3>
-                    <ul className="mt-4 flex flex-wrap gap-2">
-                      {group.items.map((item) => {
-                        const { icon: ItemIcon, iconClass, chipClass } = getSkillConfig(item);
-                        return (
-                          <li
-                            key={item}
-                            className={`inline-flex items-center gap-2 rounded-lg border border-border/50 ${chipClass} px-3.5 py-2 font-mono text-[13px] font-medium text-muted-foreground/90 transition-colors hover:border-primary/40`}
-                          >
-                            <ItemIcon className={`size-4.5 ${iconClass}`} aria-hidden />
-                            {item}
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </div>
-                </div>
-              </Reveal>
-            );
-          })}
-        </div>
+        <Reveal className="mt-10 grid gap-4 md:grid-cols-2">
+          {content.skillGroups.map((group) => (
+            <div key={group.title} className="surface-card p-7 sm:p-8">
+              <h3 className="text-headline">{group.title}</h3>
+              <ul className="mt-5 flex flex-wrap gap-2">
+                {group.items.map((item) => (
+                  <li key={item} className="chip">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </Reveal>
       </section>
 
-      <section id="experiencia" className="mx-auto max-w-6xl px-5 py-16 sm:py-20 lg:py-24">
+      <section id="experiencia" className={sectionClass}>
         <SectionHeading
           eyebrow={t.career.eyebrow}
           title={t.career.title}
           description={t.career.description}
         />
-        <div className="mt-8 grid gap-10 sm:mt-10 lg:grid-cols-2 lg:gap-16">
-          <Reveal>
-            <div className="relative">
-              <div className="flex items-center gap-3 mb-6">
-                <div className="flex size-10 items-center justify-center rounded-xl bg-violet-400/10 text-violet-400">
-                  <Layers className="size-5" />
-                </div>
-              <h3 className="text-xl font-bold">{lang === 'pt' ? 'Experiência Profissional' : 'Professional Experience'}</h3>
-            </div>
-            <Timeline entries={content.experience} icon={Layers} />
-          </div>
+        <Reveal className="mt-10 grid gap-12 lg:grid-cols-2 lg:gap-16">
+          <Timeline
+            title={lang === "pt" ? "Experiência profissional" : "Professional experience"}
+            entries={content.experience}
+          />
+          <Timeline
+            title={lang === "pt" ? "Formação acadêmica" : "Education"}
+            entries={content.education}
+          />
         </Reveal>
-        <Reveal delay={0.2}>
-          <div className="relative">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="flex size-10 items-center justify-center rounded-xl bg-blue-400/10 text-blue-400">
-                <Sparkles className="size-5" />
-              </div>
-              <h3 className="text-xl font-bold">{lang === 'pt' ? 'Formação Acadêmica' : 'Education'}</h3>
-            </div>
-            <Timeline entries={content.education} icon={Sparkles} />
-          </div>
-        </Reveal>
-        </div>
       </section>
 
-      <section id="projetos" className="mx-auto max-w-6xl px-5 py-16 sm:py-20 lg:py-24">
+      <section id="projetos" className={sectionClass}>
         <SectionHeading
           eyebrow={t.projects.eyebrow}
           title={t.projects.title}
           description={t.projects.description}
-          action={
-            <div className="hidden sm:flex size-12 items-center justify-center rounded-2xl bg-indigo-400/10 text-indigo-400 ring-1 ring-indigo-400/20 transition-transform hover:scale-110">
-              <Layers className="size-6" />
-            </div>
-          }
         />
-        <div className="mt-8 grid gap-6 sm:mt-10 md:grid-cols-2">
-          {content.featuredProjects.map((project, projectIdx) => (
-            <Reveal key={project.name} delay={projectIdx * 0.1}>
-              <a
-                href={project.url}
-                target="_blank"
-                rel="noreferrer"
-                className="card-modern group relative flex h-full flex-col overflow-hidden rounded-3xl p-6 transition-all hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className="flex size-7 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                      <Cpu className="size-3.5" />
-                    </div>
-                    <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-primary/80 font-bold">
-                      {project.year}
-                    </span>
-                  </div>
-                  <div className="flex size-8 items-center justify-center rounded-lg bg-primary/5 text-primary opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Sparkles className="size-4" />
-                  </div>
-                </div>
-                <h3 className="mt-3 text-xl font-bold group-hover:text-primary transition-colors">{project.title}</h3>
-                <p className="mt-3 flex-1 text-sm leading-relaxed text-muted-foreground">{project.description}</p>
-                <ul className="mt-5 flex flex-wrap gap-2">
-                  {project.tags.map((tag) => (
-                    <li key={tag} className="glass-pill rounded-full px-3 py-1 font-mono text-[11px]">
-                      {tag}
-                    </li>
-                  ))}
-                </ul>
-              </a>
-            </Reveal>
-          ))}
+        <div className="mt-10 grid gap-4 md:grid-cols-2">
+          {content.featuredProjects.map((project, index, all) => {
+            const wide = index === 0 || (index === all.length - 1 && all.length % 2 === 0);
+            return (
+              <Reveal key={project.name} className={wide ? "md:col-span-2" : ""}>
+                <FeaturedProjectCard project={project} wide={wide} />
+              </Reveal>
+            );
+          })}
         </div>
 
-        <div className="mt-14 sm:mt-16">
+        <div className="mt-20">
           <SectionHeading
             eyebrow="GitHub"
             title={t.projects.pinnedTitle}
             description={t.projects.pinnedDescription}
-            action={
-              <div className="hidden sm:flex size-12 items-center justify-center rounded-2xl bg-slate-400/10 text-slate-400 ring-1 ring-slate-400/20 transition-transform hover:scale-110">
-                <Github className="size-6" />
-              </div>
-            }
           />
           <div className="mt-10">
             <ProjectsGrid limit={6} />
@@ -458,62 +270,49 @@ function Home() {
         </div>
       </section>
 
-      <section id="artigos" className="mx-auto max-w-6xl px-5 py-16 sm:py-20 lg:py-24">
+      <section id="artigos" className={sectionClass}>
         <SectionHeading
           eyebrow={t.articles.eyebrow}
           title={t.articles.title}
           description={t.articles.description}
-          action={
-            <div className="hidden sm:flex size-12 items-center justify-center rounded-2xl bg-rose-400/10 text-rose-400 ring-1 ring-rose-400/20 transition-transform hover:scale-110">
-              <PenLine className="size-6" />
-            </div>
-          }
         />
         <div className="mt-10">
           <ArticlesGrid limit={6} />
         </div>
       </section>
 
-      <section id="contato" className="mx-auto max-w-6xl px-5 py-16 sm:py-20 lg:py-24">
+      <section id="contato" className={sectionClass}>
         <SectionHeading
           eyebrow={t.contact.eyebrow}
           title={t.contact.title}
           description={t.contact.description}
-          action={
-            <div className="hidden sm:flex size-12 items-center justify-center rounded-2xl bg-emerald-400/10 text-emerald-400 ring-1 ring-emerald-400/20 transition-transform hover:scale-110">
-              <Mail className="size-6" />
-            </div>
-          }
         />
-        <div className="mt-8 grid gap-5 sm:mt-10 lg:grid-cols-[1fr_1.2fr]">
-          <div>
-            <ul className="space-y-3">
-              {channels.map(({ label, value, href, icon: Icon, colorClass, bgClass }, channelIdx) => (
-                <li key={label}>
-                  <Reveal delay={channelIdx * 0.1}>
-                  <a
-                    href={href}
-                    target={href.startsWith("http") ? "_blank" : undefined}
-                    rel="noreferrer"
-                    className="card-modern flex items-center gap-4 rounded-2xl p-4"
-                  >
-                    <span className={`inline-flex size-10 items-center justify-center rounded-full ${bgClass} ${colorClass}`}>
-                      <Icon className="size-4" aria-hidden />
+        <Reveal className="mt-10 grid items-start gap-4 lg:grid-cols-[1fr_1.25fr]">
+          <ul className="surface-card p-2">
+            {channels.map(({ label, value, href }) => (
+              <li key={label}>
+                <a
+                  href={href}
+                  target={href.startsWith("http") ? "_blank" : undefined}
+                  rel="noreferrer"
+                  className="group flex items-center justify-between gap-4 rounded-[1.25rem] px-5 py-4 transition-colors duration-200 hover:bg-foreground/[0.05] active:bg-foreground/[0.09]"
+                >
+                  <span className="min-w-0">
+                    <span className="block font-medium">{label}</span>
+                    <span className="block truncate text-[0.9375rem] text-muted-foreground">
+                      {value}
                     </span>
-                    <span>
-                      <span className="block text-sm font-medium">{label}</span>
-                      <span className="block text-sm text-muted-foreground">{value}</span>
-                    </span>
-                  </a>
-                  </Reveal>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <Reveal>
-            <ContactForm />
-          </Reveal>
-        </div>
+                  </span>
+                  <ArrowUpRight
+                    className="size-[18px] shrink-0 text-muted-foreground transition-[translate,color] duration-300 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-foreground"
+                    aria-hidden
+                  />
+                </a>
+              </li>
+            ))}
+          </ul>
+          <ContactForm />
+        </Reveal>
       </section>
     </div>
   );

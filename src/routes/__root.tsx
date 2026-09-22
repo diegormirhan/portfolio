@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 
+import { AmbientBackground } from "../components/ambient-background";
 import { SiteFooter } from "../components/site-footer";
 import { SiteFrame } from "../components/site-frame";
 import { SiteHeader } from "../components/site-header";
@@ -95,12 +96,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.png", type: "image/webp" },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "" },
       { rel: "preconnect", href: "https://pinned.berrysauce.dev", crossOrigin: "anonymous" },
       { rel: "preconnect", href: "https://api.rss2json.com", crossOrigin: "anonymous" },
       { rel: "dns-prefetch", href: "https://api.github.com" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" },
     ],
   }),
   shellComponent: RootShell,
@@ -130,6 +128,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <LanguageProvider>
         <div className="relative flex min-h-screen flex-col">
+          <AmbientBackground />
           <SiteFrame />
           <SiteHeader />
           <main className="flex-1">
@@ -142,5 +141,3 @@ function RootComponent() {
     </QueryClientProvider>
   );
 }
-
-

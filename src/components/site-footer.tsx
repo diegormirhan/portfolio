@@ -1,60 +1,35 @@
-import { Github, Linkedin, Mail, PenLine } from "lucide-react";
-
 import { useI18n } from "../lib/i18n";
 import { profile } from "../lib/site-data";
+
+const links = [
+  { label: "GitHub", href: profile.github },
+  { label: "LinkedIn", href: profile.linkedin },
+  { label: "Medium", href: profile.medium },
+  { label: "E-mail", href: `mailto:${profile.email}` },
+];
 
 export function SiteFooter() {
   const { t } = useI18n();
 
   return (
-    <footer className="border-t border-border bg-surface">
-      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-5 py-8 sm:flex-row">
-        <p className="text-sm text-muted-foreground">
+    <footer className="mx-auto w-full max-w-5xl px-5 pb-12 sm:px-8">
+      <div className="text-caption flex flex-col gap-4 border-t border-border pt-6 text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+        <p>
           © {new Date().getFullYear()} {profile.name}. {t.footer}
         </p>
-        <ul className="flex items-center gap-3">
-          <li>
-            <a
-              href={profile.github}
-              target="_blank"
-              rel="noreferrer"
-              aria-label="GitHub"
-              className="inline-flex size-9 items-center justify-center rounded-full border border-border text-slate-300 hover:border-slate-300 hover:bg-slate-300/10"
-            >
-              <Github className="size-4" />
-            </a>
-          </li>
-          <li>
-            <a
-              href={profile.linkedin}
-              target="_blank"
-              rel="noreferrer"
-              aria-label="LinkedIn"
-              className="inline-flex size-9 items-center justify-center rounded-full border border-border text-blue-500 hover:border-blue-500 hover:bg-blue-500/10"
-            >
-              <Linkedin className="size-4" />
-            </a>
-          </li>
-          <li>
-            <a
-              href={profile.medium}
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Medium"
-              className="inline-flex size-9 items-center justify-center rounded-full border border-border text-green-500 hover:border-green-500 hover:bg-green-500/10"
-            >
-              <PenLine className="size-4" />
-            </a>
-          </li>
-          <li>
-            <a
-              href={`mailto:${profile.email}`}
-              aria-label="E-mail"
-              className="inline-flex size-9 items-center justify-center rounded-full border border-border text-red-400 hover:border-red-400 hover:bg-red-400/10"
-            >
-              <Mail className="size-4" />
-            </a>
-          </li>
+        <ul className="flex flex-wrap gap-x-6 gap-y-2">
+          {links.map((link) => (
+            <li key={link.label}>
+              <a
+                href={link.href}
+                target={link.href.startsWith("http") ? "_blank" : undefined}
+                rel="noreferrer"
+                className="transition-colors duration-200 hover:text-foreground"
+              >
+                {link.label}
+              </a>
+            </li>
+          ))}
         </ul>
       </div>
     </footer>

@@ -16,15 +16,17 @@ export function SectionHeading({
   action?: ReactNode;
 }) {
   return (
-    <div className={cn("flex flex-wrap items-end justify-between gap-4", className)}>
-      <div className="max-w-2xl">
+    <div className={cn("flex flex-wrap items-end justify-between gap-x-8 gap-y-4", className)}>
+      <div className="max-w-3xl">
         {eyebrow ? (
-          <span className="glass-pill inline-flex rounded-full px-4 py-1.5 font-mono text-xs uppercase tracking-[0.25em] text-primary">
+          <p className="text-[0.9375rem] font-semibold tracking-[-0.01em] text-primary">
             {eyebrow}
-          </span>
+          </p>
         ) : null}
-        <h2 className="mt-2 text-3xl font-bold tracking-tight sm:text-5xl">{title}</h2>
-        {description ? <p className="mt-3 text-muted-foreground">{description}</p> : null}
+        <h2 className="text-title mt-2">{title}</h2>
+        {description ? (
+          <p className="text-lede mt-4 max-w-2xl text-muted-foreground">{description}</p>
+        ) : null}
       </div>
       {action}
     </div>

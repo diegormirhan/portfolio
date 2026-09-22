@@ -15,7 +15,7 @@ export function ProjectsGrid({ limit }: { limit?: number }) {
 
   if (isPending) {
     return (
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: limit ?? 6 }).map((_, index) => (
           <ProjectCardSkeleton key={index} />
         ))}
@@ -25,10 +25,15 @@ export function ProjectsGrid({ limit }: { limit?: number }) {
 
   if (isError || !data || data.length === 0) {
     return (
-      <div className="rounded-2xl border border-border bg-card p-8 text-center">
+      <div className="surface-card p-8 text-center">
         <p className="text-sm text-muted-foreground">
           {t.projects.error}{" "}
-          <a href={profile.github} target="_blank" rel="noreferrer" className="text-primary hover:underline">
+          <a
+            href={profile.github}
+            target="_blank"
+            rel="noreferrer"
+            className="text-primary hover:underline"
+          >
             {t.projects.errorLink}
           </a>
         </p>
@@ -39,9 +44,9 @@ export function ProjectsGrid({ limit }: { limit?: number }) {
   const projects = limit ? data.slice(0, limit) : data;
 
   return (
-    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {projects.map((project, idx) => (
-        <Reveal key={project.id} className="h-full" delay={idx * 0.1}>
+        <Reveal key={project.id} className="h-full" delay={(idx % 3) * 0.05}>
           <ProjectCard project={project} />
         </Reveal>
       ))}
