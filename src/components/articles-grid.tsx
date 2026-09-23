@@ -8,7 +8,7 @@ import { useI18n } from "../lib/i18n";
 import { profile } from "../lib/site-data";
 
 export function ArticlesGrid({ limit }: { limit?: number }) {
-  const { t } = useI18n();
+  const { lang, t } = useI18n();
   const [hydrated, setHydrated] = useState(false);
   useEffect(() => setHydrated(true), []);
   const { data, isPending, isError } = useQuery({ ...articlesQueryOptions, enabled: hydrated });
@@ -23,7 +23,9 @@ export function ArticlesGrid({ limit }: { limit?: number }) {
     );
   }
 
-  if (isError || !data || data.length === 0) {
+  const inLang = data?.filter((article) => article.lang === lang) ?? [];
+
+  if (isError || inLang.length === 0) {
     return (
       <div className="surface-card p-8 text-center">
         <p className="text-sm text-muted-foreground">
@@ -41,7 +43,7 @@ export function ArticlesGrid({ limit }: { limit?: number }) {
     );
   }
 
-  const articles = limit ? data.slice(0, limit) : data;
+  const articles = limit ? inLang.slice(0, limit) : inLang;
 
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

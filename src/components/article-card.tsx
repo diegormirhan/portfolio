@@ -4,7 +4,7 @@ import { useI18n } from "../lib/i18n";
 import { formatDate, type Article } from "../lib/medium";
 
 export function ArticleCard({ article }: { article: Article }) {
-  const { t } = useI18n();
+  const { lang, t } = useI18n();
 
   return (
     <article className="surface-card pressable group relative flex h-full flex-col overflow-hidden transition-colors duration-200 hover:bg-secondary">
@@ -25,7 +25,7 @@ export function ArticleCard({ article }: { article: Article }) {
 
       <div className="flex flex-1 flex-col p-6">
         <p className="text-caption tabular-nums text-muted-foreground">
-          {formatDate(article.publishedAt)} · {article.readingMinutes} min
+          {formatDate(article.publishedAt, lang)} · {article.readingMinutes} min
         </p>
         <h3 className="text-headline mt-2">
           <a
