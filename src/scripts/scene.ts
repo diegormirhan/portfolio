@@ -179,9 +179,9 @@ function makeNetwork(shared: Shared): Station {
   const layerOf = layers.flatMap((n, li) => Array<number>(n).fill(li));
 
   const neurons = new THREE.InstancedMesh(
-    new THREE.SphereGeometry(0.13, 32, 16),
+    new THREE.SphereGeometry(0.14, 48, 24),
     new THREE.ShaderMaterial({
-      uniforms: { uBody: { value: new THREE.Color("#0d3380") }, uGlow: { value: CERULEAN } },
+      uniforms: { uBody: { value: new THREE.Color("#2356c4") }, uGlow: { value: CERULEAN } },
       vertexShader: /* glsl */ `
         varying vec3 vNormal;
         varying vec3 vView;
@@ -201,12 +201,18 @@ function makeNetwork(shared: Shared): Station {
         varying vec3 vView;
         varying float vLevel;
         void main() {
-          float facing = max(dot(normalize(vNormal), normalize(vView)), 0.0);
-          // Brilho interno: forte no centro, some na borda; a borda ganha um leve contorno cobalto
-          float inner = pow(facing, 2.2) * vLevel;
-          float rim = pow(1.0 - facing, 3.0) * 0.5;
-          vec3 color = uBody + uGlow * inner * 1.3 + uBody * rim * 2.5;
-          gl_FragColor = vec4(min(color, uGlow * 1.15), 1.0);
+          vec3 n = normalize(vNormal);
+          vec3 v = normalize(vView);
+          // Luz de estúdio vinda de cima/esquerda: sombreado difuso dá o volume da esfera
+          vec3 l = normalize(vec3(-0.5, 0.7, 0.6));
+          float diffuse = 0.35 + 0.65 * max(dot(n, l), 0.0);
+          float spec = pow(max(dot(reflect(-l, n), v), 0.0), 48.0);
+          float facing = max(dot(n, v), 0.0);
+          // Brilho ciano por dentro (respira e dispara) + contorno ciano na borda
+          float inner = pow(facing, 2.0) * vLevel;
+          float rim = pow(1.0 - facing, 2.5);
+          vec3 color = uBody * diffuse + uGlow * (inner * 1.1 + rim * 0.55) + vec3(0.75, 0.9, 1.0) * spec * 0.6;
+          gl_FragColor = vec4(color, 1.0);
         }
       `,
     }),
