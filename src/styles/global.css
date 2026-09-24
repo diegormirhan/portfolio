@@ -64,6 +64,12 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
+/* Durante o preloader e a abertura não há rolagem nem barra */
+html.is-intro {
+  overflow: hidden;
+  scrollbar-width: none;
+}
+
 html.lenis,
 html.lenis body {
   height: auto;
@@ -444,7 +450,7 @@ main,
   position: absolute;
   inset: -3.5rem -5rem;
   border-radius: 999px;
-  background: radial-gradient(closest-side, oklch(0.62 0.19 262 / 70%), oklch(0.62 0.19 262 / 25%) 55%, transparent);
+  background: radial-gradient(closest-side, color-mix(in oklch, var(--cobalt-bright) 70%, transparent), color-mix(in oklch, var(--cobalt-bright) 25%, transparent) 55%, transparent);
   filter: blur(18px);
   pointer-events: none;
   animation: go-breathe 2.8s ease-in-out infinite;
@@ -471,9 +477,9 @@ main,
   letter-spacing: 0.18em;
   text-transform: uppercase;
   box-shadow:
-    inset 0 0 0 1px oklch(0.78 0.12 228 / 35%),
-    0 0 50px 4px oklch(0.55 0.19 262 / 55%),
-    0 14px 60px -10px oklch(0.44 0.19 262 / 90%);
+    inset 0 0 0 1px color-mix(in oklch, var(--cerulean-bright) 35%, transparent),
+    0 0 50px 4px color-mix(in oklch, var(--cobalt-bright) 55%, transparent),
+    0 14px 60px -10px color-mix(in oklch, var(--cobalt) 90%, transparent);
   transition:
     color 0.45s var(--ease-out),
     gap 0.5s var(--ease-out),
@@ -486,7 +492,7 @@ main,
   inset: 0;
   z-index: -1;
   border-radius: inherit;
-  background: linear-gradient(90deg, var(--cerulean-bright), oklch(0.9 0.07 228));
+  background: linear-gradient(90deg, var(--cerulean-bright), color-mix(in oklch, var(--cerulean-bright), #fff 45%));
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.6s var(--ease-out);
@@ -530,9 +536,9 @@ main,
   gap: 0.8rem;
   color: var(--bg-deep);
   box-shadow:
-    inset 0 0 0 1px oklch(0.9 0.07 228 / 60%),
-    0 0 80px 10px oklch(0.78 0.12 228 / 55%),
-    0 18px 90px -8px oklch(0.78 0.12 228 / 85%);
+    inset 0 0 0 1px color-mix(in oklch, var(--cerulean-bright) 60%, transparent),
+    0 0 80px 10px color-mix(in oklch, var(--cerulean-bright) 55%, transparent),
+    0 18px 90px -8px color-mix(in oklch, var(--cerulean-bright) 85%, transparent);
 }
 
 .preloader__go:hover .go__fill,
@@ -615,7 +621,7 @@ main,
 }
 
 .intro-expand__pill.is-hover {
-  background: linear-gradient(90deg, var(--cerulean-bright), oklch(0.9 0.07 228));
+  background: linear-gradient(90deg, var(--cerulean-bright), color-mix(in oklch, var(--cerulean-bright), #fff 45%));
 }
 
 .intro-expand__glow {
@@ -652,7 +658,7 @@ main,
 }
 
 #intro .intro-ring--glow {
-  stroke: #9fd4ff;
+  stroke: color-mix(in oklch, var(--cerulean-bright), #fff 45%);
   stroke-width: 8px;
   stroke-opacity: 0.3;
 }

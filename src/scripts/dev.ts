@@ -27,7 +27,9 @@ type DevWindow = { __devOn?: boolean; __devPulse?: { level: number; age: number 
 const devWindow = window as unknown as DevWindow;
 devWindow.__devPulse = { level: 0, age: 99 };
 
-let on = false;
+// Recarregar mantém o dev mode (o script inline do <head> já pôs a classe)
+let on = document.documentElement.classList.contains("dev");
+devWindow.__devOn = on;
 let muted = false;
 let busy = false;
 
@@ -552,6 +554,9 @@ function apply(next: boolean) {
   on = next;
   devWindow.__devOn = on;
   document.documentElement.classList.toggle("dev", on);
+  try {
+    sessionStorage.setItem("dev", on ? "1" : "0");
+  } catch {}
   // Sempre recomeça do topo
   if (lenis) lenis.scrollTo(0, { immediate: true, force: true });
   else scrollTo(0, 0);
@@ -593,6 +598,18 @@ function syncButtons() {
     }
   });
 }
+
+// Dev mode vindo de um recarregamento: o pulso e a trilha começam quando a abertura termina
+// (o clique em "Entrar" já liberou o áudio; "entrar sem som" chega mudo)
+addEventListener("intro:done", (e) => {
+  if (!on) return;
+  if ((e as CustomEvent<{ sound?: boolean }>).detail?.sound === false) muted = true;
+  startAudio();
+  setupLayer();
+  beatStart = nextBeat = clock() + 0.35;
+  startLoop();
+  syncButtons();
+});
 
 // O cabeçalho é trocado a cada página: religa os botões e mantém o estado
 document.addEventListener("astro:page-load", () => {

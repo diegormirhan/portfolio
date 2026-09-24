@@ -51,7 +51,11 @@ const socials = [
     <meta name="twitter:card" content="summary_large_image" />
     <script is:inline>
       // Esconde os elementos animados só quando a animação vai de fato rodar
-      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("js-motion");
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("js-motion", "is-intro");
+      // Recarregar mantém o dev mode ligado
+      try {
+        if (sessionStorage.getItem("dev") === "1") document.documentElement.classList.add("dev");
+      } catch {}
     </script>
     <script
       type="application/ld+json"

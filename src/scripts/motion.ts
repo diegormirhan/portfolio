@@ -82,6 +82,9 @@ function sceneReady() {
 async function runPreloader() {
   const root = document.getElementById("preloader");
   if (!root) return;
+  // Recarregar sempre volta ao topo (o roteador do Astro restauraria a posição antiga)
+  lenis?.scrollTo(0, { immediate: true, force: true });
+  scrollTo(0, 0);
   const counter = root.querySelector<HTMLElement>("[data-count]")!;
   const bar = root.querySelector<HTMLElement>("[data-bar]")!;
   const progress = { value: 0 };
@@ -93,6 +96,7 @@ async function runPreloader() {
   if (reduceMotion) {
     await Promise.race([Promise.all([document.fonts.ready, sceneReady()]), wait(2500)]);
     root.remove();
+    dispatchEvent(new CustomEvent("intro:done"));
     return;
   }
 
@@ -113,7 +117,12 @@ async function runPreloader() {
   const expander = expandPill(root, choice.rect, choice.hovered, Math.max(0.6, hitIn - 0.2));
   await wait(hitIn * 1000);
   await playIntro(root, expander);
+  dispatchEvent(new CustomEvent("intro:done", { detail: { sound: choice.sound } }));
 }
+
+/** Degradê do fundo do nome: cobalto, ou vermelho no dev mode. */
+const introGlow = () =>
+  document.documentElement.classList.contains("dev") ? ["#b3101f", "#4a0710", "#12030a"] : ["#1f4bc4", "#10286e", "#060d2a"];
 
 /** Momento do golpe dentro de intro-hit.m4a (a subida vem antes). */
 const HIT_AT = 1.31;
@@ -228,7 +237,7 @@ function expandPill(root: HTMLElement, rect: DOMRect, hovered: boolean, duration
   const r = Math.hypot(innerWidth, innerHeight) * 0.6;
   el.innerHTML = `<span class="intro-expand__pill${hovered ? " is-hover" : ""}"></span><span class="intro-expand__glow"></span>`;
   (el.lastElementChild as HTMLElement).style.background =
-    `radial-gradient(circle ${r}px at 50% 50%, #1f4bc4 0%, #10286e 45%, #060d2a 100%)`;
+    `radial-gradient(circle ${r}px at 50% 50%, ${introGlow()[0]} 0%, ${introGlow()[1]} 45%, ${introGlow()[2]} 100%)`;
   Object.assign(el.style, {
     left: `${rect.left}px`,
     top: `${rect.top}px`,
@@ -284,7 +293,7 @@ function revealBrand() {
     )
     .fromTo(
       dot ? [dot] : [],
-      { color: "#ffffff", textShadow: "0 0 18px rgba(120, 200, 255, 0.95)" },
+      { color: "#ffffff", textShadow: `0 0 18px ${document.documentElement.classList.contains("dev") ? "rgba(255, 60, 75, 0.95)" : "rgba(120, 200, 255, 0.95)"}` },
       { color: "", textShadow: "0 0 0 rgba(120, 200, 255, 0)", duration: 0.8, ease: "power2.out" },
       "-=0.2",
     );
@@ -353,9 +362,9 @@ async function playIntro(root: HTMLElement, expander?: HTMLElement) {
         <ellipse cx="${ox}" cy="${oy}" rx="${oInkWidth * 0.35}" ry="${oInkHeight * 0.405}" />
       </clipPath>
       <radialGradient id="intro-glow" gradientUnits="userSpaceOnUse" cx="${W / 2}" cy="${H / 2}" r="${Math.hypot(W, H) * 0.6}">
-        <stop offset="0" stop-color="#1f4bc4" />
-        <stop offset="0.45" stop-color="#10286e" />
-        <stop offset="1" stop-color="#060d2a" />
+        <stop offset="0" stop-color="${introGlow()[0]}" />
+        <stop offset="0.45" stop-color="${introGlow()[1]}" />
+        <stop offset="1" stop-color="${introGlow()[2]}" />
       </radialGradient>
     </defs>
     <g mask="url(#intro-mask)" class="intro-cover">
@@ -757,7 +766,8 @@ document.addEventListener("astro:page-load", () => {
   let intro: Promise<void>;
   if (firstLoad) {
     firstLoad = false;
-    intro = runPreloader();
+    // A barra de rolagem só aparece quando o site de fato começa
+    intro = runPreloader().finally(() => document.documentElement.classList.remove("is-intro"));
   } else {
     const el = curtain();
     intro = new Promise<void>((resolve) => {
