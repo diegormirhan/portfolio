@@ -1,0 +1,172 @@
+---
+import Base from "../layouts/Base.astro";
+import { content, ui, type Lang } from "../lib/content";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const c = content(lang);
+const t = ui[lang];
+const timeline = [
+  { title: t.experience, entries: c.experience, scene: { shape: "0", x: "2.3" } },
+  { title: t.education, entries: c.education, scene: { shape: "1", x: "2.4" } },
+];
+const allSkills = c.skillGroups.flatMap((group) => group.items);
+---
+
+<Base lang={lang} page="experience" title={t.nav.experience}>
+  <section class="wrap page-top" data-intro data-scene="1" data-scene-x="2.5" data-scene-scale="0.8">
+    <h1 class="display display--xl" data-split="intro">{t.nav.experience}</h1>
+  </section>
+
+  {
+    timeline.map((block) => (
+      <section class="wrap section block" data-scene={block.scene.shape} data-scene-x={block.scene.x} data-scene-scale="0.8" data-scene-dim="0.45">
+        <h2 class="display display--lg block__title" data-split>
+          {block.title}
+        </h2>
+        <ol class="entries">
+          {block.entries.map((entry) => (
+            <li class="entry" data-reveal>
+              <p class="entry__period mono muted">{entry.period}</p>
+              <div>
+                <h3 class="display display--sm">{entry.title}</h3>
+                <p class="entry__org accent">{entry.org}</p>
+              </div>
+              <div class="entry__body">
+                <p>{entry.description}</p>
+                <ul class="entry__tags">
+                  {entry.tags.map((tag) => (
+                    <li class="tag">{tag}</li>
+                  ))}
+                </ul>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+    ))
+  }
+
+  <section class="section skills" data-scene="3" data-scene-y="-0.5">
+    <h2 class="wrap display display--lg block__title" data-split>{t.skills}</h2>
+    <div class="marquee" data-marquee aria-hidden="true">
+      <div class="marquee__track">
+        {
+          [0, 1].map(() => (
+            <p class="marquee__row display display--lg">
+              {allSkills.map((skill) => (
+                <span>
+                  {skill}
+                  <span class="marquee__sep">/</span>
+                </span>
+              ))}
+            </p>
+          ))
+        }
+      </div>
+    </div>
+    <div class="wrap groups">
+      {
+        c.skillGroups.map((group) => (
+          <div class="group" data-reveal>
+            <h3 class="mono accent">{group.title}</h3>
+            <ul class="group__items">
+              {group.items.map((item) => (
+                <li>{item}</li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+      <div class="group" data-reveal>
+        <h3 class="mono accent">{t.languages}</h3>
+        <ul class="group__items">{c.languages.map((language) => <li>{language}</li>)}</ul>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .block__title {
+    margin-bottom: clamp(2rem, 6vh, 4rem);
+  }
+
+  .entries {
+    border-top: 1px solid var(--line);
+  }
+
+  .entry {
+    display: grid;
+    grid-template-columns: 12rem minmax(0, 1fr) minmax(0, 1.1fr);
+    gap: 1.5rem 2.5rem;
+    padding-block: clamp(1.75rem, 4vh, 2.75rem);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .entry__org {
+    margin-top: 0.6rem;
+  }
+
+  .entry__body {
+    display: grid;
+    gap: 1.25rem;
+    color: oklch(0.96 0.006 250 / 82%);
+    line-height: 1.6;
+  }
+
+  .entry__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+
+  @media (max-width: 899px) {
+    .entry {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .skills {
+    overflow: hidden;
+  }
+
+  .marquee {
+    padding-block: 1rem 3rem;
+  }
+
+  .marquee__track {
+    display: flex;
+    width: max-content;
+  }
+
+  .marquee__row {
+    display: flex;
+    white-space: nowrap;
+    padding-right: 0.3em;
+  }
+
+  .marquee__row > span {
+    padding-right: 0.3em;
+  }
+
+  .marquee__sep {
+    padding-left: 0.3em;
+    color: var(--cobalt-bright);
+  }
+
+  .groups {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: 2.5rem;
+  }
+
+  .group__items {
+    display: grid;
+    gap: 0.4rem;
+    margin-top: 1rem;
+    font-size: 1.125rem;
+  }
+</style>

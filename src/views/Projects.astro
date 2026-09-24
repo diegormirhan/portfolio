@@ -1,0 +1,46 @@
+---
+import Base from "../layouts/Base.astro";
+import LinkRows from "../components/LinkRows.astro";
+import ProjectRows from "../components/ProjectRows.astro";
+import { projects, ui, type Lang } from "../lib/content";
+import { getRepos } from "../lib/data";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = ui[lang];
+const repos = await getRepos();
+---
+
+<Base lang={lang} page="projects" title={t.nav.projects}>
+  <section class="wrap page-top" data-intro data-scene="3" data-scene-y="-0.4" data-scene-dim="0.55">
+    <h1 class="display display--xl title" data-split="intro">{t.nav.projects}</h1>
+    <ProjectRows lang={lang} items={projects(lang)} />
+  </section>
+
+  {
+    repos.length > 0 && (
+      <section class="wrap section" data-scene="1" data-scene-x="2.4" data-scene-dim="0.45">
+        <h2 class="display display--lg title" data-split>
+          {t.repos}
+        </h2>
+        <LinkRows
+          items={repos.map((repo) => ({
+            href: repo.url,
+            title: repo.name,
+            meta: [repo.language, `★ ${repo.stars}`].filter(Boolean).join("  "),
+            aside: repo.description,
+          }))}
+        />
+      </section>
+    )
+  }
+</Base>
+
+<style>
+  .title {
+    margin-bottom: clamp(2rem, 6vh, 4rem);
+  }
+</style>

@@ -1,0 +1,249 @@
+---
+import Base from "../layouts/Base.astro";
+import { projectPath, projects, ui, type Lang } from "../lib/content";
+import { getReadme } from "../lib/data";
+
+interface Props {
+  lang: Lang;
+  slug: string;
+}
+
+const { lang, slug } = Astro.props;
+const t = ui[lang];
+const all = projects(lang);
+const index = all.findIndex((p) => p.slug === slug);
+const project = all[index]!;
+const next = all[(index + 1) % all.length]!;
+const readme = await getReadme(project.repo);
+const repoUrl = `https://github.com/${project.repo}`;
+---
+
+<Base
+  lang={lang}
+  page="projects"
+  title={project.title}
+  description={project.description}
+  alternate={projectPath(lang === "pt" ? "en" : "pt", slug)}
+>
+  <section class="wrap page-top head" data-intro data-scene="1" data-scene-x="2.3" data-scene-scale="0.75">
+    <p class="mono muted" data-reveal>{project.year}</p>
+    <h1 class="display display--xl" data-split="intro">{project.title}</h1>
+    <p class="display display--sm accent" data-split="intro" data-delay="0.2">{project.tagline}</p>
+    <div class="head__foot" data-reveal>
+      <ul class="tags">{project.tags.map((tag) => <li class="tag">{tag}</li>)}</ul>
+      <div class="actions">
+        <a href={repoUrl} target="_blank" rel="noreferrer" class="pill" data-magnetic>{t.code} ↗</a>
+        {
+          project.demo && (
+            <a href={project.demo} target="_blank" rel="noreferrer" class="pill pill--solid" data-magnetic>
+              {t.demo} ↗
+            </a>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <figure class="shot wrap" data-clip>
+    <img src={project.image} alt={project.imageAlt} data-parallax="0.6" />
+  </figure>
+
+  <section class="wrap section" data-scene="3" data-scene-y="-0.8" data-scene-dim="0.3">
+    <p class="lead intro" data-fill>{project.description}</p>
+    {
+      readme ? (
+        <article class="prose" data-reveal set:html={readme} />
+      ) : (
+        <p class="muted" data-reveal>
+          {t.noReadme}{" "}
+          <a href={repoUrl} target="_blank" rel="noreferrer" class="u-link accent">
+            GitHub
+          </a>
+        </p>
+      )
+    }
+  </section>
+
+  <section class="wrap next" data-scene="0" data-scene-scale="0.9">
+    <a href={projectPath(lang, next.slug)} class="next__link" data-preview data-preview-src={next.image}>
+      <span class="mono muted">{t.next}</span>
+      <span class="display display--xl" data-split>{next.title}</span>
+    </a>
+  </section>
+</Base>
+
+<style>
+  .head {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  .head__foot {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .tags,
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .shot {
+    margin-top: clamp(3rem, 10vh, 6rem);
+    overflow: hidden;
+    border-radius: 1.5rem;
+    padding: 0;
+    max-width: calc(1600px - var(--gutter) * 2);
+    width: calc(100% - var(--gutter) * 2);
+    aspect-ratio: 16 / 9;
+  }
+
+  .shot img {
+    width: 100%;
+    height: 116%;
+    margin-top: -8%;
+    object-fit: cover;
+    object-position: top center;
+  }
+
+  .intro {
+    max-width: 30ch;
+    margin-bottom: clamp(3rem, 10vh, 6rem);
+  }
+
+  .next {
+    padding-block: clamp(5rem, 14vh, 9rem);
+  }
+
+  .next__link {
+    display: grid;
+    gap: 1rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--line);
+    transition: color 0.4s;
+  }
+
+  .next__link:hover {
+    color: var(--cerulean-bright);
+  }
+
+  /* README: tipografia de leitura, coluna estreita */
+  .prose {
+    max-width: 72ch;
+    margin-left: auto;
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    color: oklch(0.96 0.006 250 / 85%);
+  }
+
+  .prose :global(h2),
+  .prose :global(h3),
+  .prose :global(h4) {
+    margin: 2.5em 0 0.75em;
+    color: var(--fg);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    font-variation-settings: "wdth" 80;
+  }
+
+  .prose :global(h2) {
+    font-size: 2rem;
+    text-transform: uppercase;
+  }
+
+  .prose :global(h3) {
+    font-size: 1.4rem;
+  }
+
+  .prose :global(p),
+  .prose :global(ul),
+  .prose :global(ol),
+  .prose :global(pre),
+  .prose :global(table),
+  .prose :global(blockquote) {
+    margin-bottom: 1.25em;
+  }
+
+  .prose :global(ul),
+  .prose :global(ol) {
+    padding-left: 1.25em;
+  }
+
+  .prose :global(ul) {
+    list-style: square;
+  }
+
+  .prose :global(ol) {
+    list-style: decimal;
+  }
+
+  .prose :global(li::marker) {
+    color: var(--cerulean-bright);
+  }
+
+  .prose :global(a) {
+    color: var(--cerulean-bright);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  .prose :global(code) {
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    padding: 0.1em 0.35em;
+    border-radius: 0.3em;
+    background: var(--faint);
+  }
+
+  .prose :global(pre) {
+    padding: 1.25rem;
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: 0.75rem;
+    background: oklch(0.1 0.016 262 / 70%);
+  }
+
+  .prose :global(pre code) {
+    padding: 0;
+    background: none;
+  }
+
+  .prose :global(img) {
+    height: auto;
+    margin-block: 1.5em;
+    border-radius: 0.75rem;
+  }
+
+  .prose :global(table) {
+    display: block;
+    overflow-x: auto;
+    border-collapse: collapse;
+    font-size: 0.9375rem;
+  }
+
+  .prose :global(th),
+  .prose :global(td) {
+    padding: 0.5em 0.9em;
+    border-bottom: 1px solid var(--line);
+    text-align: left;
+  }
+
+  .prose :global(blockquote) {
+    padding-left: 1em;
+    border-left: 2px solid var(--cobalt-bright);
+    color: var(--muted);
+  }
+
+  .prose :global(hr) {
+    border: 0;
+    border-top: 1px solid var(--line);
+    margin-block: 2.5em;
+  }
+</style>

@@ -1,0 +1,485 @@
+---
+import { ClientRouter } from "astro:transitions";
+import brFlag from "flag-icons/flags/4x3/br.svg?url";
+import usFlag from "flag-icons/flags/4x3/us.svg?url";
+
+import "../styles/global.css";
+import { content, pathFor, profile, ui, type Lang, type PageKey } from "../lib/content";
+
+interface Props {
+  lang: Lang;
+  page: PageKey;
+  title?: string;
+  description?: string;
+  /** Caminho equivalente no outro idioma (padrão: a mesma página) */
+  alternate?: string;
+}
+
+const { lang, page, title, description, alternate } = Astro.props;
+const other: Lang = lang === "pt" ? "en" : "pt";
+const t = ui[lang];
+const c = content(lang);
+const otherPath = alternate ?? pathFor(other, page);
+const fullTitle = title ? `${title} | ${profile.name}` : `${profile.name} | ${c.role}`;
+const desc = description ?? c.headline;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const pages: PageKey[] = ["home", "projects", "blog", "experience", "contact"];
+const socials = [
+  { label: "GitHub", href: profile.github },
+  { label: "LinkedIn", href: profile.linkedin },
+  { label: "Medium", href: profile.medium },
+];
+---
+
+<!doctype html>
+<html lang={lang === "pt" ? "pt-BR" : "en"} transition:animate="none">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={desc} />
+    <meta name="author" content={profile.name} />
+    <meta name="theme-color" content="#0b1020" />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang={lang === "pt" ? "pt-BR" : "en"} href={canonical} />
+    <link rel="alternate" hreflang={other === "pt" ? "pt-BR" : "en"} href={new URL(otherPath, Astro.site)} />
+    <link rel="icon" href="/favicon.png" type="image/png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={desc} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script is:inline>
+      // Esconde os elementos animados só quando a animação vai de fato rodar
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("js-motion");
+    </script>
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Person",
+        name: profile.name,
+        jobTitle: c.role,
+        url: profile.site,
+        email: `mailto:${profile.email}`,
+        sameAs: [profile.github, profile.linkedin, profile.medium],
+      })}
+    />
+    <ClientRouter fallback="swap" />
+  </head>
+  <body>
+    <a class="skip" href="#main">{t.skip}</a>
+
+    <canvas id="scene" aria-hidden="true" transition:persist></canvas>
+    <div class="backdrop" aria-hidden="true" transition:persist="backdrop"></div>
+    <div class="scrim" aria-hidden="true" transition:persist="scrim"></div>
+
+    <div id="preloader" aria-hidden="true">
+      <p class="mono" data-fade>{profile.name}</p>
+      <p class="preloader__count display" data-fade><span data-count>000</span><span class="accent">%</span></p>
+      <div class="preloader__bar" data-fade><span data-bar></span></div>
+    </div>
+
+    <header class="header">
+      <a href={pathFor(lang, "home")} class="header__brand display" aria-label={profile.name}>
+        Diego<span class="accent">.</span>
+      </a>
+      <div class="header__actions">
+        <a
+          href={otherPath}
+          class="flag"
+          hreflang={other}
+          lang={other}
+          aria-label={t.switchLang}
+          title={t.switchLang}
+          data-magnetic="0.4"
+        >
+          <img src={other === "en" ? usFlag : brFlag} alt="" width="28" height="21" />
+        </a>
+        <button class="burger" type="button" aria-expanded="false" aria-controls="menu" data-menu-toggle data-magnetic="0.3">
+          <span class="sr-only">{t.menu}</span>
+          <span class="burger__line" aria-hidden="true"></span>
+          <span class="burger__line" aria-hidden="true"></span>
+        </button>
+      </div>
+    </header>
+
+    <nav id="menu" class="menu" aria-label={t.menu} inert>
+      <ul class="menu__list">
+        {
+          pages.map((key) => (
+            <li class="menu__row">
+              <a
+                href={pathFor(lang, key)}
+                class:list={["menu__link display", { "is-current": key === page }]}
+                aria-current={key === page ? "page" : undefined}
+              >
+                <span class="menu__inner" data-menu-item>
+                  {t.nav[key]}
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="menu__foot mono" data-menu-fade>
+        <a href={`mailto:${profile.email}`} class="u-link">{profile.email}</a>
+        <ul class="menu__socials">
+          {
+            socials.map((s) => (
+              <li>
+                <a href={s.href} target="_blank" rel="noreferrer" class="u-link">
+                  {s.label}
+                </a>
+              </li>
+            ))
+          }
+          <li><a href={profile.resume} download class="u-link">{t.resume}</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <main id="main">
+      <slot />
+    </main>
+
+    <footer class="footer wrap">
+      <div class="footer__row mono">
+        <a href={`mailto:${profile.email}`} class="u-link">{profile.email}</a>
+        <ul class="footer__socials">
+          {
+            socials.map((s) => (
+              <li>
+                <a href={s.href} target="_blank" rel="noreferrer" class="u-link">
+                  {s.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+        <p class="muted">© {new Date().getFullYear()} {profile.name}. {t.rights}</p>
+      </div>
+      <p class="footer__mark display" aria-hidden="true" data-reveal>Diego Mirhan</p>
+    </footer>
+
+    <div id="preview" aria-hidden="true"><img alt="" /></div>
+    <div id="curtain" aria-hidden="true" transition:persist></div>
+
+    <script>
+      import "../scripts/motion";
+      // Three.js em chunk separado: o conteúdo e as animações não esperam a cena 3D
+      import("../scripts/scene");
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  #scene {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  /* Luz ambiente atrás da cena; também é o fundo quando não há WebGL */
+  .backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background:
+      radial-gradient(60vmax 50vmax at 85% 10%, oklch(0.44 0.19 262 / 32%), transparent 70%),
+      radial-gradient(50vmax 45vmax at 5% 95%, oklch(0.54 0.11 232 / 22%), transparent 70%),
+      var(--bg);
+  }
+
+  /* Escurece a faixa onde fica o texto, entre a cena e o conteúdo.
+   * Desktop: lado esquerdo (as formas ficam à direita). Mobile: tela toda, mais leve. */
+  .scrim {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(90deg, oklch(0.1 0.016 262 / 72%) 0%, oklch(0.1 0.016 262 / 50%) 45%, transparent 66%);
+  }
+
+  @media (max-aspect-ratio: 1/1) {
+    .scrim {
+      background: oklch(0.1 0.016 262 / 45%);
+    }
+  }
+
+  /* ---------- Preloader ---------- */
+  #preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    display: grid;
+    grid-template-rows: 1fr auto auto;
+    gap: 1.25rem;
+    padding: var(--gutter);
+    background: var(--bg-deep);
+    clip-path: inset(0 0 0 0);
+  }
+
+  .preloader__count {
+    font-size: clamp(5rem, 22vw, 20rem);
+    line-height: 0.8;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .preloader__bar {
+    height: 2px;
+    background: var(--line);
+  }
+
+  .preloader__bar span {
+    display: block;
+    height: 100%;
+    background: linear-gradient(90deg, var(--cobalt-bright), var(--cerulean-bright));
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+
+  html:not(.js-motion) #preloader {
+    display: none;
+  }
+
+  /* ---------- Header ---------- */
+  .header {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 70;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 5rem;
+    padding-inline: var(--gutter);
+    pointer-events: none;
+  }
+
+  .header > * {
+    pointer-events: auto;
+  }
+
+  .header__brand {
+    font-size: 1.75rem;
+    line-height: 1;
+    mix-blend-mode: difference;
+  }
+
+  .header__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .flag {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: oklch(0.13 0.018 262 / 55%);
+    backdrop-filter: blur(12px);
+    transition: border-color 0.3s;
+  }
+
+  .flag img {
+    width: 1.4rem;
+    height: auto;
+    border-radius: 2px;
+  }
+
+  .flag:hover {
+    border-color: var(--fg);
+  }
+
+  .burger {
+    position: relative;
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 50%;
+    background: var(--fg);
+    transition: background-color 0.3s;
+  }
+
+  .burger:hover {
+    background: var(--cerulean-bright);
+  }
+
+  .burger__line {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 1.25rem;
+    height: 2px;
+    margin-left: -0.625rem;
+    background: var(--bg-deep);
+    transition: transform 0.6s var(--ease-out);
+  }
+
+  .burger__line:first-of-type {
+    transform: translateY(-4px);
+  }
+
+  .burger__line:last-of-type {
+    transform: translateY(4px);
+  }
+
+  .burger[aria-expanded="true"] .burger__line:first-of-type {
+    transform: rotate(45deg);
+  }
+
+  .burger[aria-expanded="true"] .burger__line:last-of-type {
+    transform: rotate(-45deg);
+  }
+
+  /* ---------- Menu ---------- */
+  .menu {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 7rem var(--gutter) var(--gutter);
+    background:
+      radial-gradient(70vmax 60vmax at 100% 0%, oklch(0.44 0.19 262 / 70%), transparent 70%),
+      oklch(0.1 0.016 262 / 88%);
+    backdrop-filter: blur(20px);
+    visibility: hidden;
+    clip-path: circle(0% at calc(100% - 3rem) 2.5rem);
+  }
+
+  .menu__row {
+    overflow: hidden;
+  }
+
+  .menu__link {
+    display: block;
+    font-size: clamp(3.25rem, 11vh, 8.5rem);
+    line-height: 0.95;
+    color: var(--muted);
+    transition: color 0.3s;
+  }
+
+  .menu__inner {
+    display: inline-block;
+    transition: transform 0.6s var(--ease-out);
+  }
+
+  .menu__link:hover,
+  .menu__link.is-current {
+    color: var(--fg);
+  }
+
+  .menu__link:hover .menu__inner {
+    transform: translateX(0.12em);
+  }
+
+  .menu__link.is-current .menu__inner::after {
+    content: "";
+    display: inline-block;
+    width: 0.18em;
+    height: 0.18em;
+    margin-left: 0.15em;
+    border-radius: 50%;
+    background: var(--cerulean-bright);
+    vertical-align: 0.1em;
+  }
+
+  .menu__foot {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .menu__socials,
+  .footer__socials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+  }
+
+  /* ---------- Footer ---------- */
+  .footer {
+    padding-top: clamp(4rem, 10vh, 7rem);
+    overflow: hidden;
+  }
+
+  .footer__row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+    padding-block: 1.5rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .footer__mark {
+    font-size: 15.2vw;
+    line-height: 0.78;
+    white-space: nowrap;
+    margin-inline: calc(var(--gutter) * -0.2);
+    padding-bottom: 0.04em;
+    background: linear-gradient(180deg, var(--fg) 35%, var(--cerulean-bright) 80%, var(--cobalt-bright));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    /* A sombra geral do rodapé vazaria pelo preenchimento transparente e escureceria o nome */
+    text-shadow: none;
+  }
+
+  /* ---------- Preview flutuante das listas ---------- */
+  #preview {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 50;
+    width: clamp(16rem, 24vw, 26rem);
+    aspect-ratio: 16 / 10;
+    /* À direita do cursor, para não cobrir o texto da linha */
+    margin: calc(clamp(16rem, 24vw, 26rem) * -0.3125) 0 0 2rem;
+    border-radius: 1rem;
+    overflow: hidden;
+    pointer-events: none;
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  #preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top left;
+  }
+
+  /* ---------- Cortina de transição ---------- */
+  #curtain {
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+    pointer-events: none;
+    background: linear-gradient(160deg, var(--cobalt), var(--bg-deep) 70%);
+    clip-path: inset(100% 0 0 0);
+  }
+
+  .no-webgl #scene {
+    display: none;
+  }
+
+  .js-motion [data-split] {
+    opacity: 0;
+  }
+
+  .split-line {
+    padding-bottom: 0.06em;
+    margin-bottom: -0.06em;
+  }
+</style>

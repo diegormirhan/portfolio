@@ -1,0 +1,101 @@
+---
+/* Lista tipográfica de links externos (artigos, repositórios). */
+export type LinkRow = { href: string; title: string; meta: string; aside?: string; image?: string | null };
+
+interface Props {
+  items: LinkRow[];
+}
+
+const { items } = Astro.props;
+---
+
+<ul class="links">
+  {
+    items.map((item) => (
+      <li class="link" data-reveal>
+        <a
+          href={item.href}
+          target="_blank"
+          rel="noreferrer"
+          class="link__a"
+          data-preview={item.image ? "" : undefined}
+          data-preview-src={item.image ?? undefined}
+        >
+          <span class="link__meta mono muted">{item.meta}</span>
+          <span class="link__title">{item.title}</span>
+          {item.aside ? <span class="link__aside muted">{item.aside}</span> : null}
+          <span class="link__arrow" aria-hidden="true">
+            ↗
+          </span>
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .links {
+    border-top: 1px solid var(--line);
+  }
+
+  .link {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .link__a {
+    display: grid;
+    grid-template-columns: 9rem minmax(0, 1.4fr) minmax(0, 1fr) 2rem;
+    align-items: baseline;
+    gap: 1.5rem;
+    padding-block: 1.5rem;
+  }
+
+  .link__title {
+    font-size: clamp(1.25rem, 2.2vw, 2rem);
+    line-height: 1.1;
+    font-weight: 560;
+    letter-spacing: -0.02em;
+    font-variation-settings: "wdth" 85;
+    transition: color 0.3s;
+  }
+
+  .link__a:hover .link__title {
+    color: var(--cerulean-bright);
+  }
+
+  .link__aside {
+    font-size: 0.9375rem;
+    line-height: 1.45;
+  }
+
+  .link__arrow {
+    justify-self: end;
+    font-size: 1.25rem;
+    transition: transform 0.5s var(--ease-out);
+  }
+
+  .link__a:hover .link__arrow {
+    transform: rotate(45deg);
+  }
+
+  @media (max-width: 767px) {
+    .link__a {
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 0.4rem 1rem;
+    }
+
+    .link__meta,
+    .link__aside {
+      grid-column: 1 / -1;
+    }
+
+    .link__title {
+      grid-column: 1;
+    }
+
+    .link__arrow {
+      grid-column: 2;
+      grid-row: 2;
+    }
+  }
+</style>

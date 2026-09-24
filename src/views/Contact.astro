@@ -1,0 +1,56 @@
+---
+import Base from "../layouts/Base.astro";
+import LinkRows from "../components/LinkRows.astro";
+import { profile, ui, type Lang } from "../lib/content";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = ui[lang];
+const channels = [
+  { href: profile.linkedin, title: "LinkedIn", meta: profile.linkedinHandle },
+  { href: profile.github, title: "GitHub", meta: `@${profile.githubUser}` },
+  { href: profile.medium, title: "Medium", meta: profile.mediumUser },
+];
+---
+
+<Base lang={lang} page="contact" title={t.nav.contact}>
+  <section class="wrap page-top contact" data-intro data-scene="0" data-scene-x="1.9" data-scene-scale="0.95">
+    <h1 class="display display--xl" data-split="intro">{t.contactTitle}</h1>
+    <a href={`mailto:${profile.email}`} class="mail" data-reveal data-magnetic="0.12">{profile.email}</a>
+    <div class="actions" data-reveal>
+      <a href={profile.resume} download class="pill pill--solid" data-magnetic>{t.resume} ↓</a>
+    </div>
+  </section>
+
+  <section class="wrap section" data-scene="1" data-scene-x="-2.3" data-scene-scale="0.8">
+    <LinkRows items={channels} />
+  </section>
+</Base>
+
+<style>
+  .contact {
+    min-height: 88dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 2rem;
+  }
+
+  .mail {
+    align-self: flex-start;
+    font-size: clamp(1.4rem, 5.4vw, 5.5rem);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    font-variation-settings: "wdth" 80;
+    background: linear-gradient(90deg, var(--cobalt-bright), var(--cerulean-bright)) 0 100% / 0 3px no-repeat;
+    transition: background-size 0.7s var(--ease-out);
+    overflow-wrap: anywhere;
+  }
+
+  .mail:hover {
+    background-size: 100% 3px;
+  }
+</style>

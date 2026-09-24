@@ -1,0 +1,59 @@
+---
+import Base from "../layouts/Base.astro";
+import LinkRows from "../components/LinkRows.astro";
+import { pathFor, profile, ui, type Lang } from "../lib/content";
+import { articlesFor, formatDate, getArticles } from "../lib/data";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const t = ui[lang];
+const articles = await articlesFor(lang);
+const feedLoaded = (await getArticles()).length > 0;
+const other: Lang = lang === "pt" ? "en" : "pt";
+---
+
+<Base lang={lang} page="blog" title={t.nav.blog}>
+  <section class="wrap page-top" data-intro data-scene="1" data-scene-x="2.4" data-scene-scale="0.8" data-scene-dim="0.55">
+    <h1 class="display display--xl title" data-split="intro">{t.nav.blog}</h1>
+    {
+      articles.length > 0 ? (
+        <LinkRows
+          items={articles.map((a) => ({
+            href: a.link,
+            title: a.title,
+            meta: formatDate(a.date, lang),
+            aside: `${a.minutes} ${t.minRead}`,
+            image: a.thumbnail,
+          }))}
+        />
+      ) : feedLoaded ? (
+        <p class="lead muted" data-reveal>
+          {t.otherLangArticles}{" "}
+          <a href={pathFor(other, "blog")} class="u-link accent">
+            →
+          </a>
+        </p>
+      ) : (
+        <p class="lead muted" data-reveal>
+          {t.noArticles}{" "}
+          <a href={profile.medium} target="_blank" rel="noreferrer" class="u-link accent">
+            Medium
+          </a>
+        </p>
+      )
+    }
+  </section>
+</Base>
+
+<style>
+  .title {
+    margin-bottom: clamp(2rem, 6vh, 4rem);
+  }
+
+  section {
+    padding-bottom: clamp(5rem, 14vh, 9rem);
+  }
+</style>

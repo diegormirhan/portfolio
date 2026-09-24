@@ -1,0 +1,197 @@
+---
+import Base from "../layouts/Base.astro";
+import LinkRows from "../components/LinkRows.astro";
+import ProjectRows from "../components/ProjectRows.astro";
+import { content, pathFor, profile, projects, ui, type Lang } from "../lib/content";
+import { articlesFor, formatDate } from "../lib/data";
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const c = content(lang);
+const t = ui[lang];
+const articles = (await articlesFor(lang)).slice(0, 3);
+---
+
+<Base lang={lang} page="home">
+  <section class="hero" data-intro data-scene="0" data-scene-x="2" data-scene-y="0.4">
+    <div class="wrap hero__inner">
+      <h1 class="hero__name display display--xl" data-split="intro">Diego<br />Mirhan</h1>
+      <div class="hero__foot">
+        <p class="hero__role display display--sm" data-split="intro" data-delay="0.25">{c.role}</p>
+        <a href={pathFor(lang, "projects")} class="pill pill--solid" data-reveal data-magnetic>
+          {t.selected} <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section about" data-scene="1" data-scene-x="2.6" data-scene-scale="0.85">
+    <div class="wrap about__grid">
+      <p class="lead" data-fill>{c.summary}</p>
+      <p class="about__more muted" data-reveal>{c.about}</p>
+    </div>
+  </section>
+
+  <!-- Única seção com a rede neural: todo o texto fica na metade esquerda -->
+  <section class="section" data-scene="2" data-scene-x="2.9" data-scene-scale="0.8">
+    <ul class="wrap focus">
+      {
+        c.highlights.map((item) => (
+          <li class="focus__item">
+            <h2 class="display display--md" data-split>
+              {item.title}
+            </h2>
+            <p class="focus__text muted" data-reveal>
+              {item.description}
+            </p>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <section class="section" data-scene="3" data-scene-y="-0.6" data-scene-dim="0.5">
+    <div class="wrap">
+      <h2 class="display display--lg section-title" data-split>{t.selected}</h2>
+      <ProjectRows lang={lang} items={projects(lang).slice(0, 4)} />
+      <a href={pathFor(lang, "projects")} class="pill more" data-reveal data-magnetic>
+        {t.allProjects} <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </section>
+
+  {
+    articles.length > 0 && (
+      <section class="section" data-scene="1" data-scene-x="2.4" data-scene-scale="0.7" data-scene-dim="0.5">
+        <div class="wrap">
+          <h2 class="display display--lg section-title" data-split>
+            {t.articles}
+          </h2>
+          <LinkRows
+            items={articles.map((a) => ({
+              href: a.link,
+              title: a.title,
+              meta: formatDate(a.date, lang),
+              image: a.thumbnail,
+            }))}
+          />
+          <a href={pathFor(lang, "blog")} class="pill more" data-reveal data-magnetic>
+            {t.allArticles} <span aria-hidden="true">→</span>
+          </a>
+        </div>
+      </section>
+    )
+  }
+
+  <section class="section cta" data-scene="0" data-scene-scale="1.15">
+    <div class="wrap">
+      <h2 class="display display--xl" data-split>{t.contactTitle}</h2>
+      <a href={`mailto:${profile.email}`} class="cta__mail" data-reveal data-magnetic="0.15">
+        {profile.email}
+      </a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    min-height: 100dvh;
+    display: flex;
+    align-items: flex-end;
+  }
+
+  .hero__inner {
+    padding-block: 7rem clamp(2rem, 6vh, 4rem);
+  }
+
+  .hero__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-top: clamp(1.25rem, 3vh, 2rem);
+  }
+
+  .hero__role {
+    max-width: 16ch;
+    color: var(--cerulean-bright);
+  }
+
+  .about__grid {
+    display: grid;
+    gap: 2.5rem;
+  }
+
+  /* Texto à esquerda, forma à direita (a cena desloca a nuvem para o lado vazio) */
+  @media (min-width: 900px) {
+    .about__grid {
+      padding-right: 45%;
+    }
+  }
+
+  .about__more {
+    max-width: 52ch;
+    font-size: 1.125rem;
+    line-height: 1.55;
+  }
+
+  .focus {
+    display: grid;
+    gap: clamp(4rem, 12vh, 8rem);
+  }
+
+  .focus__item {
+    display: grid;
+    gap: 1.25rem;
+  }
+
+  @media (min-width: 900px) {
+    .focus__item {
+      max-width: 44%;
+    }
+
+    .focus__item:nth-child(2) {
+      padding-left: 6%;
+    }
+  }
+
+  .focus__text {
+    max-width: 38ch;
+    font-size: 1.125rem;
+    line-height: 1.5;
+  }
+
+  .section-title {
+    margin-bottom: clamp(2rem, 6vh, 4rem);
+  }
+
+  .more {
+    margin-top: 2.5rem;
+  }
+
+  .cta {
+    min-height: 90dvh;
+    display: flex;
+    align-items: center;
+  }
+
+  .cta__mail {
+    display: inline-block;
+    margin-top: 2rem;
+    font-size: clamp(1.4rem, 4.6vw, 4.5rem);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    font-variation-settings: "wdth" 80;
+    background: linear-gradient(90deg, var(--cobalt-bright), var(--cerulean-bright)) 0 100% / 0 3px no-repeat;
+    transition: background-size 0.7s var(--ease-out);
+    overflow-wrap: anywhere;
+  }
+
+  .cta__mail:hover {
+    background-size: 100% 3px;
+  }
+</style>

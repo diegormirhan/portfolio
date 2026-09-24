@@ -1,0 +1,130 @@
+---
+import { projectPath, type Lang, type Project } from "../lib/content";
+
+interface Props {
+  lang: Lang;
+  items: Project[];
+}
+
+const { lang, items } = Astro.props;
+---
+
+<ul class="rows">
+  {
+    items.map((project) => (
+      <li class="row" data-reveal>
+        <a href={projectPath(lang, project.slug)} class="row__link" data-preview data-preview-src={project.image}>
+          <span class="row__year mono muted">{project.year}</span>
+          <span class="row__title display display--md">{project.title}</span>
+          <span class="row__tagline">{project.tagline}</span>
+          <span class="row__arrow" aria-hidden="true">
+            ↗
+          </span>
+          <img class="row__thumb" src={project.image} alt="" loading="lazy" decoding="async" />
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  .rows {
+    border-top: 1px solid var(--line);
+  }
+
+  .row {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .row__link {
+    position: relative;
+    display: grid;
+    grid-template-columns: 4.5rem minmax(0, 1fr) minmax(0, 0.7fr) 2rem;
+    align-items: center;
+    gap: 1.5rem;
+    padding-block: clamp(1.25rem, 3vh, 2rem);
+    isolation: isolate;
+  }
+
+  /* Faixa de cor que sobe por trás da linha no hover */
+  .row__link::before {
+    content: "";
+    position: absolute;
+    inset: 0 calc(var(--gutter) * -1);
+    z-index: -1;
+    background: linear-gradient(90deg, oklch(0.44 0.19 262 / 45%), oklch(0.54 0.11 232 / 20%));
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 0.6s var(--ease-out);
+  }
+
+  .row__link:hover::before,
+  .row__link:focus-visible::before {
+    transform: scaleY(1);
+  }
+
+  .row__title {
+    transition: transform 0.6s var(--ease-out);
+  }
+
+  .row__link:hover .row__title {
+    transform: translateX(0.15em);
+  }
+
+  .row__tagline {
+    color: var(--muted);
+    font-size: 1.0625rem;
+    line-height: 1.3;
+    transition: color 0.3s;
+  }
+
+  .row__link:hover .row__tagline {
+    color: var(--fg);
+  }
+
+  .row__arrow {
+    justify-self: end;
+    font-size: 1.5rem;
+    transition: transform 0.5s var(--ease-out);
+  }
+
+  .row__link:hover .row__arrow {
+    transform: rotate(45deg);
+  }
+
+  .row__thumb {
+    display: none;
+  }
+
+  /* Sem hover (toque): o print aparece dentro da linha */
+  @media (hover: none), (max-width: 767px) {
+    .row__link {
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 0.5rem 1rem;
+    }
+
+    .row__year {
+      grid-column: 1 / -1;
+    }
+
+    .row__tagline {
+      grid-column: 1;
+    }
+
+    .row__arrow {
+      grid-column: 2;
+      grid-row: 2;
+    }
+
+    .row__thumb {
+      display: block;
+      grid-column: 1 / -1;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      object-position: top left;
+      border-radius: 0.75rem;
+      margin-top: 0.75rem;
+    }
+  }
+</style>

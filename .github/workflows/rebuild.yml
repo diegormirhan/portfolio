@@ -1,0 +1,20 @@
+# Rebuild diário: artigos do Medium, repositórios e READMEs são buscados no build,
+# então um novo build por dia mantém o site atualizado.
+# Requer o secret AMPLIFY_WEBHOOK_URL (Amplify > App settings > Build settings > Incoming webhooks).
+name: Rebuild diário
+
+on:
+  schedule:
+    - cron: "0 9 * * *" # 06:00 em Brasília
+  workflow_dispatch:
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispara o build no Amplify
+        env:
+          WEBHOOK: ${{ secrets.AMPLIFY_WEBHOOK_URL }}
+        run: |
+          if [ -z "$WEBHOOK" ]; then echo "AMPLIFY_WEBHOOK_URL não configurado"; exit 0; fi
+          curl -fsS -X POST -H "Content-Type: application/json" -d '{}' "$WEBHOOK"
