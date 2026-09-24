@@ -31,14 +31,14 @@ const other: Lang = lang === "pt" ? "en" : "pt";
           }))}
         />
       ) : feedLoaded ? (
-        <p class="lead muted" data-reveal>
+        <p class="lead muted" data-lines>
           {t.otherLangArticles}{" "}
           <a href={pathFor(other, "blog")} class="u-link accent">
             →
           </a>
         </p>
       ) : (
-        <p class="lead muted" data-reveal>
+        <p class="lead muted" data-lines>
           {t.noArticles}{" "}
           <a href={profile.medium} target="_blank" rel="noreferrer" class="u-link accent">
             Medium

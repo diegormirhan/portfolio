@@ -16,7 +16,7 @@ const articles = (await articlesFor(lang)).slice(0, 3);
 ---
 
 <Base lang={lang} page="home">
-  <section class="hero" data-intro data-scene="2" data-scene-x="2.6" data-scene-y="0.3" data-scene-scale="0.95">
+  <section class="hero" data-intro data-scene="2" data-scene-x="2.3" data-scene-y="0.1" data-scene-scale="0.8">
     <div class="wrap hero__inner">
       <h1 class="hero__name display display--xl" data-split="intro">Diego<br />Mirhan</h1>
       <div class="hero__foot">
@@ -28,10 +28,10 @@ const articles = (await articlesFor(lang)).slice(0, 3);
     </div>
   </section>
 
-  <section class="section about" data-scene="1" data-scene-x="2.6" data-scene-scale="0.85">
+  <section class="section about" data-scene="1" data-scene-x="2.4" data-scene-y="0.2" data-scene-scale="0.72">
     <div class="wrap about__grid">
       <p class="lead" data-fill>{c.summary}</p>
-      <p class="about__more muted" data-reveal>{c.about}</p>
+      <p class="about__more muted" data-lines>{c.about}</p>
     </div>
   </section>
 
@@ -44,7 +44,7 @@ const articles = (await articlesFor(lang)).slice(0, 3);
             <h2 class="display display--md" data-split>
               {item.title}
             </h2>
-            <p class="focus__text muted" data-reveal>
+            <p class="focus__text muted" data-lines>
               {item.description}
             </p>
           </li>
@@ -55,7 +55,7 @@ const articles = (await articlesFor(lang)).slice(0, 3);
 
   <section class="section" data-scene="3" data-scene-x="3.1" data-scene-y="0.2" data-scene-scale="0.66" data-scene-dim="0.38">
     <div class="wrap">
-      <h2 class="display display--lg section-title" data-split>{t.selected}</h2>
+      <h2 class="display display--lg section-title" data-split="chars">{t.selected}</h2>
       <ProjectRows lang={lang} items={projects(lang).slice(0, 4)} />
       <a href={pathFor(lang, "projects")} class="pill more" data-reveal data-magnetic>
         {t.allProjects} <span aria-hidden="true">→</span>
@@ -67,7 +67,7 @@ const articles = (await articlesFor(lang)).slice(0, 3);
     articles.length > 0 && (
       <section class="section" data-scene="3" data-scene-x="3.1" data-scene-y="0.2" data-scene-scale="0.66" data-scene-dim="0.38">
         <div class="wrap">
-          <h2 class="display display--lg section-title" data-split>
+          <h2 class="display display--lg section-title" data-split="chars">
             {t.articles}
           </h2>
           <LinkRows
@@ -89,7 +89,7 @@ const articles = (await articlesFor(lang)).slice(0, 3);
 
   <section class="section cta" data-scene="0" data-scene-scale="1.15" data-scene-dim="0.6">
     <div class="wrap">
-      <h2 class="display display--xl" data-split>{t.contactTitle}</h2>
+      <h2 class="display display--xl" data-split="chars">{t.contactTitle}</h2>
       <a href={`mailto:${profile.email}`} class="cta__mail" data-reveal data-magnetic="0.15">
         {profile.email}
       </a>

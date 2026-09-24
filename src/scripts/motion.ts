@@ -8,8 +8,11 @@
  * Atributos usados nas páginas:
  *   data-split          título revelado linha a linha por trás de uma máscara
  *   data-split="intro"  idem, mas espera o preloader / a cortina (hero)
+ *   data-split="chars"  título revelado letra a letra, girando para frente
+ *   data-lines          parágrafo aparece linha a linha, saindo de um desfoque
  *   data-reveal         sobe e aparece ao entrar na tela
- *   data-fill           palavras passam de apagadas a acesas conforme o scroll
+ *   data-fill           palavras se acendem conforme o scroll (e apagam ao voltar)
+ * As revelações tocam uma vez só; só o data-fill acompanha o scroll nos dois sentidos.
  *   data-scene="0-3"    ao entrar, a nuvem de partículas morfa (data-scene-x/y/scale/dim)
  *   data-parallax="n"   desloca no scroll (n = intensidade)
  *   data-clip           imagem revelada por clip-path
@@ -214,7 +217,7 @@ function splitLines(el: HTMLElement) {
 function setupPage(intro: Promise<void>) {
   pageContext = gsap.context(() => {
     // Títulos por linha (os do hero esperam a introdução)
-    document.querySelectorAll<HTMLElement>("[data-split]").forEach((el) => {
+    document.querySelectorAll<HTMLElement>("[data-split]:not([data-split=chars])").forEach((el) => {
       const split = splitLines(el);
       gsap.set(el, { opacity: 1 });
       const play = () =>
@@ -228,6 +231,42 @@ function setupPage(intro: Promise<void>) {
       } else {
         ScrollTrigger.create({ trigger: el, start: "top 88%", once: true, onEnter: play });
       }
+    });
+
+    // Títulos de seção letra a letra: cada letra sobe de trás da máscara girando para frente
+    document.querySelectorAll<HTMLElement>("[data-split=chars]").forEach((el) => {
+      const split = SplitText.create(el, { type: "lines,chars", mask: "lines", linesClass: "split-line" });
+      gsap.set(el, { opacity: 1 });
+      gsap.set(split.chars, { yPercent: 110, rotateX: -80, transformOrigin: "50% 100%" });
+      ScrollTrigger.create({
+        trigger: el,
+        start: "top 88%",
+        once: true,
+        onEnter: () =>
+          gsap.to(split.chars, { yPercent: 0, rotateX: 0, duration: 1.1, stagger: 0.025, ease: EASE }),
+      });
+    });
+
+    // Parágrafos linha a linha, saindo de um leve desfoque
+    document.querySelectorAll<HTMLElement>("[data-lines]").forEach((el) => {
+      const split = splitLines(el);
+      gsap.set(el, { opacity: 1 });
+      gsap.set(split.lines, { yPercent: 60, opacity: 0, filter: "blur(8px)" });
+      ScrollTrigger.create({
+        trigger: el,
+        start: "top 90%",
+        once: true,
+        onEnter: () =>
+          gsap.to(split.lines, {
+            yPercent: 0,
+            opacity: 1,
+            filter: "blur(0px)",
+            duration: 1.1,
+            stagger: 0.08,
+            ease: EASE,
+            clearProps: "filter",
+          }),
+      });
     });
 
     // Aparecer subindo (os do hero entram junto com a introdução)
@@ -252,7 +291,7 @@ function setupPage(intro: Promise<void>) {
           opacity: 1,
           stagger: 0.1,
           ease: "none",
-          scrollTrigger: { trigger: el, start: "top 80%", end: "bottom 45%", scrub: true },
+          scrollTrigger: { trigger: el, start: "top 80%", end: "bottom 45%", scrub: 0.6 },
         },
       );
     });

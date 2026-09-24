@@ -26,7 +26,7 @@ const marqueeRows = [ai ?? [], [...(languages ?? []), ...(frameworks ?? [])], in
   {
     timeline.map((block) => (
       <section class="wrap section block" data-scene={block.scene.shape} data-scene-x={block.scene.x} data-scene-scale="0.8" data-scene-dim="0.45">
-        <h2 class="display display--lg block__title" data-split>
+        <h2 class="display display--lg block__title" data-split="chars">
           {block.title}
         </h2>
         <ol class="entries">
@@ -53,7 +53,7 @@ const marqueeRows = [ai ?? [], [...(languages ?? []), ...(frameworks ?? [])], in
   }
 
   <section class="section skills" data-scene="3" data-scene-y="-0.5">
-    <h2 class="wrap display display--lg block__title" data-split>{t.skills}</h2>
+    <h2 class="wrap display display--lg block__title" data-split="chars">{t.skills}</h2>
     <!-- Três faixas (IA / linguagens e frameworks / infra), em sentidos alternados -->
     <div class="marquees" aria-hidden="true">
       {

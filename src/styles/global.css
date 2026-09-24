@@ -288,7 +288,8 @@ main,
 /* ---------- Estados iniciais de animação ----------
  * Só escondemos elementos quando o JS de movimento está ativo (classe .js-motion no <html>),
  * então sem JS ou com movimento reduzido todo o conteúdo aparece normalmente. */
-.js-motion [data-reveal] {
+.js-motion [data-reveal],
+.js-motion [data-lines] {
   opacity: 0;
 }
 

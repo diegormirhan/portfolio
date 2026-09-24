@@ -4,8 +4,9 @@
  * Objetos 3D sólidos de vidro, espalhados num espaço 3D; a câmera viaja de um para o outro
  * conforme a seção visível (transição contínua e reversível):
  *   0  </>           símbolo de código extrudado em vidro espesso
- *   1  grafo         poliedros facetados ligados aos vizinhos por tubos luminosos
- *   2  rede neural   5 camadas de neurônios cobalto com brilho interno que respira e dispara com o pulso
+ *   1  superfície    gráfico 3D de relevos com várias montanhas que se transforma (peaks,
+ *                    Rastrigin, Ackley, Griewank, Schwefel), com uma bola de luz percorrendo
+ *   2  rede neural   camadas de nós brilhantes totalmente conectadas, sobre uma grade ondulada
  *   3  camadas       pilha de placas de vidro (arquitetura), com feixes de luz entre elas
  *   4  editor        linhas de código como barras de vidro, com uma linha ativa "digitando"
  * Nos tubos correm pulsos de luz (camada a camada na rede neural). Poeira de luz sobe ao
@@ -35,7 +36,60 @@ const COBALT = new THREE.Color("#2f63e6");
 const CERULEAN = new THREE.Color("#46b6e6");
 const ICE = new THREE.Color("#dcecff");
 
+const VIOLET = new THREE.Color("#7a5cff");
+
 const rand = (a = -1, b = 1) => a + Math.random() * (b - a);
+
+/** Altura da tela em pixels físicos (tamanho dos brilhos) e brilho da seção (data-scene-dim). */
+const VIEWPORT: THREE.IUniform<number> = { value: 1 };
+const DIM: THREE.IUniform<number> = { value: 1 };
+
+/** Gradiente da marca ao longo de u (0-1): cerúleo → cobalto → violeta. */
+function brand(u: number, out = new THREE.Color()) {
+  return u < 0.5 ? out.copy(CERULEAN).lerp(COBALT, u * 2) : out.copy(COBALT).lerp(VIOLET, (u - 0.5) * 2);
+}
+
+/** Brilhos (glow) aditivos: um ponto de luz difuso por posição; a intensidade vem na cor. */
+function glowSprites(count: number, size: number) {
+  const positions = new Float32Array(count * 3);
+  const colors = new Float32Array(count * 3);
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+  geometry.setAttribute("aColor", new THREE.BufferAttribute(colors, 3));
+  const points = new THREE.Points(
+    geometry,
+    new THREE.ShaderMaterial({
+      uniforms: { uSize: { value: size }, uViewport: VIEWPORT, uDim: DIM },
+      vertexShader: /* glsl */ `
+        uniform float uSize;
+        uniform float uViewport;
+        attribute vec3 aColor;
+        varying vec3 vColor;
+        void main() {
+          vec4 mv = modelViewMatrix * vec4(position, 1.0);
+          gl_Position = projectionMatrix * mv;
+          // Tamanho em unidades do mundo, convertido para pixels pela projeção
+          gl_PointSize = uSize * projectionMatrix[1][1] * uViewport * 0.5 / -mv.z;
+          vColor = aColor;
+        }
+      `,
+      fragmentShader: /* glsl */ `
+        uniform float uDim;
+        varying vec3 vColor;
+        void main() {
+          float d = length(gl_PointCoord - 0.5) * 2.0;
+          float a = exp(-d * d * 5.0) * (1.0 - d);
+          gl_FragColor = vec4(vColor, max(a, 0.0) * (0.35 + 0.65 * uDim));
+        }
+      `,
+      transparent: true,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+    }),
+  );
+  points.frustumCulled = false;
+  return { points, positions, colors, geometry };
+}
 
 /* ---------- Materiais ---------- */
 
@@ -77,9 +131,11 @@ const pulseVertex = /* glsl */ `
   attribute float aPhase;
   varying float vT;
   varying float vPhase;
+  varying float vX;
   void main() {
     vT = uv.x;
     vPhase = aPhase;
+    vX = position.x;
     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
   }
 `;
@@ -90,16 +146,20 @@ const pulseFragment = /* glsl */ `
   uniform float uBase;
   uniform float uSpan;
   uniform vec3 uCerulean;
+  uniform vec3 uFar;
+  uniform float uRange;
   uniform vec3 uIce;
   varying float vT;
   varying float vPhase;
+  varying float vX;
   void main() {
     // Um pulso por tubo: cabeça brilhante indo de 0 a 1, com rastro atrás. A travessia dura
     // uSpan do ciclo; no resto do ciclo o tubo fica em repouso (encadeia camada a camada)
     float d = vT - fract(uTime * uSpeed - vPhase) / uSpan;
     float head = exp(-d * d * 900.0);
     float tail = d < 0.0 ? exp(d * 8.0) * 0.5 : 0.0;
-    vec3 color = mix(uCerulean, uIce, clamp(head * 1.5, 0.0, 1.0));
+    vec3 base = mix(uCerulean, uFar, clamp(vX / uRange * 0.5 + 0.5, 0.0, 1.0));
+    vec3 color = mix(base, uIce, clamp(head * 1.5, 0.0, 1.0));
     gl_FragColor = vec4(color, uBase + (head + tail) * 1.1);
   }
 `;
@@ -122,6 +182,8 @@ function pulseTubes(
   speed: number,
   base: number,
   span = 1,
+  far = CERULEAN,
+  range = 1,
 ) {
   return new THREE.Mesh(
     geometry,
@@ -129,6 +191,8 @@ function pulseTubes(
       uniforms: {
         uTime: shared.uTime,
         uCerulean: { value: CERULEAN },
+        uFar: { value: far },
+        uRange: { value: range },
         uIce: { value: ICE },
         uSpeed: { value: speed },
         uBase: { value: base },
@@ -163,55 +227,51 @@ function fireAt(t: number, layer: number) {
 }
 
 function makeNetwork(shared: Shared): Station {
-  // Perceptron 6-10-12-10-4 com 340 conexões. Cada neurônio é uma esfera cobalto escura com um
-  // brilho ciano por dentro, que respira devagar e intensifica quando o pulso da camada anterior
-  // chega. A intensidade de cada um vem por instância (instanceColor.r).
+  // Rede neural em camadas (5-7-8-7-4), cada camada ligada a todas as da seguinte, no estilo
+  // "bolhas de luz": nós com brilho difuso, cores em gradiente cerúleo → violeta ao longo das
+  // camadas e uma grade ondulada embaixo. Os pulsos saem de uma camada e chegam na próxima
+  // no instante em que ela acende (fireAt), da entrada até a saída.
   const group = new THREE.Group();
-  const layers = [6, 10, 12, 10, 4];
+  const W = 2.6; // meia-largura (da entrada à saída)
+  const layers = [5, 7, 8, 7, 4];
   const byLayer = layers.map((n, li) =>
     Array.from({ length: n }, (_, ni) => {
-      const x = (li / (layers.length - 1) - 0.5) * 5;
-      const y = (n === 1 ? 0 : ni / (n - 1) - 0.5) * (n * 0.34);
-      return new THREE.Vector3(x, y, rand(-0.12, 0.12));
+      const x = (li / (layers.length - 1) - 0.5) * 2 * W;
+      const y = (ni / (n - 1) - 0.5) * n * 0.36 + 0.25;
+      // Camadas levemente curvas em profundidade: a rede tem volume ao girar
+      return new THREE.Vector3(x, y, -0.18 * y * y + rand(-0.06, 0.06));
     }),
   );
   const nodes = byLayer.flat();
   const layerOf = layers.flatMap((n, li) => Array<number>(n).fill(li));
+  const tone = nodes.map((n) => brand(THREE.MathUtils.clamp(n.x / (2 * W) + 0.5, 0, 1)));
 
-  const neurons = new THREE.InstancedMesh(
-    new THREE.SphereGeometry(0.14, 48, 24),
+  // Nós: esferas pequenas com centro claro tingido; a cor por instância já traz a intensidade
+  const orbs = new THREE.InstancedMesh(
+    new THREE.SphereGeometry(0.09, 32, 16),
     new THREE.ShaderMaterial({
-      uniforms: { uBody: { value: new THREE.Color("#2356c4") }, uGlow: { value: CERULEAN } },
+      uniforms: { uIce: { value: ICE } },
       vertexShader: /* glsl */ `
         varying vec3 vNormal;
         varying vec3 vView;
-        varying float vLevel;
+        varying vec3 vColor;
         void main() {
           vec4 mv = modelViewMatrix * instanceMatrix * vec4(position, 1.0);
           vNormal = normalize(normalMatrix * mat3(instanceMatrix) * normal);
           vView = normalize(-mv.xyz);
-          vLevel = instanceColor.r;
+          vColor = instanceColor;
           gl_Position = projectionMatrix * mv;
         }
       `,
       fragmentShader: /* glsl */ `
-        uniform vec3 uBody;
-        uniform vec3 uGlow;
+        uniform vec3 uIce;
         varying vec3 vNormal;
         varying vec3 vView;
-        varying float vLevel;
+        varying vec3 vColor;
         void main() {
-          vec3 n = normalize(vNormal);
-          vec3 v = normalize(vView);
-          // Luz de estúdio vinda de cima/esquerda: sombreado difuso dá o volume da esfera
-          vec3 l = normalize(vec3(-0.5, 0.7, 0.6));
-          float diffuse = 0.35 + 0.65 * max(dot(n, l), 0.0);
-          float spec = pow(max(dot(reflect(-l, n), v), 0.0), 48.0);
-          float facing = max(dot(n, v), 0.0);
-          // Brilho ciano por dentro (respira e dispara) + contorno ciano na borda
-          float inner = pow(facing, 2.0) * vLevel;
-          float rim = pow(1.0 - facing, 2.5);
-          vec3 color = uBody * diffuse + uGlow * (inner * 1.1 + rim * 0.55) + vec3(0.75, 0.9, 1.0) * spec * 0.6;
+          float facing = max(dot(normalize(vNormal), normalize(vView)), 0.0);
+          // Borda na cor do nó e centro mais claro, como uma bolha de luz
+          vec3 color = mix(vColor, mix(vColor, uIce, 0.55) * 1.4, pow(facing, 1.6));
           gl_FragColor = vec4(color, 1.0);
         }
       `,
@@ -220,86 +280,355 @@ function makeNetwork(shared: Shared): Station {
   );
   const m = new THREE.Matrix4();
   nodes.forEach((node, i) => {
-    m.makeTranslation(node);
-    neurons.setMatrixAt(i, m);
-    neurons.setColorAt(i, new THREE.Color(0, 0, 0));
+    orbs.setMatrixAt(i, m.makeTranslation(node));
+    orbs.setColorAt(i, tone[i]!);
   });
-  neurons.computeBoundingSphere();
-  group.add(neurons);
+  orbs.computeBoundingSphere();
+  const halos = glowSprites(nodes.length, 0.85);
+  nodes.forEach((node, i) => halos.positions.set([node.x, node.y, node.z], i * 3));
 
+  // Conexões entre camadas vizinhas (todas com todas), pulsos sincronizados camada a camada
   const edges: [THREE.Vector3, THREE.Vector3, number][] = [];
   for (let li = 0; li < layers.length - 1; li++)
     for (const a of byLayer[li]!) for (const b of byLayer[li + 1]!) edges.push([a, b, li * NET_LAYER_PHASE]);
-  group.add(pulseTubes(tubes(edges, 0.006), shared, NET_SPEED, 0.12, NET_LAYER_PHASE));
+  const links = pulseTubes(tubes(edges, 0.0055), shared, NET_SPEED, 0.28, NET_LAYER_PHASE, VIOLET, W);
 
-  const level = new THREE.Color();
+  // Grade ondulada embaixo: linhas nas duas direções, deslocadas no shader
+  const GRID_W = 3.6;
+  const GRID_D = 2.6;
+  const LINES = 30;
+  const STEPS = 90;
+  const gridPoints: number[] = [];
+  for (let k = 0; k <= LINES; k++) {
+    const u = (k / LINES) * 2 - 1;
+    for (let step = 0; step < STEPS; step++) {
+      const a = (step / STEPS) * 2 - 1;
+      const b = ((step + 1) / STEPS) * 2 - 1;
+      // um segmento da linha ao longo de x (z fixo) e um da linha ao longo de z (x fixo)
+      gridPoints.push(a * GRID_W, 0, u * GRID_D, b * GRID_W, 0, u * GRID_D);
+      gridPoints.push(u * GRID_W, 0, a * GRID_D, u * GRID_W, 0, b * GRID_D);
+    }
+  }
+  const gridGeometry = new THREE.BufferGeometry();
+  gridGeometry.setAttribute("position", new THREE.Float32BufferAttribute(gridPoints, 3));
+  const grid = new THREE.LineSegments(
+    gridGeometry,
+    new THREE.ShaderMaterial({
+      uniforms: {
+        uTime: shared.uTime,
+        uNear: { value: CERULEAN },
+        uFar: { value: VIOLET },
+        uSize: { value: new THREE.Vector2(GRID_W, GRID_D) },
+        uDim: DIM,
+      },
+      vertexShader: /* glsl */ `
+        uniform float uTime;
+        uniform vec2 uSize;
+        varying vec2 vUv;
+        void main() {
+          vec3 p = position;
+          p.y = -1.05
+            + 0.22 * sin(p.x * 0.9 + uTime * 0.45) * cos(p.z * 1.2 - uTime * 0.3)
+            + 0.12 * sin((p.x + p.z) * 1.8 + uTime * 0.6);
+          vUv = p.xz / uSize;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
+        }
+      `,
+      fragmentShader: /* glsl */ `
+        uniform vec3 uNear;
+        uniform vec3 uFar;
+        uniform float uDim;
+        varying vec2 vUv;
+        void main() {
+          // Some nas bordas: a grade não tem começo nem fim visíveis
+          float edge = (1.0 - smoothstep(0.55, 1.0, abs(vUv.x))) * (1.0 - smoothstep(0.4, 1.0, abs(vUv.y)));
+          vec3 color = mix(uNear, uFar, vUv.x * 0.5 + 0.5);
+          gl_FragColor = vec4(color, edge * 0.42 * (0.35 + 0.65 * uDim));
+        }
+      `,
+      transparent: true,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+    }),
+  );
+
+  // A grade fica como um chão abaixo da rede, inclinada para dar para ver a ondulação
+  grid.position.y = -0.95;
+  grid.rotation.x = 0.35;
+  group.add(grid, links, orbs, halos.points);
+
+  const color = new THREE.Color();
+  const size = new THREE.Vector3();
   return {
     group,
     update: (t) => {
-      group.rotation.y = Math.sin(t * 0.2) * 0.28;
-      // Respiração lenta (defasada por neurônio) + disparo quando os pulsos chegam
-      nodes.forEach((_, i) => {
-        const breathe = 0.45 + 0.15 * Math.sin(t * 1.1 + i * 0.9);
-        neurons.setColorAt(i, level.setRGB(breathe + fireAt(t, layerOf[i]!) * 0.9, 0, 0));
+      group.rotation.x = 0.08;
+      group.rotation.y = -0.25 + Math.sin(t * 0.18) * 0.25;
+      // Cada camada acende quando os pulsos da anterior chegam; entre um e outro, respira
+      nodes.forEach((node, i) => {
+        const wave = fireAt(t, layerOf[i]!);
+        const breathe = 0.75 + 0.25 * Math.sin(t * 1.3 + i * 1.7);
+        orbs.setColorAt(i, color.copy(tone[i]!).multiplyScalar(breathe + wave * 1.3));
+        orbs.setMatrixAt(i, m.compose(node, IDENTITY, size.setScalar(1 + wave * 0.35)));
+        color.copy(tone[i]!).lerp(ICE, wave * 0.4).multiplyScalar(0.55 + wave * 0.9 + 0.15 * breathe);
+        halos.colors.set([color.r, color.g, color.b], i * 3);
       });
-      neurons.instanceColor!.needsUpdate = true;
+      orbs.instanceColor!.needsUpdate = true;
+      orbs.instanceMatrix.needsUpdate = true;
+      halos.geometry.attributes.aColor!.needsUpdate = true;
     },
   };
 }
 
-function makeGraph(shared: Shared): Station {
-  // Constelação: poliedros facetados numa casca irregular + alguns internos, cada nó ligado
-  // aos 3 vizinhos mais próximos por tubos com pulsos. Gira devagar.
-  const group = new THREE.Group();
-  const nodes: THREE.Vector3[] = [];
-  const golden = Math.PI * (3 - Math.sqrt(5));
-  const SHELL = 60;
-  for (let i = 0; i < SHELL; i++) {
-    const y = 1 - (i / (SHELL - 1)) * 2;
-    const r = Math.sqrt(1 - y * y);
-    const radius = 1.9 * rand(0.8, 1.05);
-    nodes.push(new THREE.Vector3(Math.cos(golden * i) * r * radius, y * radius, Math.sin(golden * i) * r * radius));
+/* Funções de teste de otimização com várias montanhas, em x, z ∈ [-1, 1], altura normalizada
+ * ~0-1. As mesmas fórmulas em TS (a bola) e em GLSL (a superfície). */
+const SURFACES = 5;
+function surface(k: number, x: number, z: number) {
+  const TAU = Math.PI * 2;
+  switch (k) {
+    case 0: {
+      // peaks: três montanhas e dois vales
+      const X = x * 3;
+      const Z = z * 3;
+      const f =
+        3 * (1 - X) ** 2 * Math.exp(-X * X - (Z + 1) ** 2) -
+        10 * (X / 5 - X ** 3 - Z ** 5) * Math.exp(-X * X - Z * Z) -
+        Math.exp(-((X + 1) ** 2) - Z * Z) / 3;
+      return (f + 6.6) / 14.8;
+    }
+    case 1: {
+      // Rastrigin: grade de picos
+      const X = x * 2.2;
+      const Z = z * 2.2;
+      return (20 + X * X - 10 * Math.cos(TAU * X) + Z * Z - 10 * Math.cos(TAU * Z)) / 50;
+    }
+    case 2: {
+      // Ackley invertida: um pico central cercado de montanhas menores
+      const X = x * 3;
+      const Z = z * 3;
+      const a = -20 * Math.exp(-0.2 * Math.sqrt(0.5 * (X * X + Z * Z)));
+      const b = -Math.exp(0.5 * (Math.cos(TAU * X) + Math.cos(TAU * Z)));
+      return 1 - (a + b + Math.E + 20) / 12;
+    }
+    case 3: {
+      // Griewank (ampliada): ondas de montanhas
+      const X = x * 9;
+      const Z = z * 9;
+      return (1 + (X * X + Z * Z) / 250 - Math.cos(X) * Math.cos(Z / Math.SQRT2)) / 2.7;
+    }
+    default: {
+      // Schwefel: cordilheira irregular
+      const X = x * 420;
+      const Z = z * 420;
+      return (837.97 - X * Math.sin(Math.sqrt(Math.abs(X))) - Z * Math.sin(Math.sqrt(Math.abs(Z)))) / 1680;
+    }
   }
-  for (let i = 0; i < 10; i++) nodes.push(new THREE.Vector3(rand(), rand(), rand()).normalize().multiplyScalar(rand(0.4, 1.1)));
+}
 
-  const shells = new THREE.InstancedMesh(
-    new THREE.IcosahedronGeometry(0.15, 0),
-    glass("#9cc6ff", { flatShading: true }),
-    nodes.length,
+const surfaceGlsl = /* glsl */ `
+  uniform float uA;
+  uniform float uB;
+  uniform float uMix;
+  const float TAU = 6.2831853;
+  float surfaceK(float k, float x, float z) {
+    if (k < 0.5) {
+      float X = x * 3.0; float Z = z * 3.0;
+      float f = 3.0 * (1.0 - X) * (1.0 - X) * exp(-X * X - (Z + 1.0) * (Z + 1.0))
+        - 10.0 * (X / 5.0 - X * X * X - Z * Z * Z * Z * Z) * exp(-X * X - Z * Z)
+        - exp(-(X + 1.0) * (X + 1.0) - Z * Z) / 3.0;
+      return (f + 6.6) / 14.8;
+    }
+    if (k < 1.5) {
+      float X = x * 2.2; float Z = z * 2.2;
+      return (20.0 + X * X - 10.0 * cos(TAU * X) + Z * Z - 10.0 * cos(TAU * Z)) / 50.0;
+    }
+    if (k < 2.5) {
+      float X = x * 3.0; float Z = z * 3.0;
+      float a = -20.0 * exp(-0.2 * sqrt(0.5 * (X * X + Z * Z)));
+      float b = -exp(0.5 * (cos(TAU * X) + cos(TAU * Z)));
+      return 1.0 - (a + b + 2.7182818 + 20.0) / 12.0;
+    }
+    if (k < 3.5) {
+      float X = x * 9.0; float Z = z * 9.0;
+      return (1.0 + (X * X + Z * Z) / 250.0 - cos(X) * cos(Z / 1.4142136)) / 2.7;
+    }
+    float X = x * 420.0; float Z = z * 420.0;
+    return (837.97 - X * sin(sqrt(abs(X))) - Z * sin(sqrt(abs(Z)))) / 1680.0;
+  }
+  float heightAt(vec2 p) {
+    return mix(surfaceK(uA, p.x, p.y), surfaceK(uB, p.x, p.y), uMix);
+  }
+`;
+
+const LAND_HALF = 2.1; // meia-largura no mundo
+const LAND_HEIGHT = 1.9;
+const landGlsl = /* glsl */ `
+  const float HALF = ${LAND_HALF.toFixed(2)};
+  const float HEIGHT = ${LAND_HEIGHT.toFixed(2)};
+`;
+
+function makeLandscape(): Station {
+  // Gráfico 3D de função de otimização: superfície com mapa de cores da marca (vales cobalto
+  // profundo → picos cerúleo/gelo) e uma malha de linhas acesa por cima. A cada ~6,5 s a
+  // superfície se transforma na próxima função, e uma bola de luz desce em espiral até o mínimo.
+  const group = new THREE.Group();
+  const morph = { uA: { value: 0 }, uB: { value: 1 }, uMix: { value: 0 } };
+
+  const surfaceMesh = new THREE.Mesh(
+    new THREE.PlaneGeometry(2, 2, 140, 140).rotateX(-Math.PI / 2),
+    new THREE.ShaderMaterial({
+      uniforms: {
+        ...morph,
+        uLow: { value: new THREE.Color("#081642") },
+        uMid: { value: COBALT },
+        uHigh: { value: CERULEAN },
+        uTop: { value: new THREE.Color("#c8f1ff") },
+        uDim: DIM,
+      },
+      vertexShader: /* glsl */ `
+        ${surfaceGlsl}
+        ${landGlsl}
+        varying float vH;
+        varying vec3 vNormal;
+        varying vec3 vView;
+        void main() {
+          vec2 p = position.xz;
+          float h = heightAt(p);
+          // Normal por diferenças finitas: sombreado do relevo
+          float e = 0.01;
+          float hx = (heightAt(p + vec2(e, 0.0)) - heightAt(p - vec2(e, 0.0))) * HEIGHT;
+          float hz = (heightAt(p + vec2(0.0, e)) - heightAt(p - vec2(0.0, e))) * HEIGHT;
+          vec3 n = normalize(vec3(-hx, 2.0 * e * HALF, -hz));
+          vH = h;
+          vec4 mv = modelViewMatrix * vec4(p.x * HALF, h * HEIGHT - 0.9, p.y * HALF, 1.0);
+          vNormal = normalize(normalMatrix * n);
+          vView = normalize(-mv.xyz);
+          gl_Position = projectionMatrix * mv;
+        }
+      `,
+      fragmentShader: /* glsl */ `
+        uniform vec3 uLow;
+        uniform vec3 uMid;
+        uniform vec3 uHigh;
+        uniform vec3 uTop;
+        uniform float uDim;
+        varying float vH;
+        varying vec3 vNormal;
+        varying vec3 vView;
+        void main() {
+          float h = clamp(vH, 0.0, 1.0);
+          vec3 color = mix(uLow, uMid, smoothstep(0.0, 0.35, h));
+          color = mix(color, uHigh, smoothstep(0.3, 0.7, h));
+          color = mix(color, uTop, smoothstep(0.7, 1.0, h));
+          vec3 n = normalize(vNormal);
+          if (!gl_FrontFacing) n = -n;
+          float light = 0.45 + 0.75 * max(dot(n, normalize(vec3(-0.4, 0.9, 0.5))), 0.0);
+          float rim = pow(1.0 - abs(dot(n, normalize(vView))), 3.0);
+          gl_FragColor = vec4((color * light + uHigh * rim * 0.5) * (0.45 + 0.55 * uDim), 0.9);
+        }
+      `,
+      transparent: true,
+      side: THREE.DoubleSide,
+    }),
   );
-  const m = new THREE.Matrix4();
-  const q = new THREE.Quaternion();
-  const e = new THREE.Euler();
-  const s = new THREE.Vector3();
-  nodes.forEach((node, i) => {
-    q.setFromEuler(e.set(rand(0, 6), rand(0, 6), 0));
-    shells.setMatrixAt(i, m.compose(node, q, s.setScalar(rand(0.7, 1.25))));
-  });
-  shells.computeBoundingSphere();
-  group.add(shells);
 
-  const seen = new Set<string>();
-  const edges: [THREE.Vector3, THREE.Vector3, number][] = [];
-  nodes.forEach((node, a) => {
-    nodes
-      .map((other, b) => [b, node.distanceTo(other)] as const)
-      .filter(([b]) => b !== a)
-      .sort((x, y) => x[1] - y[1])
-      .slice(0, 3)
-      .forEach(([b]) => {
-        const key = a < b ? `${a}-${b}` : `${b}-${a}`;
-        if (seen.has(key)) return;
-        seen.add(key);
-        edges.push([node, nodes[b]!, Math.random()]);
-      });
-  });
-  group.add(pulseTubes(tubes(edges, 0.014), shared, 0.28, 0.45));
+  // Malha de linhas por cima (o "wireframe" do gráfico), um fio acima da superfície
+  const LINES = 28;
+  const STEPS = 120;
+  const wire: number[] = [];
+  for (let k = 0; k <= LINES; k++) {
+    const u = (k / LINES) * 2 - 1;
+    for (let step = 0; step < STEPS; step++) {
+      const a = (step / STEPS) * 2 - 1;
+      const b = ((step + 1) / STEPS) * 2 - 1;
+      wire.push(a, 0, u, b, 0, u, u, 0, a, u, 0, b);
+    }
+  }
+  const wireGeometry = new THREE.BufferGeometry();
+  wireGeometry.setAttribute("position", new THREE.Float32BufferAttribute(wire, 3));
+  const wireLines = new THREE.LineSegments(
+    wireGeometry,
+    new THREE.ShaderMaterial({
+      uniforms: { ...morph, uColor: { value: ICE }, uDim: DIM },
+      vertexShader: /* glsl */ `
+        ${surfaceGlsl}
+        ${landGlsl}
+        varying float vH;
+        void main() {
+          float h = heightAt(position.xz);
+          vH = h;
+          vec3 p = vec3(position.x * HALF, h * HEIGHT - 0.9 + 0.012, position.z * HALF);
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
+        }
+      `,
+      fragmentShader: /* glsl */ `
+        uniform vec3 uColor;
+        uniform float uDim;
+        varying float vH;
+        void main() {
+          gl_FragColor = vec4(uColor, (0.12 + 0.3 * clamp(vH, 0.0, 1.0)) * (0.4 + 0.6 * uDim));
+        }
+      `,
+      transparent: true,
+      depthWrite: false,
+      blending: THREE.AdditiveBlending,
+    }),
+  );
 
+  // Bola de luz (o otimizador) com brilho e rastro
+  const ball = new THREE.Mesh(new THREE.SphereGeometry(0.07, 24, 12), new THREE.MeshBasicMaterial({ color: ICE }));
+  const TRAIL = 14;
+  const trail = glowSprites(TRAIL + 1, 0.5);
+  const history = Array.from({ length: TRAIL }, () => new THREE.Vector3(0, -99, 0));
+
+  group.add(surfaceMesh, wireLines, ball, trail.points);
+
+  const PERIOD = 6.5;
+  const MORPH = 1.6;
+  const color = new THREE.Color();
+  let lastSample = 0;
+  let lastT = 0;
+  const target = new THREE.Vector3();
   return {
     group,
     update: (t) => {
-      group.rotation.y = t * 0.12;
-      group.rotation.x = Math.sin(t * 0.15) * 0.15;
+      group.rotation.x = 0.42;
+      group.rotation.y = -0.7 + t * 0.08;
+      const cycle = Math.floor(t / PERIOD);
+      const local = t - cycle * PERIOD;
+      const a = cycle % SURFACES;
+      const b = (cycle + 1) % SURFACES;
+      const mix = THREE.MathUtils.smoothstep(local, PERIOD - MORPH, PERIOD);
+      morph.uA.value = a;
+      morph.uB.value = b;
+      morph.uMix.value = mix;
+
+      // Percorre o relevo numa órbita que abre e fecha devagar, subindo e descendo as montanhas
+      const r = 0.45 + 0.3 * Math.sin(t * 0.23);
+      const angle = t * 0.9;
+      const x = Math.cos(angle) * r;
+      const z = Math.sin(angle) * r;
+      const h = THREE.MathUtils.lerp(surface(a, x, z), surface(b, x, z), mix);
+      target.set(x * LAND_HALF, h * LAND_HEIGHT - 0.9 + 0.09, z * LAND_HALF);
+      // Segue o alvo com amortecimento: some o tremido de passar por cima de relevos muito
+      // rugosos (Rastrigin, Griewank) e das mudanças de altura na troca de função
+      const dt = Math.min(Math.max(t - lastT, 0), 0.1);
+      lastT = t;
+      ball.position.lerp(target, 1 - Math.exp(-dt * 6));
+      if (t - lastSample > 0.06) {
+        lastSample = t;
+        history.pop();
+        history.unshift(ball.position.clone());
+      }
+      trail.positions.set([ball.position.x, ball.position.y, ball.position.z], 0);
+      trail.colors.set([ICE.r * 1.2, ICE.g * 1.2, ICE.b * 1.2], 0);
+      history.forEach((q, i) => {
+        trail.positions.set([q.x, q.y, q.z], (i + 1) * 3);
+        color.copy(CERULEAN).multiplyScalar(0.55 * (1 - i / TRAIL));
+        trail.colors.set([color.r, color.g, color.b], (i + 1) * 3);
+      });
+      trail.geometry.attributes.position!.needsUpdate = true;
+      trail.geometry.attributes.aColor!.needsUpdate = true;
     },
   };
 }
@@ -479,8 +808,8 @@ function init(canvas: HTMLCanvasElement) {
 
   const shared: Shared = { uTime: { value: 0 } };
 
-  // Cada objeto numa "estação" ao longo de z, na ordem da Home (rede → grafo → editor → camadas → </>)
-  const stations: Station[] = [makeCode(), makeGraph(shared), makeNetwork(shared), makeStack(shared), makeEditor()];
+  // Cada objeto numa "estação" ao longo de z, na ordem da Home (rede → superfície → editor → camadas → </>)
+  const stations: Station[] = [makeCode(), makeLandscape(), makeNetwork(shared), makeStack(shared), makeEditor()];
   const depthOf = [-80, -20, 0, -60, -40];
   stations.forEach((station, i) => {
     station.group.position.set(0, 0, depthOf[i]!);
@@ -607,6 +936,7 @@ function init(canvas: HTMLCanvasElement) {
     camera.aspect = w / h;
     baseZ = w / h < 0.8 ? 12 : 9; // telas estreitas: câmera mais longe para o objeto caber
     camera.updateProjectionMatrix();
+    VIEWPORT.value = h * dpr;
     smokeRenderer?.setSize(w, h, false);
     fluid?.resize();
   }
@@ -666,6 +996,7 @@ function init(canvas: HTMLCanvasElement) {
       station.group.scale.setScalar(Math.max(near, 0.001) * (i === target.shape ? state.scale : 1));
     });
     renderer.toneMappingExposure = 0.55 + 0.55 * state.dim;
+    DIM.value = state.dim;
 
     // Rolar rápido aproxima um pouco a câmera; o cursor dá uma leve paralaxe
     const scrollSpeed = Math.abs(scrollY - lastScroll) / Math.max(dt, 1e-3) / innerHeight;

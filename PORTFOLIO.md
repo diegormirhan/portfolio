@@ -373,7 +373,7 @@ Todo o conteúdo do site está no frontmatter acima. Este corpo documenta de ond
 
 - Tema escuro único, azul cobalto (primária) e azul cerúleo (secundária).
 - Referências principais: emotion-agency.com e portfolio.widehue.co/rezonbio.
-- Cena Three.js fixa ao fundo com objetos 3D sólidos de vidro (rede neural com núcleos acesos, grafo, editor de código, pilha de camadas, símbolo </>); a câmera viaja entre eles conforme o scroll, com pulsos de luz sincronizados camada a camada, poeira de luz ao fundo e fumaça fluida colorida seguindo o cursor.
+- Cena Three.js fixa ao fundo com objetos 3D (rede neural em camadas com nós brilhantes sobre grade ondulada, gráfico 3D de funções de otimização que se transforma, editor de código, pilha de camadas, símbolo </>); a câmera viaja entre eles conforme o scroll, com pulsos de luz e brilhos, poeira de luz ao fundo e fumaça fluida colorida seguindo o cursor.
 - Preloader com contador em %, transições de scroll (GSAP + Lenis), bolhas flutuantes, menu hambúrguer em tela cheia no canto superior direito.
 - Sem cards e sem frases de apoio nas seções; listas são linhas tipográficas com preview no hover.
 - Páginas: início, projetos (+ uma por projeto, com README), blog, experiência/skills, contato (sem formulário). PT na raiz, EN em `/en/`, troca por bandeira.

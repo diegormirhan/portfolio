@@ -49,7 +49,7 @@ const repoUrl = `https://github.com/${project.repo}`;
   <section class="wrap section detail" data-scene="3" data-scene-y="-0.9" data-scene-dim="0.3">
     <p class="lead detail__intro" data-fill>{project.description}</p>
     <div class="detail__overview">
-      {project.overview.map((paragraph) => <p data-reveal>{paragraph}</p>)}
+      {project.overview.map((paragraph) => <p data-lines>{paragraph}</p>)}
     </div>
     <ul class="detail__highlights">
       {
