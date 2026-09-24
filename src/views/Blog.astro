@@ -1,7 +1,8 @@
 ---
 import Base from "../layouts/Base.astro";
+import DevNote from "../components/DevNote.astro";
 import LinkRows from "../components/LinkRows.astro";
-import { pathFor, profile, ui, type Lang } from "../lib/content";
+import { devNotes, pathFor, profile, ui, type Lang } from "../lib/content";
 import { articlePath, articlesFor, formatDate, getArticles } from "../lib/data";
 
 interface Props {
@@ -16,8 +17,9 @@ const other: Lang = lang === "pt" ? "en" : "pt";
 ---
 
 <Base lang={lang} page="blog" title={t.nav.blog}>
-  <section class="wrap page-top" data-intro data-scene="1" data-scene-x="2.4" data-scene-scale="0.8" data-scene-dim="0.55">
+  <section class="wrap page-top dev-host" data-intro data-scene="1" data-scene-x="2.4" data-scene-scale="0.8" data-scene-dim="0.55">
     <h1 class="display display--xl title" data-split="intro">{t.nav.blog}</h1>
+    <DevNote text={devNotes.page} />
     {
       articles.length > 0 ? (
         <LinkRows

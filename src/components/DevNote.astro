@@ -1,0 +1,14 @@
+---
+/**
+ * Anotação de código/matemática que só aparece no dev mode, flutuando na seção.
+ * A seção que a recebe precisa da classe `dev-host` (posicionamento).
+ */
+interface Props {
+  text: string;
+  class?: string;
+}
+
+const { text, class: className } = Astro.props;
+---
+
+<pre class:list={["dev-note mono", className]} aria-hidden="true">{text}</pre>

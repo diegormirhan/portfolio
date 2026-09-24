@@ -310,37 +310,74 @@ en:
         - title: "No cloud"
           text: "whisper.cpp and llama.cpp on Vulkan, with models downloaded from Hugging Face on first run. No API key and no data leaving the machine."
 
+# Dev mode: anotações flutuantes de código e matemática em cada seção (iguais nos dois idiomas)
+dev:
+  hero: |-
+    y = σ(Wx + b)
+    ∂L/∂W = δ · xᵀ
+  about: |-
+    θ ← θ − η · ∇θ L(θ)
+    while loss > ε: step()
+  focus:
+    - |-
+      attn = softmax(QKᵀ / √d) · V
+      model.generate(prompt, local=True)
+    - |-
+      async for batch in stream(src):
+          await sink.write(transform(batch))
+    - |-
+      UI = f(state)
+      deploy(main) → prod
+  selected: |-
+    for p in projects:
+        ship(p)
+  articles: |-
+    Σ ideias → texto
+    publish(draft, lang)
+  cta: |-
+    await connect("diego")
+    return 200
+  page: |-
+    GET /diego  200 OK
+    ∫ curiosidade dt
+
 # Dados que não mudam por idioma. A ordem aqui é a ordem no site.
 projects:
   - slug: toolhaven-desktop
+    dev: "invoke(\"run\", { tool: \"ffmpeg\", args })\nqueue.push(job)  // O(1)"
     year: "2026"
     repo: diegormirhan/toolhaven-desktop
     image: /projects/toolhaven.webp
     demo: https://toolhaven-kohl.vercel.app/
     tags: [Tauri, Rust, React, FFmpeg]
   - slug: polyrag
+    dev: "cos(q, d) = q·d / (‖q‖ ‖d‖)\nroute = argmax_s sim(q, s)"
     year: "2026"
     repo: diegormirhan/polyrag
     image: /projects/polyrag.webp
     tags: [FastAPI, Qdrant, llama.cpp, SvelteKit]
   - slug: rasterscope
+    dev: "NDVI = (NIR − R) / (NIR + R)\nŷ = UNet(x) ∈ [0,1]^(H×W)"
     year: "2026"
     repo: diegormirhan/rasterscope
     image: /projects/rasterscope.webp
     demo: https://rasterscope.onrender.com/
     tags: [U-Net, ONNX, FastAPI, React]
   - slug: aeropulse
+    dev: "RUL = f(x₁ … xₙ)\nL = Σ(y − ŷ)² + λ‖w‖²"
     year: "2026"
     repo: diegormirhan/aeropulse
     image: /projects/aeropulse.webp
     tags: [XGBoost, FastAPI, React, Docker]
   - slug: manim-editor
+    dev: "self.play(Transform(a, b))\nt ∈ [0, 1] → frame"
     year: "2026"
     repo: diegormirhan/manim-editor
     image: /projects/manim-editor.webp
     demo: https://manim-editor-alpha.vercel.app/
     tags: [Tauri, React, Python, Manim]
   - slug: voice-assistant
+    dev: "mic → whisper → llama → tts\nWER = (S + D + I) / N"
     year: "2026"
     repo: diegormirhan/voice-assistant
     image: /projects/voice-assistant.webp
@@ -374,6 +411,17 @@ Todo o conteúdo do site está no frontmatter acima. Este corpo documenta de ond
 - Tema escuro único, azul cobalto (primária) e azul cerúleo (secundária).
 - Referências principais: emotion-agency.com e portfolio.widehue.co/rezonbio.
 - Cena Three.js fixa ao fundo com objetos 3D (rede neural em camadas com nós brilhantes sobre grade ondulada, gráfico 3D de funções de otimização que se transforma, editor de código, pilha de camadas, símbolo </>); a câmera viaja entre eles conforme o scroll, com pulsos de luz e brilhos, poeira de luz ao fundo e fumaça fluida colorida seguindo o cursor.
-- Preloader com contador em %, transições de scroll (GSAP + Lenis), bolhas flutuantes, menu hambúrguer em tela cheia no canto superior direito.
+- Preloader com contador em % → botão "Entrar" (ou "entrar sem som") → a pílula vira um círculo cobalto enquanto a subida do som toca → no golpe, "DIEGO" surge de uma vez com clarão e tremor (título de trailer) → o branco se apaga e o site aparece por dentro das letras, o miolo do "O" ganha um contorno luminoso e a câmera mergulha por ele até o site (a cada carregamento completo); o "Diego." do topo entra em seguida;
 - Sem cards e sem frases de apoio nas seções; listas são linhas tipográficas com preview no hover.
+- **Dev mode** (botão ao lado da bandeira): visual mais agressivo (cobalto + vermelho sinal #ff2b3a), versões técnicas dos objetos 3D (backpropagation, descida do gradiente, arquitetura de sistema, multiplicação de matrizes, ∇), linhas de código e símbolos matemáticos flutuando, anotações de código/equações em cada seção, pulso grave a cada 5 s (uma cordilheira de areia vermelha explode de baixo da tela, atrás de tudo, e cai de volta; o relevo 3D gera ondas), trilha sonora que se abre com o scroll, vinheta e grão de filme. Entra por uma bolha que cresce em ondas; sempre leva ao topo; continua ao navegar e desliga ao recarregar; botão de mudo.
 - Páginas: início, projetos (+ uma por projeto, com README), blog, experiência/skills, contato (sem formulário). PT na raiz, EN em `/en/`, troca por bandeira.
+
+## Áudio (`public/audio/`)
+
+- `intro-hit.m4a`: "Big cinematic impact" (Mixkit 788, Mixkit License), cortado para a subida + golpe em 1,31 s. Alternativa guardada: "Cinematic Impact Boom 04" (Universfield, Pixabay).
+
+- `dev-theme.m4a`: "Bittersweet Eerie Horror Vocals: The Siren", AlesiaDavina (Pixabay Content License), recomprimida para AAC 64 kbps. https://pixabay.com/music/horror-scene-bittersweet-eerie-horror-vocals-the-siren-142786/
+- `dev-pulse.m4a`: "Cinematic mystery trailer drum hit" (Mixkit 546, Mixkit License), normalizada e cortada em 4,7 s. https://mixkit.co/free-sound-effects/drum/
+- Trilhas candidatas avaliadas (plano B):
+  - Mixkit: "Ode to Loneliness" (Diego Nava, https://assets.mixkit.co/music/520/520.mp3), "River Flow" (Eugenio Mininni, https://assets.mixkit.co/music/594/594.mp3), "Staring at the Night Sky" (Alejandro Magaña, https://assets.mixkit.co/music/168/168.mp3), "Silent Descent" (Eugenio Mininni, https://assets.mixkit.co/music/614/614.mp3).
+  - Pixabay: "The Sorrow II – Ethereal Theme" (tAUREON, https://pixabay.com/music/main-title-the-sorrow-ii-etheral-theme-123139/), "Storm – Powerful Ethereal Female Vocalise" (MoonpetalMedia, https://pixabay.com/music/epic-classical-storm-powerful-ethereal-female-vocalise-cinematic-ambient-519571/), "Cinematic Soundtrack – Epic Female Solo" (AntipodeanWriter, https://pixabay.com/music/main-title-cinematic-soundtrack-epic-female-solo-18501/).

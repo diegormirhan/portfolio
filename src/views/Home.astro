@@ -1,8 +1,9 @@
 ---
 import Base from "../layouts/Base.astro";
+import DevNote from "../components/DevNote.astro";
 import LinkRows from "../components/LinkRows.astro";
 import ProjectRows from "../components/ProjectRows.astro";
-import { content, pathFor, profile, projects, ui, type Lang } from "../lib/content";
+import { content, devNotes, pathFor, profile, projects, ui, type Lang } from "../lib/content";
 import { articlePath, articlesFor, formatDate } from "../lib/data";
 
 interface Props {
@@ -16,7 +17,7 @@ const articles = (await articlesFor(lang)).slice(0, 3);
 ---
 
 <Base lang={lang} page="home">
-  <section class="hero" data-intro data-scene="2" data-scene-x="2.3" data-scene-y="0.1" data-scene-scale="0.8">
+  <section class="hero dev-host" data-intro data-scene="2" data-scene-x="2.3" data-scene-y="0.1" data-scene-scale="0.8">
     <div class="wrap hero__inner">
       <h1 class="hero__name display display--xl" data-split="intro">Diego<br />Mirhan</h1>
       <div class="hero__foot">
@@ -26,34 +27,38 @@ const articles = (await articlesFor(lang)).slice(0, 3);
         </a>
       </div>
     </div>
+    <DevNote text={devNotes.hero} class="dev-note--hero" />
   </section>
 
-  <section class="section about" data-scene="1" data-scene-x="2.4" data-scene-y="0.2" data-scene-scale="0.72">
+  <section class="section about dev-host" data-scene="1" data-scene-x="2.4" data-scene-y="0.2" data-scene-scale="0.72">
     <div class="wrap about__grid">
       <p class="lead" data-fill>{c.summary}</p>
       <p class="about__more muted" data-lines>{c.about}</p>
     </div>
+    <DevNote text={devNotes.about} />
   </section>
 
   <!-- Editor de código em miniatura à direita; todo o texto fica na metade esquerda -->
   <section class="section" data-scene="4" data-scene-x="2.6" data-scene-scale="0.9">
     <ul class="wrap focus">
       {
-        c.highlights.map((item) => (
-          <li class="focus__item">
+        c.highlights.map((item, i) => (
+          <li class="focus__item dev-host">
             <h2 class="display display--md" data-split>
               {item.title}
             </h2>
             <p class="focus__text muted" data-lines>
               {item.description}
             </p>
+            <DevNote text={devNotes.focus[i] ?? ""} class="dev-note--side" />
           </li>
         ))
       }
     </ul>
   </section>
 
-  <section class="section" data-scene="3" data-scene-x="3.1" data-scene-y="0.2" data-scene-scale="0.66" data-scene-dim="0.38">
+  <section class="section dev-host" data-scene="3" data-scene-x="3.1" data-scene-y="0.2" data-scene-scale="0.66" data-scene-dim="0.38">
+    <DevNote text={devNotes.selected} class="dev-note--top" />
     <div class="wrap">
       <h2 class="display display--lg section-title" data-split="chars">{t.selected}</h2>
       <ProjectRows lang={lang} items={projects(lang).slice(0, 4)} />
@@ -65,7 +70,8 @@ const articles = (await articlesFor(lang)).slice(0, 3);
 
   {
     articles.length > 0 && (
-      <section class="section" data-scene="3" data-scene-x="3.1" data-scene-y="0.2" data-scene-scale="0.66" data-scene-dim="0.38">
+      <section class="section dev-host" data-scene="3" data-scene-x="3.1" data-scene-y="0.2" data-scene-scale="0.66" data-scene-dim="0.38">
+        <DevNote text={devNotes.articles} class="dev-note--top" />
         <div class="wrap">
           <h2 class="display display--lg section-title" data-split="chars">
             {t.articles}
@@ -87,25 +93,28 @@ const articles = (await articlesFor(lang)).slice(0, 3);
     )
   }
 
-  <section class="section cta" data-scene="0" data-scene-scale="1.15" data-scene-dim="0.6">
+  <section class="section cta dev-host" data-scene="0" data-scene-scale="1.15" data-scene-dim="0.6">
     <div class="wrap">
       <h2 class="display display--xl" data-split="chars">{t.contactTitle}</h2>
       <a href={`mailto:${profile.email}`} class="cta__mail" data-reveal data-magnetic="0.15">
         {profile.email}
       </a>
     </div>
+    <DevNote text={devNotes.cta} />
   </section>
 </Base>
 
 <style>
+  /* Texto principal no centro-esquerda da tela (a rede neural fica à direita) */
   .hero {
     min-height: 100dvh;
     display: flex;
-    align-items: flex-end;
+    align-items: center;
   }
 
   .hero__inner {
-    padding-block: 7rem clamp(2rem, 6vh, 4rem);
+    width: 100%;
+    padding-block: 6rem;
   }
 
   .hero__foot {

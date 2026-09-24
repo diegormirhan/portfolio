@@ -1,6 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
-import { content, ui, type Lang } from "../lib/content";
+import DevNote from "../components/DevNote.astro";
+import { content, devNotes, ui, type Lang } from "../lib/content";
 
 interface Props {
   lang: Lang;
@@ -19,8 +20,9 @@ const marqueeRows = [ai ?? [], [...(languages ?? []), ...(frameworks ?? [])], in
 ---
 
 <Base lang={lang} page="experience" title={t.nav.experience}>
-  <section class="wrap page-top" data-intro data-scene="1" data-scene-x="2.5" data-scene-scale="0.8">
+  <section class="wrap page-top dev-host" data-intro data-scene="1" data-scene-x="2.5" data-scene-scale="0.8">
     <h1 class="display display--xl" data-split="intro">{t.nav.experience}</h1>
+    <DevNote text={devNotes.page} />
   </section>
 
   {

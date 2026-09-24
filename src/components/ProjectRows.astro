@@ -22,6 +22,7 @@ const { lang, items } = Astro.props;
           </span>
           <img class="row__thumb" src={project.image} alt="" loading="lazy" decoding="async" />
         </a>
+        <pre class="dev-note dev-note--row mono" aria-hidden="true">{project.dev}</pre>
       </li>
     ))
   }

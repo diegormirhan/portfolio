@@ -1,8 +1,9 @@
 ---
 import Base from "../layouts/Base.astro";
+import DevNote from "../components/DevNote.astro";
 import LinkRows from "../components/LinkRows.astro";
 import ProjectRows from "../components/ProjectRows.astro";
-import { projects, ui, type Lang } from "../lib/content";
+import { devNotes, projects, ui, type Lang } from "../lib/content";
 import { getRepos } from "../lib/data";
 
 interface Props {
@@ -15,8 +16,9 @@ const repos = await getRepos();
 ---
 
 <Base lang={lang} page="projects" title={t.nav.projects}>
-  <section class="wrap page-top" data-intro data-scene="3" data-scene-y="-0.4" data-scene-dim="0.55">
+  <section class="wrap page-top dev-host" data-intro data-scene="3" data-scene-y="-0.4" data-scene-dim="0.55">
     <h1 class="display display--xl title" data-split="intro">{t.nav.projects}</h1>
+    <DevNote text={devNotes.page} />
     <ProjectRows lang={lang} items={projects(lang)} />
   </section>
 

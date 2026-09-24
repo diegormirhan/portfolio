@@ -1,7 +1,8 @@
 ---
 import Base from "../layouts/Base.astro";
+import DevNote from "../components/DevNote.astro";
 import LinkRows from "../components/LinkRows.astro";
-import { profile, ui, type Lang } from "../lib/content";
+import { devNotes, profile, ui, type Lang } from "../lib/content";
 
 interface Props {
   lang: Lang;
@@ -17,8 +18,9 @@ const channels = [
 ---
 
 <Base lang={lang} page="contact" title={t.nav.contact}>
-  <section class="wrap page-top contact" data-intro data-scene="0" data-scene-x="1.9" data-scene-scale="0.95">
+  <section class="wrap page-top dev-host contact" data-intro data-scene="0" data-scene-x="1.9" data-scene-scale="0.95">
     <h1 class="display display--xl" data-split="intro">{t.contactTitle}</h1>
+    <DevNote text={devNotes.page} />
     <a href={`mailto:${profile.email}`} class="mail" data-reveal data-magnetic="0.12">{profile.email}</a>
     <div class="actions" data-reveal>
       <a href={profile.resume} download class="pill pill--solid" data-magnetic>{t.resume} ↓</a>

@@ -36,6 +36,8 @@
   --cobalt-bright: oklch(0.62 0.19 262);
   --cerulean: oklch(0.54 0.11 232);
   --cerulean-bright: oklch(0.78 0.12 228);
+  /* Vermelho sinal (#ff2b3a): acento do dev mode */
+  --signal: oklch(0.65 0.24 25);
 
   --font-display: "Bricolage Grotesque Variable", "Arial Narrow", sans-serif;
   --font-mono: "JetBrains Mono Variable", ui-monospace, monospace;
@@ -414,4 +416,386 @@ main,
   border: 0;
   border-top: 1px solid var(--line);
   margin-block: 2.5em;
+}
+
+/* Abertura: botão de entrada, círculo cobalto e nome recortado (motion.ts) */
+.preloader__enter {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 1.6rem;
+}
+
+.preloader__enter[hidden] {
+  display: none;
+}
+
+/* Botão de entrada: pílula cobalto com halo que respira; no hover, um preenchimento cerúleo
+ * varre a pílula, o texto rola para cima, a seta entra e o brilho cresce */
+.preloader__stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.preloader__halo {
+  position: absolute;
+  inset: -3.5rem -5rem;
+  border-radius: 999px;
+  background: radial-gradient(closest-side, oklch(0.62 0.19 262 / 70%), oklch(0.62 0.19 262 / 25%) 55%, transparent);
+  filter: blur(18px);
+  pointer-events: none;
+  animation: go-breathe 2.8s ease-in-out infinite;
+}
+
+@keyframes go-breathe {
+  0%, 100% { opacity: 0.5; transform: scale(0.92); }
+  50% { opacity: 1; transform: scale(1.08); }
+}
+
+.preloader__go {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  height: 4rem;
+  padding-inline: 2.75rem;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--cobalt);
+  color: var(--fg);
+  font-size: 0.875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  box-shadow:
+    inset 0 0 0 1px oklch(0.78 0.12 228 / 35%),
+    0 0 50px 4px oklch(0.55 0.19 262 / 55%),
+    0 14px 60px -10px oklch(0.44 0.19 262 / 90%);
+  transition:
+    color 0.45s var(--ease-out),
+    gap 0.5s var(--ease-out),
+    box-shadow 0.5s var(--ease-out),
+    transform 0.3s var(--ease-out);
+}
+
+.go__fill {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--cerulean-bright), oklch(0.9 0.07 228));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.6s var(--ease-out);
+}
+
+.go__label {
+  position: relative;
+  display: inline-block;
+  height: 1.3em;
+  line-height: 1.3;
+  overflow: hidden;
+}
+
+.go__label > span,
+.go__label::after {
+  display: block;
+  transition: transform 0.55s var(--ease-out);
+}
+
+.go__label::after {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 100%;
+}
+
+.go__arrow {
+  display: inline-block;
+  width: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateX(-0.6rem);
+  transition:
+    width 0.5s var(--ease-out),
+    opacity 0.4s var(--ease-out),
+    transform 0.5s var(--ease-out);
+}
+
+.preloader__go:hover,
+.preloader__go:focus-visible {
+  gap: 0.8rem;
+  color: var(--bg-deep);
+  box-shadow:
+    inset 0 0 0 1px oklch(0.9 0.07 228 / 60%),
+    0 0 80px 10px oklch(0.78 0.12 228 / 55%),
+    0 18px 90px -8px oklch(0.78 0.12 228 / 85%);
+}
+
+.preloader__go:hover .go__fill,
+.preloader__go:focus-visible .go__fill {
+  transform: scaleX(1);
+}
+
+.preloader__go:hover .go__label > span,
+.preloader__go:hover .go__label::after,
+.preloader__go:focus-visible .go__label > span,
+.preloader__go:focus-visible .go__label::after {
+  transform: translateY(-100%);
+}
+
+.preloader__go:hover .go__arrow,
+.preloader__go:focus-visible .go__arrow {
+  width: 1em;
+  opacity: 1;
+  transform: none;
+}
+
+.preloader__go:active {
+  transform: scale(0.97);
+}
+
+.preloader__silent {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--muted);
+  text-transform: lowercase;
+  transition: color 0.3s;
+}
+
+.preloader__silent span {
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+  transition: background-size 0.4s var(--ease-out);
+}
+
+.preloader__silent:hover,
+.preloader__silent:focus-visible {
+  color: var(--fg);
+}
+
+.preloader__silent:hover span,
+.preloader__silent:focus-visible span {
+  background-size: 100% 1px;
+}
+
+.preloader__morph {
+  position: fixed;
+  z-index: 1;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--cobalt-bright), var(--cerulean-bright));
+  pointer-events: none;
+}
+
+.preloader__morph span {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--cobalt);
+  opacity: 0;
+}
+
+.intro-expand {
+  position: fixed;
+  z-index: 92;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.intro-expand > span {
+  position: absolute;
+  inset: 0;
+}
+
+.intro-expand__pill {
+  background: var(--cobalt);
+}
+
+.intro-expand__pill.is-hover {
+  background: linear-gradient(90deg, var(--cerulean-bright), oklch(0.9 0.07 228));
+}
+
+.intro-expand__glow {
+  opacity: 0;
+}
+
+#intro {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 91;
+  pointer-events: none;
+}
+
+#intro .intro-base {
+  fill: var(--bg-deep);
+}
+
+#intro .intro-letter {
+  font-family: var(--font-display);
+  font-weight: 800;
+}
+
+#intro .intro-fill {
+  fill: var(--fg);
+}
+
+/* Contorno do miolo do "O": linha fina e luminosa, que não engrossa com o zoom */
+#intro .intro-ring {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2.5px;
+  vector-effect: non-scaling-stroke;
+}
+
+#intro .intro-ring--glow {
+  stroke: #9fd4ff;
+  stroke-width: 8px;
+  stroke-opacity: 0.3;
+}
+
+/* ---------- Dev mode ----------
+ * Tom mais agressivo: fundo quase preto com calor vermelho, acento vermelho sinal, títulos com
+ * aberração cromática e anotações de código/matemática flutuando nas seções. */
+html.dev {
+  --bg: oklch(0.1 0.018 20);
+  --bg-deep: oklch(0.07 0.014 20);
+  --line: oklch(0.65 0.24 25 / 24%);
+  --cobalt: oklch(0.42 0.17 25);
+  --cobalt-bright: var(--signal);
+  --cerulean: oklch(0.55 0.2 25);
+  --cerulean-bright: var(--signal);
+}
+
+.dev ::selection {
+  background: var(--signal);
+  color: #fff;
+}
+
+.dev .display {
+  text-shadow:
+    0.035em 0 0 oklch(0.65 0.24 25 / 60%),
+    -0.035em 0 0 oklch(0.35 0.14 20 / 70%);
+}
+
+/* Títulos grandes "tremem" em saltos curtos, de tempos em tempos */
+.dev h1.display,
+.dev .section-title {
+  animation: dev-glitch 4.8s steps(1) infinite;
+}
+
+@keyframes dev-glitch {
+  0%, 91%, 100% { transform: none; clip-path: none; }
+  92% { transform: translate(-0.02em, 0.01em) skewX(-4deg); clip-path: inset(10% 0 55% 0); }
+  93% { transform: translate(0.03em, -0.01em); clip-path: inset(50% 0 12% 0); }
+  94% { transform: translate(-0.01em, 0) skewX(3deg); clip-path: none; }
+}
+
+.dev .pill--solid {
+  background: var(--signal);
+  border-color: var(--signal);
+}
+
+.dev .pill:hover {
+  background: var(--signal);
+  border-color: var(--signal);
+  color: #fff;
+}
+
+.dev .mono.muted::before {
+  content: "// ";
+  color: var(--signal);
+}
+
+/* Anotações de código/matemática: só no dev mode, digitadas da esquerda para a direita */
+.dev-note {
+  display: none;
+}
+
+.dev-host {
+  position: relative;
+}
+
+.dev .dev-note {
+  display: block;
+  position: absolute;
+  right: var(--gutter);
+  bottom: 12%;
+  z-index: 1;
+  max-width: min(26rem, 42vw);
+  padding: 0.6rem 0 0.6rem 0.9rem;
+  border-left: 2px solid var(--signal);
+  color: oklch(0.85 0.1 25);
+  font-size: 0.8rem;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  text-transform: none;
+  letter-spacing: 0;
+  text-shadow: 0 0 1.2rem oklch(0.65 0.24 25 / 60%);
+  pointer-events: none;
+  animation: dev-type 1.6s steps(28) both, dev-float 6s ease-in-out 1.6s infinite;
+}
+
+.dev .dev-note--hero {
+  bottom: auto;
+  top: 18%;
+}
+
+.dev .dev-note--top {
+  bottom: auto;
+  top: 1rem;
+}
+
+.dev .dev-note--side {
+  right: auto;
+  left: calc(100% + 1.5rem);
+  bottom: 0.25rem;
+  max-width: 24rem;
+}
+
+.dev .dev-note--row {
+  position: static;
+  max-width: none;
+  margin: -0.4rem 0 1rem;
+  padding-block: 0;
+  font-size: 0.7rem;
+  animation: dev-type 1.2s steps(24) both;
+}
+
+@keyframes dev-type {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
+@keyframes dev-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-0.5rem); }
+}
+
+@media (max-width: 767px) {
+  .dev .dev-note:not(.dev-note--row) {
+    position: static;
+    max-width: none;
+    margin: 1.5rem var(--gutter) 0;
+    font-size: 0.7rem;
+  }
+
+  .dev .dev-note--side {
+    margin-inline: 0;
+  }
+
+  .dev .dev-note--hero {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dev .dev-note,
+  .dev h1.display,
+  .dev .section-title {
+    animation: none;
+  }
 }

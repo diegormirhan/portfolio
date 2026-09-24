@@ -33,6 +33,17 @@ type ProjectMeta = {
   image: string;
   demo?: string;
   tags: string[];
+  /** Anotação de código/matemática no dev mode */
+  dev: string;
+};
+type DevNotes = {
+  hero: string;
+  about: string;
+  focus: string[];
+  selected: string;
+  articles: string;
+  cta: string;
+  page: string;
 };
 type Portfolio = {
   profile: {
@@ -49,6 +60,7 @@ type Portfolio = {
   };
   pt: LangContent;
   en: LangContent;
+  dev: DevNotes;
   projects: ProjectMeta[];
 };
 
@@ -56,6 +68,8 @@ const data = frontmatter as Portfolio;
 
 export const profile = data.profile;
 export const content = (lang: Lang) => data[lang];
+/** Anotações flutuantes do dev mode (código e matemática, iguais nos dois idiomas) */
+export const devNotes = data.dev;
 
 export type Project = ProjectMeta & ProjectText;
 export const projects = (lang: Lang): Project[] =>
@@ -84,6 +98,11 @@ export const ui = {
     close: "Fechar",
     switchLang: "Switch to English",
     skip: "Pular para o conteúdo",
+    enter: "Entrar",
+    enterSilent: "entrar sem som",
+    devMode: "Ligar ou desligar o dev mode",
+    mute: "Silenciar o som",
+    unmute: "Ligar o som",
     selected: "Projetos selecionados",
     allProjects: "Todos os projetos",
     repos: "No GitHub",
@@ -113,6 +132,11 @@ export const ui = {
     close: "Close",
     switchLang: "Mudar para português",
     skip: "Skip to content",
+    enter: "Enter",
+    enterSilent: "enter without sound",
+    devMode: "Toggle dev mode",
+    mute: "Mute sound",
+    unmute: "Unmute sound",
     selected: "Selected work",
     allProjects: "All projects",
     repos: "On GitHub",

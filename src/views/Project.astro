@@ -1,5 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
+import DevNote from "../components/DevNote.astro";
 import { projectPath, projects, ui, type Lang } from "../lib/content";
 
 interface Props {
@@ -23,7 +24,7 @@ const repoUrl = `https://github.com/${project.repo}`;
   description={project.description}
   alternate={projectPath(lang === "pt" ? "en" : "pt", slug)}
 >
-  <section class="wrap page-top head" data-intro data-scene="1" data-scene-x="2.3" data-scene-scale="0.75">
+  <section class="wrap page-top head dev-host" data-intro data-scene="1" data-scene-x="2.3" data-scene-scale="0.75">
     <p class="mono muted" data-reveal>{project.year}</p>
     <h1 class="display display--xl" data-split="intro">{project.title}</h1>
     <p class="display display--sm accent" data-split="intro" data-delay="0.2">{project.tagline}</p>
@@ -40,6 +41,7 @@ const repoUrl = `https://github.com/${project.repo}`;
         }
       </div>
     </div>
+    <DevNote text={project.dev} />
   </section>
 
   <figure class="shot wrap" data-clip>
