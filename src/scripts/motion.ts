@@ -489,6 +489,19 @@ let menuOpen = false;
 let menuTimeline: gsap.core.Timeline | null = null;
 
 function setupMenu() {
+  // Modo leve: escolha da pessoa, guardada entre visitas (a cena escuta "lite:change")
+  const lite = document.querySelector<HTMLButtonElement>("[data-lite-toggle]");
+  const html = document.documentElement;
+  lite?.setAttribute("aria-pressed", String(html.classList.contains("lite")));
+  lite?.addEventListener("click", () => {
+    const on = html.classList.toggle("lite");
+    lite.setAttribute("aria-pressed", String(on));
+    try {
+      localStorage.setItem("lite", on ? "1" : "0");
+    } catch {}
+    dispatchEvent(new CustomEvent("lite:change", { detail: { on } }));
+  });
+
   const toggle = document.querySelector<HTMLButtonElement>("[data-menu-toggle]");
   const panel = document.getElementById("menu");
   if (!toggle || !panel) return;
@@ -549,6 +562,25 @@ addEventListener("keydown", (e) => {
 /* ---------- Animações de página ---------- */
 
 let pageContext: gsap.Context | null = null;
+/**
+ * Nome gigante do rodapé: ajusta o tamanho para ocupar exatamente a largura do rodapé.
+ * Com tamanho fixo em vw, uma fonte mais larga passava da caixa e o degradê (que só pinta
+ * dentro dela) cortava a última letra.
+ */
+function fitFooterMark() {
+  const mark = document.querySelector<HTMLElement>(".footer__mark");
+  const footer = mark?.parentElement;
+  if (!mark || !footer) return;
+  mark.style.fontSize = "100px";
+  const range = document.createRange();
+  range.selectNodeContents(mark);
+  const width = range.getBoundingClientRect().width;
+  const style = getComputedStyle(footer);
+  const available = footer.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+  if (width > 0) mark.style.fontSize = `${(100 * available) / width}px`;
+}
+addEventListener("resize", fitFooterMark);
+
 let firstLoad = true;
 
 function splitLines(el: HTMLElement) {
@@ -777,6 +809,7 @@ document.addEventListener("astro:page-load", () => {
   }
   // Divide as linhas só depois das fontes: senão as quebras saem erradas
   document.fonts.ready.then(() => {
+    fitFooterMark();
     setupPage(intro);
     ScrollTrigger.refresh();
   });

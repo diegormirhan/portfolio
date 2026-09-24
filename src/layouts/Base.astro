@@ -55,6 +55,7 @@ const socials = [
       // Recarregar mantém o dev mode ligado
       try {
         if (sessionStorage.getItem("dev") === "1") document.documentElement.classList.add("dev");
+        if (localStorage.getItem("lite") === "1") document.documentElement.classList.add("lite");
       } catch {}
     </script>
     <script
@@ -115,6 +116,11 @@ const socials = [
       <a href={pathFor(lang, "home")} class="header__brand display" aria-label={profile.name}>
         Diego<span class="accent">.</span>
       </a>
+      <!-- Só aparece com o menu aberto -->
+      <button class="lite mono" type="button" data-lite-toggle aria-pressed="false">
+        <span class="lite__track" aria-hidden="true"><span></span></span>
+        {t.lite}
+      </button>
       <div class="header__actions">
         <button class="sound" type="button" data-dev-sound aria-pressed="false" aria-label={t.mute} title={t.mute} data-label-mute={t.mute} data-label-unmute={t.unmute}>
           <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -659,6 +665,73 @@ const socials = [
     border-top: 1px solid var(--line);
   }
 
+  /* Interruptor do modo leve */
+  .lite {
+    /* No topo, centralizado no cabeçalho */
+    position: absolute;
+    top: 2.5rem;
+    left: 50%;
+    translate: -50% -50%;
+    z-index: 1;
+    pointer-events: auto;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s, visibility 0.4s, color 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .menu-open .lite {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0.35s;
+  }
+
+  /* Celular: o centro do cabeçalho não tem espaço; desce para logo abaixo dele */
+  @media (max-width: 767px) {
+    .lite {
+      top: 5.5rem;
+    }
+  }
+
+  .lite:hover,
+  .lite[aria-pressed="true"] {
+    color: var(--fg);
+  }
+
+  .lite__track {
+    position: relative;
+    width: 1.9rem;
+    height: 1.05rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    transition: background-color 0.3s, border-color 0.3s;
+  }
+
+  .lite__track span {
+    position: absolute;
+    top: 50%;
+    left: 0.15rem;
+    width: 0.65rem;
+    height: 0.65rem;
+    border-radius: 50%;
+    background: currentColor;
+    translate: 0 -50%;
+    transition: translate 0.35s var(--ease-out);
+  }
+
+  .lite[aria-pressed="true"] .lite__track {
+    background: var(--cobalt);
+    border-color: var(--cobalt-bright);
+  }
+
+  .lite[aria-pressed="true"] .lite__track span {
+    translate: 0.85rem -50%;
+  }
+
   .menu__socials,
   .footer__socials {
     display: flex;
@@ -685,10 +758,11 @@ const socials = [
   }
 
   .footer__mark {
+    /* Tamanho final ajustado em motion.ts (fitFooterMark) para caber exatamente na largura */
     font-size: 15.2vw;
     line-height: 0.78;
     white-space: nowrap;
-    margin-inline: calc(var(--gutter) * -0.2);
+    width: fit-content;
     padding-bottom: 0.04em;
     background: linear-gradient(180deg, var(--fg) 35%, var(--cerulean-bright) 80%, var(--cobalt-bright));
     -webkit-background-clip: text;

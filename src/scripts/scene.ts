@@ -857,7 +857,17 @@ function init(canvas: HTMLCanvasElement) {
   if (pending) applyShape(pending);
   snap();
 
-  if (isSmall) setLowQuality();
+  // Modo leve (botão no menu): vidro sem refração e resolução 1x. Nunca liga sozinho.
+  const fullDpr = dpr;
+  function applyLite(lite: boolean) {
+    setLowQuality(lite);
+    dpr = lite ? 1 : fullDpr;
+    renderer.setPixelRatio(dpr);
+    dustUniforms.uPixelRatio.value = dpr;
+    resize();
+  }
+  if (document.documentElement.classList.contains("lite")) applyLite(true);
+  addEventListener("lite:change", (e) => applyLite((e as CustomEvent<{ on: boolean }>).detail.on));
 
   // Pré-compila os shaders de todos os objetos (inclusive os do dev mode, ainda escondidos):
   // sem isso, cada objeto trava a página por um instante na primeira vez que aparece
@@ -871,13 +881,8 @@ function init(canvas: HTMLCanvasElement) {
   let ready = false;
   let lastScroll = scrollY;
   let speedZoom = 0;
-  // Medição de FPS nos primeiros segundos: abaixo de ~45, simplifica o vidro
-  let sampleFrames = 0;
-  let sampleTime = 0;
-  let qualityChecked = isSmall;
   // Monitores de 120/144 Hz: renderiza no máximo ~60 vezes por segundo (metade do trabalho)
   let lastFrame = 0;
-  let lowRes = false;
   function frame(now: number) {
     if (!running) return;
     if (now - lastFrame < 1000 / 62) {
@@ -886,30 +891,9 @@ function init(canvas: HTMLCanvasElement) {
     }
     lastFrame = now;
     timer.update(now);
-    const rawDt = timer.getDelta();
-    const dt = Math.min(rawDt, 0.05);
+    const dt = Math.min(timer.getDelta(), 0.05);
     const t = timer.getElapsed();
     const ease = 1 - Math.pow(0.001, dt); // aproximação exponencial independente de FPS
-
-    if (!qualityChecked && t > 1.5) {
-      sampleFrames++;
-      sampleTime += rawDt;
-      if (sampleTime > 2.5) {
-        const fps = sampleFrames / sampleTime;
-        if (fps < 45) setLowQuality();
-        // Ainda lento depois de simplificar o vidro: mede de novo e, se preciso, reduz a resolução
-        if (fps < 45 && !lowRes) {
-          lowRes = fps < 30;
-          if (lowRes) {
-            dpr = 1;
-            renderer.setPixelRatio(dpr);
-            dustUniforms.uPixelRatio.value = dpr;
-            resize();
-          }
-        }
-        qualityChecked = true;
-      }
-    }
 
     if (!reduceMotion) {
       shared.uTime.value = t;

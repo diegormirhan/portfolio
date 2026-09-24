@@ -101,13 +101,15 @@ export function glass(tint = "#8bb8ff", options: THREE.MeshPhysicalMaterialParam
 }
 
 /** Vidro simplificado: sem refração (a parte cara), mas com reflexo e transparência. */
-export function setLowQuality() {
+export function setLowQuality(low: boolean) {
   for (const material of glassMaterials) {
-    material.transmission = 0;
-    material.transparent = true;
+    material.userData.full ??= { transmission: material.transmission, envMapIntensity: material.envMapIntensity };
+    const full = material.userData.full as { transmission: number; envMapIntensity: number };
+    material.transmission = low ? 0 : full.transmission;
+    material.transparent = low;
     // Sem refração o vidro vira um véu claro: mais transparente e menos reflexo para não lavar o texto
-    material.opacity = 0.4;
-    material.envMapIntensity = 0.9;
+    material.opacity = low ? 0.4 : 1;
+    material.envMapIntensity = low ? 0.9 : full.envMapIntensity;
     material.needsUpdate = true;
   }
 }

@@ -9,7 +9,7 @@
  *   ondas no relevo.
  * - Trilha (dev-theme.m4a) que se abre com o scroll: filtro passa-baixa e volume sobem conforme
  *   a pessoa desce a página e rola mais rápido.
- * - Continua ligado ao navegar (a classe .dev vai junto na troca de página); desliga no reload.
+ * - Continua ligado ao navegar e ao recarregar a aba (sessionStorage); aba nova começa desligada.
  *
  * O relógio da batida é o do áudio (AudioContext): som e imagem não se desencontram.
  */
@@ -64,12 +64,12 @@ function setupAudio(): AudioRig | null {
     filter.type = "lowpass";
     filter.frequency.value = 900;
     const musicGain = ctx.createGain();
-    musicGain.gain.value = 0.3;
+    musicGain.gain.value = 0.45;
     ctx.createMediaElementSource(music).connect(filter).connect(musicGain).connect(master);
 
     // Pulso: reforço no subgrave para soar como um estrondo, não um clique
     const pulseBus = ctx.createGain();
-    pulseBus.gain.value = 0.8;
+    pulseBus.gain.value = 0.55;
     const shelf = ctx.createBiquadFilter();
     shelf.type = "lowshelf";
     shelf.frequency.value = 80;
@@ -440,7 +440,7 @@ function loop(time: number) {
     lastScroll = scrollY;
     const at = audio.ctx.currentTime;
     audio.filter.frequency.setTargetAtTime(700 + 5200 * depth ** 1.2 + 2200 * speed, at, 0.4);
-    audio.musicGain.gain.setTargetAtTime(0.26 + 0.22 * depth + 0.1 * speed, at, 0.6);
+    audio.musicGain.gain.setTargetAtTime(0.42 + 0.25 * depth + 0.1 * speed, at, 0.6);
   }
 
   if (on) requestAnimationFrame(loop);
