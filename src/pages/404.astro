@@ -1,0 +1,29 @@
+---
+import Base from "../layouts/Base.astro";
+import { pathFor } from "../lib/content";
+---
+
+<Base lang="pt" page="home" title="404">
+  <section class="wrap page-top notfound" data-intro data-scene="1" data-scene-x="2.4" data-scene-scale="0.8">
+    <h1 class="display display--xl" data-split="intro">404</h1>
+    <p class="lead" data-reveal>Página não encontrada.<br /><span class="muted" lang="en">Page not found.</span></p>
+    <div class="actions" data-reveal>
+      <a href={pathFor("pt", "home")} class="pill pill--solid" data-magnetic>Início</a>
+      <a href={pathFor("en", "home")} class="pill" lang="en" data-magnetic>Home</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .notfound {
+    min-height: 80dvh;
+    display: grid;
+    align-content: end;
+    gap: 2rem;
+  }
+
+  .actions {
+    display: flex;
+    gap: 0.75rem;
+  }
+</style>
