@@ -602,6 +602,13 @@ const socials = [
     clip-path: circle(0% at calc(100% - 3rem) 2.5rem);
   }
 
+  /* Dev mode: o menu perde o azul e acende em vermelho sinal */
+  .dev .menu {
+    background:
+      radial-gradient(70vmax 60vmax at 100% 0%, oklch(0.5 0.22 25 / 65%), transparent 70%),
+      oklch(0.08 0.02 20 / 90%);
+  }
+
   .menu__row {
     overflow: hidden;
   }
