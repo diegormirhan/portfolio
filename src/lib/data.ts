@@ -3,9 +3,7 @@
  * o site sai sem a lista, mas o build nunca quebra por causa da rede.
  * Promessas memorizadas: várias páginas pedem o mesmo dado e ele é buscado uma vez só.
  */
-import { marked } from "marked";
-
-import { profile, type Lang } from "./content";
+import { pathFor, profile, type Lang } from "./content";
 
 const memo = <T>(fn: () => Promise<T>) => {
   let cached: Promise<T> | undefined;
@@ -66,37 +64,16 @@ export const getRepos = memo(async (): Promise<Repo[]> => {
   }
 });
 
-/* README renderizado, com links e imagens relativos apontando para o GitHub. */
-export async function getReadme(repo: string): Promise<string> {
-  try {
-    const res = await fetch(`https://raw.githubusercontent.com/${repo}/HEAD/README.md`);
-    if (!res.ok) throw new Error(String(res.status));
-    const markdown = (await res.text()).replace(/^\s*#\s+.+\n/, ""); // o título já está no hero
-    const html = await marked.parse(markdown, { gfm: true });
-    const raw = `https://raw.githubusercontent.com/${repo}/HEAD/`;
-    const blob = `https://github.com/${repo}/blob/HEAD/`;
-    const isRelative = (url: string) => !/^([a-z]+:|#|\/\/)/i.test(url);
-    return html
-      .replace(/(<img[^>]+src=")([^"]+)"/gi, (m, pre: string, src: string) =>
-        isRelative(src) ? `${pre}${raw}${src.replace(/^\.?\//, "")}"` : m,
-      )
-      .replace(/(<a[^>]+href=")([^"]+)"/gi, (m, pre: string, href: string) =>
-        isRelative(href) ? `${pre}${blob}${href.replace(/^\.?\//, "")}"` : m,
-      )
-      .replace(/<a /g, '<a target="_blank" rel="noreferrer" ')
-      .replace(/<img /g, '<img loading="lazy" decoding="async" ');
-  } catch (error) {
-    console.warn(`[data] README de ${repo} indisponível:`, error);
-    return "";
-  }
-}
-
 /* ---------- Medium ---------- */
 
 export type Article = {
   id: string;
+  /** Último trecho da URL do Medium, sem o id final: vira a URL da página no site */
+  slug: string;
   title: string;
   link: string;
+  /** Conteúdo completo, já limpo (ver cleanArticle) */
+  html: string;
   date: Date | null;
   thumbnail: string | null;
   minutes: number;
@@ -114,6 +91,37 @@ const PT = new Set(
 const EN = new Set(
   "the of and to in is are for with that this it on as be by from an or not how what why you your can will we our their its into about when than".split(" "),
 );
+
+/*
+ * O HTML vem do feed do próprio Medium, mas passa por limpeza antes de ir para a página:
+ * sai o pixel de estatística, qualquer <script>/<style>, atributos on* e links javascript:;
+ * o título repetido no topo também sai (a página já tem o título grande).
+ */
+function cleanArticle(html: string, title: string) {
+  return html
+    .replace(/<img[^>]+medium\.com\/_\/stat[^>]*>/gi, "")
+    .replace(/<(script|style)[\s\S]*?<\/\1>/gi, "")
+    .replace(/\son\w+="[^"]*"/gi, "")
+    .replace(/href="javascript:[^"]*"/gi, 'href="#"')
+    .replace(/^\s*<h[1-4]>([\s\S]*?)<\/h[1-4]>/i, (m, heading: string) =>
+      stripHtml(heading).toLowerCase().startsWith(title.toLowerCase().slice(0, 20)) ? "" : m,
+    )
+    .replace(/<a /g, '<a target="_blank" rel="noreferrer" ')
+    .replace(/<img /g, '<img loading="lazy" decoding="async" ')
+    .replace(/<iframe /g, '<iframe loading="lazy" ');
+}
+
+const slugFrom = (link: string) => {
+  const last = decodeURIComponent(new URL(link).pathname.split("/").filter(Boolean).pop() ?? "");
+  // "titulo-do-post-7088ebd132a1": tira o id hexadecimal do fim e os acentos
+  return last
+    .replace(/-[0-9a-f]{8,}$/, "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9-]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+};
 
 // O Medium não informa o idioma do post: inferimos pela frequência de stopwords.
 export function detectLang(text: string): Lang {
@@ -140,10 +148,13 @@ export const getArticles = memo(async (): Promise<Article[]> => {
       const html = item.content ?? item.description ?? "";
       const text = stripHtml(html);
       const date = item.pubDate ? new Date(item.pubDate.replace(" ", "T")) : null;
+      const link = (item.link ?? profile.medium).split("?")[0]!;
       return {
         id: item.guid ?? item.link ?? String(index),
+        slug: slugFrom(link) || `artigo-${index}`,
         title: item.title ?? "",
-        link: item.link ?? profile.medium,
+        link,
+        html: cleanArticle(html, item.title ?? ""),
         date: date && !Number.isNaN(date.getTime()) ? date : null,
         thumbnail: item.thumbnail || html.match(/<img[^>]+src="([^"]+)"/i)?.[1] || null,
         minutes: Math.max(1, Math.round(text.split(" ").length / 200)),
@@ -157,6 +168,8 @@ export const getArticles = memo(async (): Promise<Article[]> => {
 });
 
 export const articlesFor = async (lang: Lang) => (await getArticles()).filter((a) => a.lang === lang);
+
+export const articlePath = (lang: Lang, slug: string) => `${pathFor(lang, "blog")}/${slug}`;
 
 export const formatDate = (date: Date | null, lang: Lang) =>
   date

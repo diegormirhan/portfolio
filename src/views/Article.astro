@@ -1,0 +1,93 @@
+---
+import Base from "../layouts/Base.astro";
+import { pathFor, ui, type Lang } from "../lib/content";
+import { articlePath, articlesFor, formatDate } from "../lib/data";
+
+interface Props {
+  lang: Lang;
+  slug: string;
+}
+
+const { lang, slug } = Astro.props;
+const t = ui[lang];
+const all = await articlesFor(lang);
+const index = all.findIndex((a) => a.slug === slug);
+const article = all[index]!;
+const next = all.length > 1 ? all[(index + 1) % all.length]! : null;
+const other: Lang = lang === "pt" ? "en" : "pt";
+---
+
+<Base
+  lang={lang}
+  page="blog"
+  title={article.title}
+  alternate={pathFor(other, "blog")}
+>
+  <header class="wrap page-top head" data-intro data-scene="1" data-scene-x="2.6" data-scene-scale="0.7" data-scene-dim="0.35">
+    <p class="mono muted" data-reveal>
+      {formatDate(article.date, lang)} · {article.minutes} {t.minRead}
+    </p>
+    <h1 class="display display--md title" data-split="intro">{article.title}</h1>
+  </header>
+
+  <section class="wrap body" data-scene="3" data-scene-y="-1" data-scene-dim="0.25">
+    <article class="prose" data-reveal set:html={article.html} />
+    <a href={article.link} target="_blank" rel="noreferrer" class="original mono u-link" data-reveal>
+      {t.readOnMedium} ↗
+    </a>
+  </section>
+
+  {
+    next && (
+      <section class="wrap next" data-scene="0" data-scene-scale="0.9">
+        <a href={articlePath(lang, next.slug)} class="next__link" data-preview data-preview-src={next.thumbnail ?? undefined}>
+          <span class="mono muted">{t.nextArticle}</span>
+          <span class="display display--md">{next.title}</span>
+        </a>
+      </section>
+    )
+  }
+</Base>
+
+<style>
+  .head {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  .title {
+    max-width: 22ch;
+  }
+
+  .body {
+    display: grid;
+    gap: 3rem;
+    padding-block: clamp(3rem, 8vh, 5rem) clamp(5rem, 12vh, 8rem);
+  }
+
+  .body .prose {
+    margin-inline: auto;
+    width: 100%;
+  }
+
+  .original {
+    justify-self: center;
+    color: var(--cerulean-bright);
+  }
+
+  .next {
+    padding-block: clamp(4rem, 10vh, 7rem);
+  }
+
+  .next__link {
+    display: grid;
+    gap: 1rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--line);
+    transition: color 0.4s;
+  }
+
+  .next__link:hover {
+    color: var(--cerulean-bright);
+  }
+</style>

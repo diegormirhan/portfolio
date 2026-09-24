@@ -15,7 +15,8 @@
  *   data-clip           imagem revelada por clip-path
  *   data-preview        linha de lista que mostra data-preview-src flutuando no cursor
  *   data-magnetic       é puxado levemente pelo cursor
- *   data-marquee        faixa que corre na horizontal e acelera com o scroll
+ *   data-marquee="1|-1" faixa que corre na horizontal (sentido 1 ou -1) e acelera com o scroll;
+ *                       data-marquee-duration = segundos por volta
  */
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -57,6 +58,14 @@ const setShape = (el: HTMLElement) => {
   (window as unknown as { __sceneShape: unknown }).__sceneShape = detail;
   dispatchEvent(new CustomEvent("scene:shape", { detail }));
 };
+
+// Imagens, fontes e revelações mudam a altura da página depois que os gatilhos são criados.
+// Sem recalcular, as seções "acham" que estão em outra posição e a forma de fundo não troca.
+let refreshTimer = 0;
+new ResizeObserver(() => {
+  clearTimeout(refreshTimer);
+  refreshTimer = window.setTimeout(() => ScrollTrigger.refresh(), 150);
+}).observe(document.body);
 
 /* ---------- Preloader (só na primeira carga) ---------- */
 
@@ -253,7 +262,14 @@ function setupPage(intro: Promise<void>) {
     sceneSections.forEach((el) => {
       ScrollTrigger.create({ trigger: el, start: "top 55%", end: "bottom 55%", onToggle: (self) => self.isActive && setShape(el) });
     });
-    if (sceneSections[0]) setShape(sceneSections[0]);
+    // Forma inicial = seção que está na tela (o navegador pode restaurar a rolagem no reload)
+    const line = innerHeight * 0.55;
+    const visible = sceneSections.find((el) => {
+      const r = el.getBoundingClientRect();
+      return r.top <= line && r.bottom > line;
+    });
+    const initial = visible ?? sceneSections[0];
+    if (initial) setShape(initial);
 
     if (reduceMotion) return;
 
@@ -280,16 +296,22 @@ function setupPage(intro: Promise<void>) {
       );
     });
 
-    // Faixa infinita que acelera com a velocidade do scroll
+    // Faixas infinitas; cada uma tem sentido próprio e acelera de leve com o scroll
     document.querySelectorAll<HTMLElement>("[data-marquee]").forEach((el) => {
       const track = el.firstElementChild as HTMLElement;
-      const loop = gsap.to(track, { xPercent: -50, duration: 38, ease: "none", repeat: -1 });
+      const dir = Number(el.dataset.marquee || 1) < 0 ? -1 : 1;
+      const duration = Number(el.dataset.marqueeDuration || 80);
+      const loop =
+        dir > 0
+          ? gsap.to(track, { xPercent: -50, duration, ease: "none", repeat: -1 })
+          : gsap.fromTo(track, { xPercent: -50 }, { xPercent: 0, duration, ease: "none", repeat: -1 });
       ScrollTrigger.create({
         trigger: el,
         onUpdate: (self) => {
-          const boost = 1 + Math.min(Math.abs(self.getVelocity()) / 400, 5);
-          gsap.to(loop, { timeScale: boost * (self.direction < 0 ? -1 : 1), duration: 0.2, overwrite: true });
-          gsap.to(loop, { timeScale: self.direction < 0 ? -1 : 1, duration: 1.2, delay: 0.2 });
+          const boost = 1 + Math.min(Math.abs(self.getVelocity()) / 600, 2.5);
+          const sign = self.direction < 0 ? -1 : 1;
+          gsap.to(loop, { timeScale: boost * sign, duration: 0.3, overwrite: true });
+          gsap.to(loop, { timeScale: sign, duration: 1.5, delay: 0.3 });
         },
       });
     });

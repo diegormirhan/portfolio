@@ -1,7 +1,6 @@
 ---
 import Base from "../layouts/Base.astro";
 import { projectPath, projects, ui, type Lang } from "../lib/content";
-import { getReadme } from "../lib/data";
 
 interface Props {
   lang: Lang;
@@ -14,7 +13,6 @@ const all = projects(lang);
 const index = all.findIndex((p) => p.slug === slug);
 const project = all[index]!;
 const next = all[(index + 1) % all.length]!;
-const readme = await getReadme(project.repo);
 const repoUrl = `https://github.com/${project.repo}`;
 ---
 
@@ -48,20 +46,24 @@ const repoUrl = `https://github.com/${project.repo}`;
     <img src={project.image} alt={project.imageAlt} data-parallax="0.6" />
   </figure>
 
-  <section class="wrap section" data-scene="3" data-scene-y="-0.8" data-scene-dim="0.3">
-    <p class="lead intro" data-fill>{project.description}</p>
-    {
-      readme ? (
-        <article class="prose" data-reveal set:html={readme} />
-      ) : (
-        <p class="muted" data-reveal>
-          {t.noReadme}{" "}
-          <a href={repoUrl} target="_blank" rel="noreferrer" class="u-link accent">
-            GitHub
-          </a>
-        </p>
-      )
-    }
+  <section class="wrap section detail" data-scene="3" data-scene-y="-0.9" data-scene-dim="0.3">
+    <p class="lead detail__intro" data-fill>{project.description}</p>
+    <div class="detail__overview">
+      {project.overview.map((paragraph) => <p data-reveal>{paragraph}</p>)}
+    </div>
+    <ul class="detail__highlights">
+      {
+        project.highlights.map((item) => (
+          <li class="highlight" data-reveal>
+            <h2 class="display display--sm">{item.title}</h2>
+            <p>{item.text}</p>
+          </li>
+        ))
+      }
+    </ul>
+    <a href={repoUrl} target="_blank" rel="noreferrer" class="detail__docs mono u-link" data-reveal>
+      {t.fullDocs} ↗
+    </a>
   </section>
 
   <section class="wrap next" data-scene="0" data-scene-scale="0.9">
@@ -112,9 +114,61 @@ const repoUrl = `https://github.com/${project.repo}`;
     object-position: top center;
   }
 
-  .intro {
-    max-width: 30ch;
-    margin-bottom: clamp(3rem, 10vh, 6rem);
+  .detail {
+    display: grid;
+    gap: clamp(3rem, 8vh, 5rem);
+  }
+
+  .detail__intro {
+    max-width: 26ch;
+  }
+
+  /* Visão geral: coluna de leitura deslocada para a direita */
+  .detail__overview {
+    display: grid;
+    gap: 1.25rem;
+    max-width: 62ch;
+    font-size: clamp(1.0625rem, 1.3vw, 1.25rem);
+    line-height: 1.65;
+    color: oklch(0.96 0.006 250 / 88%);
+  }
+
+  @media (min-width: 900px) {
+    .detail__overview {
+      margin-left: 38%;
+    }
+  }
+
+  /* Destaques: grade 2 × 2 separada por linhas, sem cards */
+  .detail__highlights {
+    display: grid;
+    border-top: 1px solid var(--line);
+  }
+
+  @media (min-width: 768px) {
+    .detail__highlights {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: clamp(2rem, 5vw, 5rem);
+    }
+  }
+
+  .highlight {
+    display: grid;
+    align-content: start;
+    gap: 0.9rem;
+    padding-block: clamp(1.75rem, 4vh, 2.5rem);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .highlight p {
+    max-width: 46ch;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .detail__docs {
+    justify-self: start;
+    color: var(--cerulean-bright);
   }
 
   .next {
@@ -133,117 +187,4 @@ const repoUrl = `https://github.com/${project.repo}`;
     color: var(--cerulean-bright);
   }
 
-  /* README: tipografia de leitura, coluna estreita */
-  .prose {
-    max-width: 72ch;
-    margin-left: auto;
-    font-size: 1.0625rem;
-    line-height: 1.7;
-    color: oklch(0.96 0.006 250 / 85%);
-  }
-
-  .prose :global(h2),
-  .prose :global(h3),
-  .prose :global(h4) {
-    margin: 2.5em 0 0.75em;
-    color: var(--fg);
-    font-weight: 700;
-    line-height: 1.1;
-    letter-spacing: -0.02em;
-    font-variation-settings: "wdth" 80;
-  }
-
-  .prose :global(h2) {
-    font-size: 2rem;
-    text-transform: uppercase;
-  }
-
-  .prose :global(h3) {
-    font-size: 1.4rem;
-  }
-
-  .prose :global(p),
-  .prose :global(ul),
-  .prose :global(ol),
-  .prose :global(pre),
-  .prose :global(table),
-  .prose :global(blockquote) {
-    margin-bottom: 1.25em;
-  }
-
-  .prose :global(ul),
-  .prose :global(ol) {
-    padding-left: 1.25em;
-  }
-
-  .prose :global(ul) {
-    list-style: square;
-  }
-
-  .prose :global(ol) {
-    list-style: decimal;
-  }
-
-  .prose :global(li::marker) {
-    color: var(--cerulean-bright);
-  }
-
-  .prose :global(a) {
-    color: var(--cerulean-bright);
-    text-decoration: underline;
-    text-underline-offset: 0.2em;
-  }
-
-  .prose :global(code) {
-    font-family: var(--font-mono);
-    font-size: 0.85em;
-    padding: 0.1em 0.35em;
-    border-radius: 0.3em;
-    background: var(--faint);
-  }
-
-  .prose :global(pre) {
-    padding: 1.25rem;
-    overflow-x: auto;
-    border: 1px solid var(--line);
-    border-radius: 0.75rem;
-    background: oklch(0.1 0.016 262 / 70%);
-  }
-
-  .prose :global(pre code) {
-    padding: 0;
-    background: none;
-  }
-
-  .prose :global(img) {
-    height: auto;
-    margin-block: 1.5em;
-    border-radius: 0.75rem;
-  }
-
-  .prose :global(table) {
-    display: block;
-    overflow-x: auto;
-    border-collapse: collapse;
-    font-size: 0.9375rem;
-  }
-
-  .prose :global(th),
-  .prose :global(td) {
-    padding: 0.5em 0.9em;
-    border-bottom: 1px solid var(--line);
-    text-align: left;
-  }
-
-  .prose :global(blockquote) {
-    padding-left: 1em;
-    border-left: 2px solid var(--cobalt-bright);
-    color: var(--muted);
-  }
-
-  .prose :global(hr) {
-    border: 0;
-    border-top: 1px solid var(--line);
-    margin-block: 2.5em;
-  }
 </style>

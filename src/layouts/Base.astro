@@ -73,6 +73,7 @@ const socials = [
     <canvas id="scene" aria-hidden="true" transition:persist></canvas>
     <div class="backdrop" aria-hidden="true" transition:persist="backdrop"></div>
     <div class="scrim" aria-hidden="true" transition:persist="scrim"></div>
+    <canvas id="smoke" aria-hidden="true" transition:persist></canvas>
 
     <div id="preloader" aria-hidden="true">
       <p class="mono" data-fade>{profile.name}</p>
@@ -98,8 +99,9 @@ const socials = [
         </a>
         <button class="burger" type="button" aria-expanded="false" aria-controls="menu" data-menu-toggle data-magnetic="0.3">
           <span class="sr-only">{t.menu}</span>
-          <span class="burger__line" aria-hidden="true"></span>
-          <span class="burger__line" aria-hidden="true"></span>
+          <span class="burger__line burger__line--top" aria-hidden="true"></span>
+          <span class="burger__line burger__line--mid" aria-hidden="true"></span>
+          <span class="burger__line burger__line--bottom" aria-hidden="true"></span>
         </button>
       </div>
     </header>
@@ -174,7 +176,9 @@ const socials = [
 </html>
 
 <style is:global>
-  #scene {
+  /* A fumaça do cursor fica acima do escurecimento (senão some do lado esquerdo) e abaixo do texto */
+  #scene,
+  #smoke {
     position: fixed;
     inset: 0;
     width: 100vw;
@@ -201,7 +205,7 @@ const socials = [
     inset: 0;
     z-index: -1;
     pointer-events: none;
-    background: linear-gradient(90deg, oklch(0.1 0.016 262 / 72%) 0%, oklch(0.1 0.016 262 / 50%) 45%, transparent 66%);
+    background: linear-gradient(90deg, oklch(0.1 0.016 262 / 72%) 0%, oklch(0.1 0.016 262 / 50%) 38%, transparent 52%);
   }
 
   @media (max-aspect-ratio: 1/1) {
@@ -318,22 +322,30 @@ const socials = [
     height: 2px;
     margin-left: -0.625rem;
     background: var(--bg-deep);
-    transition: transform 0.6s var(--ease-out);
+    transition:
+      transform 0.6s var(--ease-out),
+      opacity 0.3s var(--ease-out);
   }
 
-  .burger__line:first-of-type {
-    transform: translateY(-4px);
+  .burger__line--top {
+    transform: translateY(-6px);
   }
 
-  .burger__line:last-of-type {
-    transform: translateY(4px);
+  .burger__line--bottom {
+    transform: translateY(6px);
   }
 
-  .burger[aria-expanded="true"] .burger__line:first-of-type {
+  /* Aberto: as linhas de fora viram um X e a do meio some */
+  .burger[aria-expanded="true"] .burger__line--top {
     transform: rotate(45deg);
   }
 
-  .burger[aria-expanded="true"] .burger__line:last-of-type {
+  .burger[aria-expanded="true"] .burger__line--mid {
+    opacity: 0;
+    transform: scaleX(0);
+  }
+
+  .burger[aria-expanded="true"] .burger__line--bottom {
     transform: rotate(-45deg);
   }
 
@@ -413,7 +425,10 @@ const socials = [
     overflow: hidden;
   }
 
+  /* Acima do nome gigante: as letras dele passam da própria caixa e cobririam os links */
   .footer__row {
+    position: relative;
+    z-index: 1;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -470,7 +485,8 @@ const socials = [
     clip-path: inset(100% 0 0 0);
   }
 
-  .no-webgl #scene {
+  .no-webgl #scene,
+  .no-webgl #smoke {
     display: none;
   }
 

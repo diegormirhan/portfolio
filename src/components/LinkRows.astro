@@ -1,6 +1,14 @@
 ---
 /* Lista tipográfica de links externos (artigos, repositórios). */
-export type LinkRow = { href: string; title: string; meta: string; aside?: string; image?: string | null };
+export type LinkRow = {
+  href: string;
+  title: string;
+  meta: string;
+  aside?: string;
+  image?: string | null;
+  /** false = página do próprio site (abre na mesma aba, com transição) */
+  external?: boolean;
+};
 
 interface Props {
   items: LinkRow[];
@@ -15,8 +23,8 @@ const { items } = Astro.props;
       <li class="link" data-reveal>
         <a
           href={item.href}
-          target="_blank"
-          rel="noreferrer"
+          target={item.external === false ? undefined : "_blank"}
+          rel={item.external === false ? undefined : "noreferrer"}
           class="link__a"
           data-preview={item.image ? "" : undefined}
           data-preview-src={item.image ?? undefined}

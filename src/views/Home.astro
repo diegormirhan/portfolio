@@ -3,7 +3,7 @@ import Base from "../layouts/Base.astro";
 import LinkRows from "../components/LinkRows.astro";
 import ProjectRows from "../components/ProjectRows.astro";
 import { content, pathFor, profile, projects, ui, type Lang } from "../lib/content";
-import { articlesFor, formatDate } from "../lib/data";
+import { articlePath, articlesFor, formatDate } from "../lib/data";
 
 interface Props {
   lang: Lang;
@@ -16,7 +16,7 @@ const articles = (await articlesFor(lang)).slice(0, 3);
 ---
 
 <Base lang={lang} page="home">
-  <section class="hero" data-intro data-scene="0" data-scene-x="2" data-scene-y="0.4">
+  <section class="hero" data-intro data-scene="2" data-scene-x="2.6" data-scene-y="0.3" data-scene-scale="0.95">
     <div class="wrap hero__inner">
       <h1 class="hero__name display display--xl" data-split="intro">Diego<br />Mirhan</h1>
       <div class="hero__foot">
@@ -35,8 +35,8 @@ const articles = (await articlesFor(lang)).slice(0, 3);
     </div>
   </section>
 
-  <!-- Única seção com a rede neural: todo o texto fica na metade esquerda -->
-  <section class="section" data-scene="2" data-scene-x="2.9" data-scene-scale="0.8">
+  <!-- Editor de código em miniatura à direita; todo o texto fica na metade esquerda -->
+  <section class="section" data-scene="4" data-scene-x="2.6" data-scene-scale="0.9">
     <ul class="wrap focus">
       {
         c.highlights.map((item) => (
@@ -53,7 +53,7 @@ const articles = (await articlesFor(lang)).slice(0, 3);
     </ul>
   </section>
 
-  <section class="section" data-scene="3" data-scene-y="-0.6" data-scene-dim="0.5">
+  <section class="section" data-scene="3" data-scene-x="3.1" data-scene-y="0.2" data-scene-scale="0.66" data-scene-dim="0.38">
     <div class="wrap">
       <h2 class="display display--lg section-title" data-split>{t.selected}</h2>
       <ProjectRows lang={lang} items={projects(lang).slice(0, 4)} />
@@ -65,14 +65,15 @@ const articles = (await articlesFor(lang)).slice(0, 3);
 
   {
     articles.length > 0 && (
-      <section class="section" data-scene="1" data-scene-x="2.4" data-scene-scale="0.7" data-scene-dim="0.5">
+      <section class="section" data-scene="3" data-scene-x="3.1" data-scene-y="0.2" data-scene-scale="0.66" data-scene-dim="0.38">
         <div class="wrap">
           <h2 class="display display--lg section-title" data-split>
             {t.articles}
           </h2>
           <LinkRows
             items={articles.map((a) => ({
-              href: a.link,
+              href: articlePath(lang, a.slug),
+              external: false,
               title: a.title,
               meta: formatDate(a.date, lang),
               image: a.thumbnail,
@@ -86,7 +87,7 @@ const articles = (await articlesFor(lang)).slice(0, 3);
     )
   }
 
-  <section class="section cta" data-scene="0" data-scene-scale="1.15">
+  <section class="section cta" data-scene="0" data-scene-scale="1.15" data-scene-dim="0.6">
     <div class="wrap">
       <h2 class="display display--xl" data-split>{t.contactTitle}</h2>
       <a href={`mailto:${profile.email}`} class="cta__mail" data-reveal data-magnetic="0.15">

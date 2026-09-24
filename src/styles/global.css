@@ -272,7 +272,10 @@ main,
 
 .tag {
   display: inline-flex;
-  padding: 0.3em 0.75em;
+  align-items: center;
+  height: 1.75rem;
+  padding: 0 0.8em;
+  line-height: 1;
   border-radius: 999px;
   border: 1px solid var(--line);
   font-family: var(--font-mono);
@@ -296,4 +299,118 @@ main,
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* Texto longo (artigos do blog): tipografia de leitura, coluna estreita */
+.prose {
+  max-width: 72ch;
+  margin-left: auto;
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  color: oklch(0.96 0.006 250 / 85%);
+}
+
+.prose h2,
+.prose h3,
+.prose h4 {
+  margin: 2.5em 0 0.75em;
+  color: var(--fg);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  font-variation-settings: "wdth" 80;
+}
+
+.prose h2 {
+  font-size: 2rem;
+  text-transform: uppercase;
+}
+
+.prose h3 {
+  font-size: 1.4rem;
+}
+
+.prose p,
+.prose ul,
+.prose ol,
+.prose pre,
+.prose table,
+.prose blockquote {
+  margin-bottom: 1.25em;
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.25em;
+}
+
+.prose ul {
+  list-style: square;
+}
+
+.prose ol {
+  list-style: decimal;
+}
+
+.prose li::marker {
+  color: var(--cerulean-bright);
+}
+
+.prose a {
+  color: var(--cerulean-bright);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.prose code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  padding: 0.1em 0.35em;
+  border-radius: 0.3em;
+  background: var(--faint);
+}
+
+.prose pre {
+  padding: 1.25rem;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 0.75rem;
+  background: oklch(0.1 0.016 262 / 70%);
+}
+
+.prose pre code {
+  padding: 0;
+  background: none;
+}
+
+.prose img {
+  height: auto;
+  margin-block: 1.5em;
+  border-radius: 0.75rem;
+}
+
+.prose table {
+  display: block;
+  overflow-x: auto;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+
+.prose th,
+.prose td {
+  padding: 0.5em 0.9em;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+}
+
+.prose blockquote {
+  padding-left: 1em;
+  border-left: 2px solid var(--cobalt-bright);
+  color: var(--muted);
+}
+
+.prose hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin-block: 2.5em;
 }

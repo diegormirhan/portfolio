@@ -2,7 +2,7 @@
 import Base from "../layouts/Base.astro";
 import LinkRows from "../components/LinkRows.astro";
 import { pathFor, profile, ui, type Lang } from "../lib/content";
-import { articlesFor, formatDate, getArticles } from "../lib/data";
+import { articlePath, articlesFor, formatDate, getArticles } from "../lib/data";
 
 interface Props {
   lang: Lang;
@@ -22,7 +22,8 @@ const other: Lang = lang === "pt" ? "en" : "pt";
       articles.length > 0 ? (
         <LinkRows
           items={articles.map((a) => ({
-            href: a.link,
+            href: articlePath(lang, a.slug),
+            external: false,
             title: a.title,
             meta: formatDate(a.date, lang),
             aside: `${a.minutes} ${t.minRead}`,

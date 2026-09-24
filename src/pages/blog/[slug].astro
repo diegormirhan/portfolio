@@ -1,0 +1,10 @@
+---
+import View from "../../views/Article.astro";
+import { articlesFor } from "../../lib/data";
+
+export async function getStaticPaths() {
+  return (await articlesFor("pt")).map((article) => ({ params: { slug: article.slug } }));
+}
+---
+
+<View lang="pt" slug={Astro.params.slug!} />

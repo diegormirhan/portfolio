@@ -13,7 +13,9 @@ const timeline = [
   { title: t.experience, entries: c.experience, scene: { shape: "0", x: "2.3" } },
   { title: t.education, entries: c.education, scene: { shape: "1", x: "2.4" } },
 ];
-const allSkills = c.skillGroups.flatMap((group) => group.items);
+// Faixas do marquee: a stack é longa, então cada faixa leva um pedaço dela
+const [ai, languages, frameworks, infra] = c.skillGroups.map((group) => group.items);
+const marqueeRows = [ai ?? [], [...(languages ?? []), ...(frameworks ?? [])], infra ?? []];
 ---
 
 <Base lang={lang} page="experience" title={t.nav.experience}>
@@ -52,21 +54,26 @@ const allSkills = c.skillGroups.flatMap((group) => group.items);
 
   <section class="section skills" data-scene="3" data-scene-y="-0.5">
     <h2 class="wrap display display--lg block__title" data-split>{t.skills}</h2>
-    <div class="marquee" data-marquee aria-hidden="true">
-      <div class="marquee__track">
-        {
-          [0, 1].map(() => (
-            <p class="marquee__row display display--lg">
-              {allSkills.map((skill) => (
-                <span>
-                  {skill}
-                  <span class="marquee__sep">/</span>
-                </span>
+    <!-- Três faixas (IA / linguagens e frameworks / infra), em sentidos alternados -->
+    <div class="marquees" aria-hidden="true">
+      {
+        marqueeRows.map((row, index) => (
+          <div class="marquee" data-marquee={index % 2 ? "-1" : "1"} data-marquee-duration={String(70 + index * 12)}>
+            <div class="marquee__track">
+              {[0, 1].map(() => (
+                <p class:list={["marquee__row display display--md", { "marquee__row--dim": index === 1 }]}>
+                  {row.map((skill) => (
+                    <span>
+                      {skill}
+                      <span class="marquee__sep">/</span>
+                    </span>
+                  ))}
+                </p>
               ))}
-            </p>
-          ))
-        }
-      </div>
+            </div>
+          </div>
+        ))
+      }
     </div>
     <div class="wrap groups">
       {
@@ -133,8 +140,10 @@ const allSkills = c.skillGroups.flatMap((group) => group.items);
     overflow: hidden;
   }
 
-  .marquee {
-    padding-block: 1rem 3rem;
+  .marquees {
+    display: grid;
+    gap: 0.4rem;
+    padding-block: 1rem 3.5rem;
   }
 
   .marquee__track {
@@ -150,6 +159,13 @@ const allSkills = c.skillGroups.flatMap((group) => group.items);
 
   .marquee__row > span {
     padding-right: 0.3em;
+  }
+
+  /* Faixa do meio em contorno, para as três não virarem um bloco só */
+  .marquee__row--dim {
+    color: transparent;
+    -webkit-text-stroke: 1px oklch(0.96 0.006 250 / 55%);
+    text-shadow: none;
   }
 
   .marquee__sep {

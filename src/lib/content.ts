@@ -4,7 +4,14 @@ export type Lang = "pt" | "en";
 export const langs: Lang[] = ["pt", "en"];
 
 type Entry = { period: string; title: string; org: string; description: string; tags: string[] };
-type ProjectText = { title: string; tagline: string; description: string; imageAlt: string };
+type ProjectText = {
+  title: string;
+  tagline: string;
+  description: string;
+  imageAlt: string;
+  overview: string[];
+  highlights: { title: string; text: string }[];
+};
 type LangContent = {
   role: string;
   headline: string;
@@ -92,9 +99,11 @@ export const ui = {
     demo: "Demo",
     next: "Próximo projeto",
     minRead: "min de leitura",
+    readOnMedium: "Ler o original no Medium",
+    nextArticle: "Próximo artigo",
     noArticles: "Os artigos não carregaram agora. Leia direto no",
     otherLangArticles: "Ainda não há artigos em português. Leia os artigos em inglês",
-    noReadme: "O README deste projeto não carregou agora. Veja direto no",
+    fullDocs: "Documentação completa no GitHub",
     rights: "Todos os direitos reservados.",
     backToTop: "Voltar ao topo",
   },
@@ -119,9 +128,11 @@ export const ui = {
     demo: "Demo",
     next: "Next project",
     minRead: "min read",
+    readOnMedium: "Read the original on Medium",
+    nextArticle: "Next article",
     noArticles: "The articles didn't load right now. Read them on",
     otherLangArticles: "No articles in English yet. Read the ones in Portuguese",
-    noReadme: "This project's README didn't load right now. See it on",
+    fullDocs: "Full documentation on GitHub",
     rights: "All rights reserved.",
     backToTop: "Back to top",
   },
