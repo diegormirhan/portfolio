@@ -23,6 +23,21 @@ const repoUrl = `https://github.com/${project.repo}`;
   title={project.title}
   description={project.description}
   alternate={projectPath(lang === "pt" ? "en" : "pt", slug)}
+  image={`/og/${slug}-${lang}.png`}
+  imageAlt={project.imageAlt}
+  schema={[
+    {
+      "@type": "SoftwareSourceCode",
+      name: project.title,
+      description: project.description,
+      codeRepository: repoUrl,
+      keywords: project.tags.join(", "),
+      image: new URL(project.image, Astro.site).href,
+      author: { "@id": `${Astro.site!.origin}/#person` },
+      dateCreated: project.year,
+      inLanguage: lang === "pt" ? "pt-BR" : "en",
+    },
+  ]}
 >
   <section class="wrap page-top head dev-host" data-intro data-scene="1" data-scene-x="2.3" data-scene-scale="0.75">
     <p class="mono muted" data-reveal>{project.year}</p>

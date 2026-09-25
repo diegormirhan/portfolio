@@ -8,15 +8,14 @@
  *                    Rastrigin, Ackley, Griewank, Schwefel), com uma bola de luz percorrendo
  *   2  rede neural   camadas de nós brilhantes totalmente conectadas, sobre uma grade ondulada
  *   3  camadas       pilha de placas de vidro (arquitetura), com feixes de luz entre elas
- *   4  editor        linhas de código como barras de vidro, com uma linha ativa "digitando"
+ *   4-5 hardware     chip de IA com cabos e computador quântico (scene-hw.ts)
  * Nos tubos correm pulsos de luz (camada a camada na rede neural). Poeira de luz sobe ao
  * fundo, e uma fumaça fluida segue o cursor (fluid.ts, em canvas próprio).
  *
- * Qualidade automática: vidro com refração real (transmission) no desktop; no celular ou se o
- * FPS medido cair, vidro simplificado (reflexo + transparência), visualmente parecido.
+ * Modo leve (botão no menu): vidro simplificado (reflexo + transparência) e resolução 1x.
  *
  * API por eventos em window, para não acoplar a cena ao resto do JS:
- *   scene:shape  { shape: 0-4, x?, y?, scale?, dim? }  viaja até o objeto, com deslocamento na tela
+ *   scene:shape  { shape: 0-5, x?, y?, scale?, dim? }  viaja até o objeto, com deslocamento na tela
  *   scene:ready                                         disparado após o primeiro frame
  */
 import * as THREE from "three";
@@ -24,7 +23,8 @@ import { RoomEnvironment } from "three/examples/jsm/environments/RoomEnvironment
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 
 import { createFluid } from "./fluid";
-import { makeMatmul, makeNabla, makeSystem } from "./scene-dev";
+import { makeGargantua, makeMatmul, makeNabla } from "./scene-dev";
+import { makeAiChip, makeBoard, makeQuantum } from "./scene-hw";
 import {
   reduceMotion,
   isSmall,
@@ -46,7 +46,6 @@ import {
   NET_LAYER_PHASE,
   IDENTITY,
   fireAt,
-  fireWave,
   PULSE,
   PULSE_AGE,
   RED,
@@ -63,11 +62,7 @@ import {
 
 export type ShapeDetail = { shape: number; x?: number; y?: number; scale?: number; dim?: number };
 
-// Dev mode: ciclo mais lento, com ida (forward) na primeira metade e volta (backward) na segunda
-const BP_SPEED = 0.2;
-const BP_PHASE = 0.11;
-
-function makeNetwork(shared: Shared, dev = false): Station {
+function makeNetwork(shared: Shared): Station {
   // Rede neural em camadas (5-7-8-7-4), cada camada ligada a todas as da seguinte, no estilo
   // "bolhas de luz": nós com brilho difuso, cores em gradiente cerúleo → violeta ao longo das
   // camadas e uma grade ondulada embaixo. Os pulsos saem de uma camada e chegam na próxima
@@ -87,7 +82,7 @@ function makeNetwork(shared: Shared, dev = false): Station {
   const layerOf = layers.flatMap((n, li) => Array<number>(n).fill(li));
   const tone = nodes.map((n) => {
     const u = THREE.MathUtils.clamp(n.x / (2 * W) + 0.5, 0, 1);
-    return dev ? new THREE.Color().copy(BLOOD).lerp(RED, u * 0.7) : brand(u);
+    return brand(u);
   });
 
   // Nós: esferas pequenas com centro claro tingido; a cor por instância já traz a intensidade
@@ -135,25 +130,7 @@ function makeNetwork(shared: Shared, dev = false): Station {
   const edges: [THREE.Vector3, THREE.Vector3, number][] = [];
   for (let li = 0; li < layers.length - 1; li++)
     for (const a of byLayer[li]!) for (const b of byLayer[li + 1]!) edges.push([a, b, li * NET_LAYER_PHASE]);
-  const links = dev
-    ? pulseTubes(tubes(edges.map(([a, b]) => [a, b, layerOf[nodes.indexOf(a)]! * BP_PHASE]), 0.0055), shared, BP_SPEED, 0.22, BP_PHASE, ICE, W, BLOOD)
-    : pulseTubes(tubes(edges, 0.0055), shared, NET_SPEED, 0.28, NET_LAYER_PHASE, VIOLET, W);
-  // Backpropagation: o gradiente volta da saída para a entrada, em vermelho, pelas mesmas conexões
-  const gradients = dev
-    ? pulseTubes(
-        tubes(
-          edges.map(([a, b]) => [b, a, 0.5 + (layers.length - 2 - layerOf[nodes.indexOf(a)]!) * BP_PHASE]),
-          0.0075,
-        ),
-        shared,
-        BP_SPEED,
-        0,
-        BP_PHASE,
-        RED,
-        W,
-        RED,
-      )
-    : null;
+  const links = pulseTubes(tubes(edges, 0.0055), shared, NET_SPEED, 0.28, NET_LAYER_PHASE, VIOLET, W);
 
   // Grade ondulada embaixo: linhas nas duas direções, deslocadas no shader
   const GRID_W = 3.6;
@@ -178,26 +155,20 @@ function makeNetwork(shared: Shared, dev = false): Station {
     new THREE.ShaderMaterial({
       uniforms: {
         uTime: shared.uTime,
-        uNear: { value: dev ? BLOOD : CERULEAN },
-        uFar: { value: dev ? RED : VIOLET },
+        uNear: { value: CERULEAN },
+        uFar: { value: VIOLET },
         uSize: { value: new THREE.Vector2(GRID_W, GRID_D) },
         uDim: DIM,
-        uPulseAge: PULSE_AGE,
       },
       vertexShader: /* glsl */ `
         uniform float uTime;
         uniform vec2 uSize;
-        uniform float uPulseAge;
         varying vec2 vUv;
         void main() {
           vec3 p = position;
-          // Onda de choque da batida (dev mode): um anel que se abre do centro da grade
-          float ring = uPulseAge * 3.2;
-          float shock = 0.32 * exp(-pow((length(p.xz) - ring) * 2.2, 2.0)) * exp(-uPulseAge * 1.4);
           p.y = -1.05
             + 0.22 * sin(p.x * 0.9 + uTime * 0.45) * cos(p.z * 1.2 - uTime * 0.3)
-            + 0.12 * sin((p.x + p.z) * 1.8 + uTime * 0.6)
-            + shock;
+            + 0.12 * sin((p.x + p.z) * 1.8 + uTime * 0.6);
           vUv = p.xz / uSize;
           gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
         }
@@ -224,11 +195,9 @@ function makeNetwork(shared: Shared, dev = false): Station {
   grid.position.y = -0.95;
   grid.rotation.x = 0.35;
   group.add(grid, links, orbs, halos.points);
-  if (gradients) group.add(gradients);
 
   const color = new THREE.Color();
   const size = new THREE.Vector3();
-  const last = layers.length - 1;
   return {
     group,
     update: (t) => {
@@ -238,21 +207,10 @@ function makeNetwork(shared: Shared, dev = false): Station {
       nodes.forEach((node, i) => {
         const layer = layerOf[i]!;
         const breathe = 0.75 + 0.25 * Math.sin(t * 1.3 + i * 1.7);
-        if (dev) {
-          // Forward acende em rosa claro; o gradiente, ao chegar de volta, acende em vermelho
-          const forward = fireWave(t, BP_SPEED, layer * BP_PHASE);
-          const backward = fireWave(t, BP_SPEED, 0.5 + (last - layer) * BP_PHASE);
-          const beat = PULSE.value;
-          color.copy(tone[i]!).lerp(ICE, forward * 0.5).lerp(RED, backward);
-          orbs.setColorAt(i, color.clone().multiplyScalar(breathe + (forward + backward) * 1.2 + beat * 0.6));
-          orbs.setMatrixAt(i, m.compose(node, IDENTITY, size.setScalar(1 + (forward + backward) * 0.35 + beat * 0.25)));
-          color.multiplyScalar(0.5 + (forward + backward) * 0.9 + beat * 0.5);
-        } else {
-          const wave = fireAt(t, layer);
-          orbs.setColorAt(i, color.copy(tone[i]!).multiplyScalar(breathe + wave * 1.3));
-          orbs.setMatrixAt(i, m.compose(node, IDENTITY, size.setScalar(1 + wave * 0.35)));
-          color.copy(tone[i]!).lerp(ICE, wave * 0.4).multiplyScalar(0.55 + wave * 0.9 + 0.15 * breathe);
-        }
+        const wave = fireAt(t, layer);
+        orbs.setColorAt(i, color.copy(tone[i]!).multiplyScalar(breathe + wave * 1.3));
+        orbs.setMatrixAt(i, m.compose(node, IDENTITY, size.setScalar(1 + wave * 0.35)));
+        color.copy(tone[i]!).lerp(ICE, wave * 0.4).multiplyScalar(0.55 + wave * 0.9 + 0.15 * breathe);
         halos.colors.set([color.r, color.g, color.b], i * 3);
       });
       orbs.instanceColor!.needsUpdate = true;
@@ -504,55 +462,6 @@ function makeLandscape(dev = false): Station {
   };
 }
 
-function makeEditor(): Station {
-  // Arquivo de código visto de longe (minimap): cada palavra é uma barra de vidro arredondada,
-  // com cores de "syntax highlight". Uma linha ativa desce pelo arquivo e salta para a frente.
-  const group = new THREE.Group();
-  const LINES = 16;
-  const LINE_H = 0.32;
-  const tokens: { x: number; len: number; line: number }[] = [];
-  let indent = 0;
-  for (let line = 0; line < LINES; line++) {
-    if (Math.random() < 0.16) continue; // linha em branco
-    indent = Math.max(0, Math.min(3, indent + (Math.random() < 0.45 ? 1 : Math.random() < 0.5 ? -1 : 0)));
-    let x = indent * 0.36;
-    const end = x + rand(1, 3.2);
-    while (x < end) {
-      const len = Math.min(rand(0.16, 0.66), end - x);
-      tokens.push({ x, len, line });
-      x += len + 0.1;
-    }
-  }
-  const bars = new THREE.InstancedMesh(new RoundedBoxGeometry(1, 0.15, 0.15, 3, 0.06), glass("#ffffff"), tokens.length);
-  const palette = [COBALT, CERULEAN, ICE, new THREE.Color("#7f8cff")];
-  tokens.forEach((_, i) => bars.setColorAt(i, palette[(Math.random() * palette.length) | 0]!));
-  group.add(bars);
-
-  const m = new THREE.Matrix4();
-  const q = new THREE.Quaternion();
-  const scale = new THREE.Vector3();
-  const pos = new THREE.Vector3();
-  const place = (t: number) => {
-    const cursor = ((t * 0.09 * LINES) % (LINES + 4)) - 2;
-    tokens.forEach((token, i) => {
-      const lift = Math.exp(-(((token.line - cursor) / 0.8) ** 2));
-      pos.set(token.x + token.len / 2 - 2 + lift * 0.1, -(token.line - (LINES - 1) / 2) * LINE_H, lift * 0.5);
-      bars.setMatrixAt(i, m.compose(pos, q, scale.set(token.len, 1, 1)));
-    });
-    bars.instanceMatrix.needsUpdate = true;
-  };
-  place(0);
-  bars.computeBoundingSphere();
-
-  return {
-    group,
-    update: (t) => {
-      place(t);
-      group.rotation.y = -0.4 + Math.sin(t * 0.25) * 0.12;
-    },
-  };
-}
-
 function makeCode(): Station {
   // </> extrudado: dois chevrons e uma barra, com bisel, em vidro espesso
   const group = new THREE.Group();
@@ -679,12 +588,20 @@ function init(canvas: HTMLCanvasElement) {
 
   const shared: Shared = { uTime: { value: 0 } };
 
-  // Cada objeto numa "estação" ao longo de z, na ordem da Home (rede → superfície → editor → camadas → </>)
-  const normal: Station[] = [makeCode(), makeLandscape(), makeNetwork(shared), makeStack(shared), makeEditor()];
-  // Dev mode: versões técnicas nas mesmas estações (∇, descida do gradiente, backpropagation,
-  // arquitetura de sistema, multiplicação de matrizes)
-  const technical: Station[] = [makeNabla(), makeLandscape(true), makeNetwork(shared, true), makeSystem(shared), makeMatmul()];
-  const depthOf = [-80, -20, 0, -60, -40];
+  // Cada objeto numa "estação" ao longo de z, na ordem da Home
+  // (rede → superfície → chip de IA → camadas → computador quântico → </>)
+  const normal: Station[] = [makeCode(), makeLandscape(), makeNetwork(shared), makeStack(shared), makeAiChip(shared), makeQuantum(shared)];
+  // Dev mode: versões técnicas nas mesmas estações (∇, descida do gradiente, Gargantua,
+  // placa-mãe em vermelho, multiplicação de matrizes, computador quântico em vermelho)
+  const technical: Station[] = [
+    makeNabla(),
+    makeLandscape(true),
+    makeGargantua(shared),
+    makeBoard(shared),
+    makeMatmul(),
+    makeQuantum(shared, true),
+  ];
+  const depthOf = [-80, -20, 0, -60, -40, -100];
   [normal, technical].forEach((set) =>
     set.forEach((station, i) => {
       station.group.position.set(0, 0, depthOf[i]!);
@@ -786,7 +703,7 @@ function init(canvas: HTMLCanvasElement) {
   const smokeColor = new THREE.Color();
   const splatColor = new THREE.Color();
   const parallax = new THREE.Vector2();
-  let smokeIdle = 0;
+  let smokeIdle = 5; // parada até o cursor se mexer pela primeira vez
 
   addEventListener(
     "pointermove",
@@ -838,9 +755,16 @@ function init(canvas: HTMLCanvasElement) {
   }
   addEventListener("scene:shape", (e) => applyShape((e as CustomEvent<ShapeDetail>).detail));
 
-  function resize() {
-    const w = innerWidth;
-    const h = innerHeight;
+  // Tamanho do próprio canvas (100lvh no CSS): a barra do navegador do celular, que aparece e
+  // some ao rolar, não muda nada; só uma mudança real de tamanho recria os buffers
+  let lastW = 0;
+  let lastH = 0;
+  function resize(force = false) {
+    const w = canvas.clientWidth || innerWidth;
+    const h = canvas.clientHeight || innerHeight;
+    if (!force && w === lastW && h === lastH) return;
+    lastW = w;
+    lastH = h;
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     baseZ = w / h < 0.8 ? 12 : 9; // telas estreitas: câmera mais longe para o objeto caber
@@ -850,7 +774,7 @@ function init(canvas: HTMLCanvasElement) {
     fluid?.resize();
   }
   resize();
-  addEventListener("resize", resize);
+  addEventListener("resize", () => resize());
 
   // Pedido feito antes deste módulo carregar: começa já na estação certa
   const pending = (window as unknown as { __sceneShape?: ShapeDetail }).__sceneShape;
@@ -864,9 +788,9 @@ function init(canvas: HTMLCanvasElement) {
     dpr = lite ? 1 : fullDpr;
     renderer.setPixelRatio(dpr);
     dustUniforms.uPixelRatio.value = dpr;
-    resize();
+    resize(true);
   }
-  if (document.documentElement.classList.contains("lite")) applyLite(true);
+  if (document.documentElement.classList.contains("is-lite")) applyLite(true);
   addEventListener("lite:change", (e) => applyLite((e as CustomEvent<{ on: boolean }>).detail.on));
 
   // Pré-compila os shaders de todos os objetos (inclusive os do dev mode, ainda escondidos):
@@ -934,9 +858,12 @@ function init(canvas: HTMLCanvasElement) {
 
     dustUniforms.uCamera.value.copy(camera.position);
 
-    renderer.render(scene, camera);
+    // Enquanto o preloader cobre a tela inteira, só o primeiro frame é desenhado (compila e
+    // dispara scene:ready): em GPU fraca, renderizar por baixo travava o contador e o botão
+    const covered = ready && document.getElementById("preloader") !== null;
+    if (!covered) renderer.render(scene, camera);
 
-    if (fluid) {
+    if (fluid && !covered) {
       // O ponto de emissão persegue o cursor com atraso (movimento macio), e o trajeto do
       // frame é preenchido com vários splats pequenos: um rastro contínuo, sem "bolhas".
       if (pointer.ready) {

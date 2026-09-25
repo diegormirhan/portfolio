@@ -1,16 +1,15 @@
 /*
  * Versões técnicas dos objetos para o dev mode (substituem as normais nas mesmas estações):
  *   0  ∇            nabla extrudado em vidro vermelho, com símbolos matemáticos orbitando
- *   3  sistema      arquitetura de serviços (cliente → API → fila → workers → vetores / LLM)
- *                   com pacotes de luz trafegando pelas conexões
+ *   2  Gargantua    buraco negro de Interstellar: sombra, disco de acreção, lente e anel de fótons
  *   4  matmul       multiplicação de matrizes: A × B = C, linha e coluna varridas em vermelho
- * (A rede neural com backpropagation e a descida do gradiente ficam em scene.ts, como variantes.)
+ * (A descida do gradiente fica em scene.ts, como variante da superfície.)
  * Todos pulsam na batida do dev mode (PULSE).
  */
 import * as THREE from "three";
 import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeometry.js";
 
-import { BLOOD, ICE, IDENTITY, PULSE, RED, glass, pulseTubes, tubes, type Shared, type Station } from "./scene-kit";
+import { BLOOD, DIM, ICE, IDENTITY, PULSE, RED, glass, type Shared, type Station } from "./scene-kit";
 
 /** Texto como sprite (rótulos e símbolos), desenhado num canvas. */
 function label(text: string, color: string, height = 0.28, weight = 600) {
@@ -72,68 +71,6 @@ export function makeNabla(): Station {
       nabla.rotation.x = Math.sin(t * 0.3) * 0.15;
       nabla.scale.setScalar(1 + PULSE.value * 0.08);
       orbit.rotation.y = t * 0.25;
-    },
-  };
-}
-
-export function makeSystem(shared: Shared): Station {
-  // Arquitetura de um sistema de IA local: cada caixa é um serviço; os pulsos são requisições
-  const group = new THREE.Group();
-  const inner = new THREE.Group(); // o diagrama inteiro, reduzido para caber ao lado do texto
-  inner.scale.setScalar(0.62);
-  group.add(inner);
-  const services: [string, number, number, number][] = [
-    ["client", -2.7, 0.5, 0],
-    ["api", -1.35, 0, 0.1],
-    ["queue", 0, 0.95, -0.3],
-    ["cache", 0, -0.95, 0.3],
-    ["worker", 1.3, 1.25, 0],
-    ["worker", 1.3, 0.2, 0.2],
-    ["worker", 1.3, -0.85, -0.1],
-    ["vectors", 2.7, 0.8, -0.2],
-    ["llm", 2.7, -0.55, 0.2],
-  ];
-  const at = services.map(([, x, y, z]) => new THREE.Vector3(x, y, z));
-  const box = new RoundedBoxGeometry(0.72, 0.42, 0.42, 4, 0.06);
-  const edgesGeometry = new THREE.EdgesGeometry(new THREE.BoxGeometry(0.76, 0.46, 0.46));
-  const material = redGlass();
-  const wire = new THREE.LineBasicMaterial({ color: RED, transparent: true, opacity: 0.8 });
-  const boxes = services.map(([name], i) => {
-    const node = new THREE.Group();
-    node.add(new THREE.Mesh(box, material), new THREE.LineSegments(edgesGeometry, wire));
-    const tag = label(name, "#ffd6da", 0.2, 500);
-    tag.position.set(0, 0.42, 0);
-    node.add(tag);
-    node.position.copy(at[i]!);
-    inner.add(node);
-    return node;
-  });
-
-  // Conexões por etapa: a fase do pulso segue a ordem da requisição
-  const link = (a: number, b: number, stage: number): [THREE.Vector3, THREE.Vector3, number] => [at[a]!, at[b]!, stage * 0.2];
-  const edges = [
-    link(0, 1, 0),
-    link(1, 2, 1),
-    link(1, 3, 1),
-    link(2, 4, 2),
-    link(2, 5, 2),
-    link(2, 6, 2),
-    link(4, 7, 3),
-    link(5, 7, 3),
-    link(5, 8, 3),
-    link(6, 8, 3),
-  ];
-  inner.add(pulseTubes(tubes(edges, 0.012), shared, 0.32, 0.16, 0.2, RED, 2.7, BLOOD));
-
-  return {
-    group,
-    update: (t) => {
-      group.rotation.y = -0.35 + Math.sin(t * 0.2) * 0.25;
-      group.rotation.x = 0.18;
-      boxes.forEach((node, i) => {
-        node.position.y = at[i]!.y + Math.sin(t * 0.8 + i) * 0.05;
-        node.scale.setScalar(1 + PULSE.value * 0.1);
-      });
     },
   };
 }
@@ -208,6 +145,147 @@ export function makeMatmul(): Station {
       });
       cells.instanceColor!.needsUpdate = true;
       cells.instanceMatrix.needsUpdate = true;
+    },
+  };
+}
+
+/* ---------- Gargantua (Interstellar) ---------- */
+
+/**
+ * Buraco negro com disco de acreção, como o Gargantua de Interstellar, por traçado de raios:
+ * cada pixel lança um raio de luz que é curvado pela gravidade (Schwarzschild) passo a passo.
+ * O raio que cai no horizonte vira a sombra; o que cruza o disco pega a cor dele; e como os
+ * raios dão a volta no buraco, a parte de trás do disco aparece dobrada por cima e por baixo
+ * da sombra (o arco do filme), junto com o anel de fótons fino na borda.
+ * Só um quadrado voltado para a câmera, do tamanho do objeto: o resto da tela não paga nada.
+ * Unidades do shader: raio de Schwarzschild = 1.
+ */
+export function makeGargantua(shared: Shared): Station {
+  const group = new THREE.Group();
+  const RS = 0.27; // raio de Schwarzschild em unidades do mundo (sombra aparente ≈ 2,6 RS)
+  const BOUND = 13; // esfera (em RS) que contém o disco: fora dela o raio segue reto
+  const tilt = new THREE.Group();
+  tilt.rotation.set(0.055, 0, 0.2); // câmera um pouco acima do disco, que sobe para a direita (como no filme)
+  group.add(tilt);
+
+  const quad = new THREE.Mesh(
+    new THREE.PlaneGeometry(2, 2),
+    new THREE.ShaderMaterial({
+      uniforms: { uTime: shared.uTime, uDim: DIM, uPulse: PULSE, uRs: { value: RS }, uBound: { value: BOUND } },
+      vertexShader: /* glsl */ `
+        uniform float uRs, uBound;
+        varying vec3 vRo;
+        varying vec3 vRd;
+        void main() {
+          // Quadrado voltado para a câmera, centrado no buraco
+          vec4 c = modelViewMatrix * vec4(0.0, 0.0, 0.0, 1.0);
+          float s = length(modelViewMatrix[0].xyz);
+          vec3 viewPos = c.xyz + vec3(position.xy * uBound * uRs * s, 0.0);
+          gl_Position = projectionMatrix * vec4(viewPos, 1.0);
+          // Câmera e ponto do quadrado no espaço do buraco (disco no plano y = 0), em RS.
+          // A direção é linear no quadrado: interpolada, continua exata.
+          mat3 toLocal = transpose(mat3(modelViewMatrix) / s);
+          vRo = toLocal * (-c.xyz) / (s * uRs);
+          vRd = toLocal * (viewPos - c.xyz) / (s * uRs) - vRo;
+        }
+      `,
+      fragmentShader: /* glsl */ `
+        uniform float uTime, uDim, uPulse, uBound;
+        varying vec3 vRo;
+        varying vec3 vRd;
+        float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+        float noise(vec2 p) {
+          vec2 i = floor(p), f = fract(p);
+          vec2 u = f * f * (3.0 - 2.0 * f);
+          return mix(mix(hash(i), hash(i + vec2(1, 0)), u.x), mix(hash(i + vec2(0, 1)), hash(i + vec2(1, 1)), u.x), u.y);
+        }
+        float fbm(vec2 p) { return noise(p) * 0.5 + noise(p * 2.1) * 0.3 + noise(p * 4.3) * 0.2; }
+
+        const float R_IN = 2.6;
+        const float R_OUT = 11.0;
+
+        // Disco: gás quente (branco no centro, vermelho para fora), em faixas finas
+        // que giram mais rápido perto do buraco; o lado que vem para nós brilha mais
+        vec4 disk(vec3 p) {
+          float r = length(p.xz);
+          float t = (r - R_IN) / (R_OUT - R_IN);
+          float a = atan(p.z, p.x) + uTime * 1.4 / pow(r / R_IN, 1.5);
+          vec2 q = vec2(cos(a), sin(a)) * r;
+          // Poeira fibrosa esticada pela rotação (ruído alongado ao longo da órbita)
+          float grain = fbm(vec2(r * 2.2, 0.0) + q * 0.35);
+          float fibers = 0.8 + 0.2 * sin(r * 5.0 + grain * 7.0);
+          float heat = pow(1.0 - t, 1.6) * smoothstep(0.0, 0.025, t);
+          float doppler = 1.0 + 0.4 * (p.x / r);
+          float i = heat * fibers * mix(0.6, 1.25, grain) * doppler * (1.0 + uPulse * 0.5);
+          // Tons do dev mode: vermelho profundo → vermelho alaranjado → branco quente no centro
+          vec3 col = mix(vec3(0.55, 0.04, 0.06), vec3(1.0, 0.28, 0.2), smoothstep(0.08, 0.45, i));
+          col = mix(col, vec3(1.0, 0.88, 0.84), smoothstep(0.55, 1.05, i));
+          float alpha = clamp(i * 1.8, 0.0, 0.95) * smoothstep(1.0, 0.75, t);
+          return vec4(col * i * 3.2, alpha);
+        }
+
+        void main() {
+          vec3 dir = normalize(vRd);
+          vec3 pos = vRo;
+          // Leva o raio (reto, sem gravidade relevante) até a esfera que contém tudo
+          float b = dot(pos, dir);
+          float h = b * b - dot(pos, pos) + uBound * uBound;
+          if (h < 0.0) discard;
+          pos += dir * max(0.0, -b - sqrt(h));
+
+          vec3 vel = dir;
+          vec3 L = cross(pos, vel);
+          float h2 = dot(L, L);
+          vec3 col = vec3(0.0);
+          float alpha = 0.0;
+          float rMin = 1e3;
+          for (int i = 0; i < 150; i++) {
+            float r = length(pos);
+            rMin = min(rMin, r);
+            if (r < 1.0) { alpha = 1.0; break; } // caiu no horizonte: sombra
+            if (r > uBound + 0.5 && dot(pos, vel) > 0.0) break; // escapou
+            // Passos curtos perto do buraco, onde a curva é forte
+            float dt = clamp(0.07 * (r - 0.9) * r, 0.02, 0.9);
+            vec3 prev = pos;
+            vel += -1.5 * h2 * pos / pow(r, 5.0) * dt;
+            pos += vel * dt;
+            if (prev.y * pos.y < 0.0) {
+              vec3 hit = mix(prev, pos, prev.y / (prev.y - pos.y));
+              float rr = length(hit.xz);
+              if (rr > R_IN && rr < R_OUT) {
+                vec4 d = disk(hit);
+                col += (1.0 - alpha) * d.rgb;
+                alpha += (1.0 - alpha) * d.a;
+              }
+            }
+            if (alpha > 0.97) break;
+          }
+          // Brilho difuso em volta da sombra (o "bloom" do filme): raios que raspam o buraco
+          if (alpha < 1.0) col += (1.0 - alpha) * vec3(1.0, 0.22, 0.2) * 0.22 * exp(-(rMin - 1.5) * 0.55) * (1.0 + uPulse * 0.6);
+          // Estoura para branco com suavidade em vez de saturar
+          col = (1.0 - exp(-col * 1.4)) * uDim;
+          // Pré-multiplicado: a sombra tapa o fundo; o gás soma luz
+          gl_FragColor = vec4(col, max(alpha, min(1.0, max(col.r, max(col.g, col.b)))));
+        }
+      `,
+      transparent: true,
+      depthWrite: false,
+      blending: THREE.CustomBlending,
+      blendSrc: THREE.OneFactor,
+      blendDst: THREE.OneMinusSrcAlphaFactor,
+      blendSrcAlpha: THREE.OneFactor,
+      blendDstAlpha: THREE.OneMinusSrcAlphaFactor,
+    }),
+  );
+  quad.frustumCulled = false;
+  tilt.add(quad);
+
+  return {
+    group,
+    update: (t) => {
+      // Oscila bem devagar: a lente muda de forma conforme o ângulo, como numa câmera orbitando
+      tilt.rotation.x = 0.055 + Math.sin(t * 0.21) * 0.012;
+      group.rotation.y = Math.sin(t * 0.13) * 0.12;
     },
   };
 }

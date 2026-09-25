@@ -7,7 +7,10 @@ profile:
   email: mirhan.diego@gmail.com
   phone: "(12) 99141-0569"
   site: https://diegomirhan.com
-  resume: /diego-mirhan-cv.pdf
+  # Currículo por idioma (o site em inglês oferece a versão em inglês)
+  resume:
+    pt: /diego-mirhan-cv.pdf
+    en: /diego-mirhan-resume-en.pdf
   logo: /logo.png
   github: https://github.com/diegormirhan
   githubUser: diegormirhan

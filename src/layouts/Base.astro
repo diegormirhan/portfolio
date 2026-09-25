@@ -11,18 +11,76 @@ interface Props {
   page: PageKey;
   title?: string;
   description?: string;
-  /** Caminho equivalente no outro idioma (padrão: a mesma página) */
+  /** Caminho equivalente no outro idioma (padrão: a mesma página); é para onde a bandeira leva */
   alternate?: string;
+  /** false quando a página não tem tradução (artigos): sem hreflang apontando para outra página */
+  translated?: boolean;
+  /** Imagem de compartilhamento (caminho do site ou URL completa) */
+  image?: string;
+  imageAlt?: string;
+  /** Artigo: og:type article e data de publicação */
+  published?: Date | null;
+  noindex?: boolean;
+  /** Dados estruturados extras desta página (schema.org), somados ao grafo do site */
+  schema?: Record<string, unknown>[];
 }
 
-const { lang, page, title, description, alternate } = Astro.props;
+const { lang, page, title, description, alternate, translated = true, image, imageAlt, published, noindex, schema = [] } =
+  Astro.props;
 const other: Lang = lang === "pt" ? "en" : "pt";
 const t = ui[lang];
 const c = content(lang);
 const otherPath = alternate ?? pathFor(other, page);
 const fullTitle = title ? `${title} | ${profile.name}` : `${profile.name} | ${c.role}`;
-const desc = description ?? c.headline;
-const canonical = new URL(Astro.url.pathname, Astro.site);
+const desc = description ?? (page === "home" ? c.headline : t.pageDesc[page as keyof typeof t.pageDesc]) ?? c.headline;
+const site = Astro.site!;
+const withSlash = (path: string) => (path.endsWith("/") ? path : `${path}/`);
+const canonical = new URL(withSlash(Astro.url.pathname), site).href;
+const otherUrl = new URL(withSlash(otherPath), site).href;
+const ptUrl = lang === "pt" ? canonical : otherUrl;
+const locale = { pt: "pt_BR", en: "en_US" };
+const hreflang = { pt: "pt-BR", en: "en" };
+const ogImage = new URL(image ?? `/og/site-${lang}.png`, site).href;
+const ogImageAlt = imageAlt ?? `${profile.name}, ${c.role}`;
+
+// Grafo schema.org: o site, a pessoa (o autor de tudo) e esta página
+const person = {
+  "@type": "Person",
+  "@id": `${site.origin}/#person`,
+  name: profile.name,
+  url: site.origin + "/",
+  image: `${site.origin}/icon-512.png`,
+  jobTitle: c.role,
+  description: c.summary,
+  email: `mailto:${profile.email}`,
+  sameAs: [profile.github, profile.linkedin, profile.medium],
+  knowsAbout: c.skillGroups.flatMap((group) => group.items).slice(0, 24),
+  knowsLanguage: ["pt-BR", "en", "fr"],
+};
+const graph = [
+  {
+    "@type": "WebSite",
+    "@id": `${site.origin}/#website`,
+    url: site.origin + "/",
+    name: profile.name,
+    inLanguage: ["pt-BR", "en"],
+    publisher: { "@id": person["@id"] },
+  },
+  person,
+  {
+    // Página de um projeto ou artigo (com schema próprio) é uma página comum; as listas são coleções
+    "@type": page === "home" ? "ProfilePage" : schema.length === 0 && (page === "blog" || page === "projects") ? "CollectionPage" : "WebPage",
+    "@id": canonical,
+    url: canonical,
+    name: fullTitle,
+    description: desc,
+    inLanguage: hreflang[lang],
+    isPartOf: { "@id": `${site.origin}/#website` },
+    primaryImageOfPage: ogImage,
+    ...(page === "home" ? { mainEntity: { "@id": person["@id"] } } : { about: { "@id": person["@id"] } }),
+  },
+  ...schema,
+];
 const pages: PageKey[] = ["home", "projects", "blog", "experience", "contact"];
 const socials = [
   { label: "GitHub", href: profile.github },
@@ -39,36 +97,57 @@ const socials = [
     <title>{fullTitle}</title>
     <meta name="description" content={desc} />
     <meta name="author" content={profile.name} />
-    <meta name="theme-color" content="#0b1020" />
+    <meta name="robots" content={noindex ? "noindex, follow" : "index, follow, max-image-preview:large, max-snippet:-1"} />
+    <meta name="theme-color" content="#060a18" />
     <link rel="canonical" href={canonical} />
-    <link rel="alternate" hreflang={lang === "pt" ? "pt-BR" : "en"} href={canonical} />
-    <link rel="alternate" hreflang={other === "pt" ? "pt-BR" : "en"} href={new URL(otherPath, Astro.site)} />
-    <link rel="icon" href="/favicon.png" type="image/png" />
-    <meta property="og:type" content="website" />
+    {
+      translated && (
+        <>
+          <link rel="alternate" hreflang={hreflang[lang]} href={canonical} />
+          <link rel="alternate" hreflang={hreflang[other]} href={otherUrl} />
+          <link rel="alternate" hreflang="x-default" href={ptUrl} />
+        </>
+      )
+    }
+    <link rel="sitemap" href="/sitemap.xml" />
+    <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta property="og:site_name" content={profile.name} />
+    <meta property="og:type" content={published !== undefined ? "article" : page === "home" ? "profile" : "website"} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={desc} />
     <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={locale[lang]} />
+    {translated && <meta property="og:locale:alternate" content={locale[other]} />}
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:alt" content={ogImageAlt} />
+    {!image?.startsWith("http") && <meta property="og:image:width" content="1200" />}
+    {!image?.startsWith("http") && <meta property="og:image:height" content="630" />}
+    {published && <meta property="article:published_time" content={published.toISOString()} />}
+    {published !== undefined && <meta property="article:author" content={profile.linkedin} />}
+    {page === "home" && <meta property="profile:first_name" content="Diego" />}
+    {page === "home" && <meta property="profile:last_name" content="Mirhan" />}
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={desc} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
     <script is:inline>
-      // Esconde os elementos animados só quando a animação vai de fato rodar
-      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("js-motion", "is-intro");
+      // A abertura (preloader + nome + som) roda sempre, inclusive com "reduzir movimento";
+      // o resto das animações só quando a pessoa não pediu menos movimento
+      document.documentElement.classList.add("is-intro");
+      if (!matchMedia("(prefers-reduced-motion: reduce)").matches) document.documentElement.classList.add("js-motion");
       // Recarregar mantém o dev mode ligado
       try {
         if (sessionStorage.getItem("dev") === "1") document.documentElement.classList.add("dev");
-        if (localStorage.getItem("lite") === "1") document.documentElement.classList.add("lite");
+        if (localStorage.getItem("lite") === "1") document.documentElement.classList.add("is-lite");
       } catch {}
     </script>
     <script
       type="application/ld+json"
-      set:html={JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "Person",
-        name: profile.name,
-        jobTitle: c.role,
-        url: profile.site,
-        email: `mailto:${profile.email}`,
-        sameAs: [profile.github, profile.linkedin, profile.medium],
-      })}
+      set:html={JSON.stringify({ "@context": "https://schema.org", "@graph": graph })}
     />
     <ClientRouter fallback="swap" />
   </head>
@@ -182,7 +261,7 @@ const socials = [
               </li>
             ))
           }
-          <li><a href={profile.resume} download class="u-link">{t.resume}</a></li>
+          <li><a href={profile.resume[lang]} download class="u-link">{t.resume}</a></li>
         </ul>
       </div>
     </nav>
@@ -224,13 +303,15 @@ const socials = [
 </html>
 
 <style is:global>
-  /* A fumaça do cursor fica acima do escurecimento (senão some do lado esquerdo) e abaixo do texto */
+  /* A fumaça do cursor fica acima do escurecimento (senão some do lado esquerdo) e abaixo do texto.
+   * Camadas fixas de fundo com a altura da tela sem a barra do navegador (100lvh): no celular a
+   * barra aparece e some ao rolar, e a altura não pode mudar junto (a cena esticava e pulava). */
   #scene,
   #smoke {
     position: fixed;
-    inset: 0;
+    inset: 0 0 auto;
     width: 100vw;
-    height: 100vh;
+    height: 100lvh;
     z-index: -1;
     pointer-events: none;
   }
@@ -294,7 +375,8 @@ const socials = [
     transform-origin: left;
   }
 
-  html:not(.js-motion) #preloader {
+  /* Sem JS não há quem tire o preloader */
+  html:not(.is-intro) #preloader {
     display: none;
   }
 
@@ -432,7 +514,8 @@ const socials = [
   /* Camadas do dev mode (invisíveis fora dele) */
   .dev-fx {
     position: fixed;
-    inset: 0;
+    inset: 0 0 auto;
+    height: 100lvh;
     z-index: -1;
     pointer-events: none;
     opacity: 0;
@@ -497,10 +580,10 @@ const socials = [
 
   #dev-sand {
     position: fixed;
-    inset: 0;
+    inset: 0 0 auto;
     z-index: -2;
     width: 100vw;
-    height: 100vh;
+    height: 100lvh;
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.6s;

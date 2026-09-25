@@ -209,13 +209,6 @@ export const IDENTITY = new THREE.Quaternion();
  * 0-1: o quanto a camada acende agora. Os pulsos da camada L saem em L·fase e levam uma fase
  * para cruzar, então chegam na camada L+1 exatamente quando os dela saem.
  */
-/** 0-1: pulso que passa por um ponto do ciclo (fase `offset`), no ritmo `speed`. */
-export function fireWave(t: number, speed: number, offset: number) {
-  const a = (((t * speed - offset) % 1) + 1) % 1;
-  const dist = Math.min(a, 1 - a);
-  return Math.exp(-dist * dist * 90);
-}
-
 export function fireAt(t: number, layer: number) {
   const a = (((t * NET_SPEED - layer * NET_LAYER_PHASE) % 1) + 1) % 1;
   const dist = Math.min(a, 1 - a);

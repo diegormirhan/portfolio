@@ -1,14 +1,5 @@
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
-
+# Tudo liberado para indexação (buscadores, redes sociais e assistentes de IA)
 User-agent: *
 Allow: /
+
+Sitemap: https://diegomirhan.com/sitemap.xml

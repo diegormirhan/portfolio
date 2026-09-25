@@ -23,7 +23,7 @@ const channels = [
     <DevNote text={devNotes.page} />
     <a href={`mailto:${profile.email}`} class="mail" data-reveal data-magnetic="0.12">{profile.email}</a>
     <div class="actions" data-reveal>
-      <a href={profile.resume} download class="pill pill--solid" data-magnetic>{t.resume} ↓</a>
+      <a href={profile.resume[lang]} download class="pill pill--solid" data-magnetic>{t.resume} ↓</a>
     </div>
   </section>
 

@@ -169,7 +169,7 @@ export const getArticles = memo(async (): Promise<Article[]> => {
 
 export const articlesFor = async (lang: Lang) => (await getArticles()).filter((a) => a.lang === lang);
 
-export const articlePath = (lang: Lang, slug: string) => `${pathFor(lang, "blog")}/${slug}`;
+export const articlePath = (lang: Lang, slug: string) => `${pathFor(lang, "blog")}${slug}/`;
 
 export const formatDate = (date: Date | null, lang: Lang) =>
   date

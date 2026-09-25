@@ -53,9 +53,10 @@ const setShape = (el: HTMLElement) => {
     shape: !wide && shape === NETWORK ? 1 : shape,
     x: wide ? Number(d.sceneX ?? 0) : 0,
     y: Number(d.sceneY ?? 0),
-    scale: Number(d.sceneScale ?? 1) * (wide ? 1 : 0.8),
-    // No celular a nuvem fica sempre atrás do texto: mais apagada
-    dim: Number(d.sceneDim ?? 1) * (wide ? 1 : 0.55),
+    // No celular o objeto fica sempre atrás do texto: menor e mais apagado, para não competir
+    // com a leitura (o </> do fim da página saía cortado nas bordas)
+    scale: Math.min(Number(d.sceneScale ?? 1) * (wide ? 1 : 0.72), wide ? 9 : 0.6),
+    dim: Number(d.sceneDim ?? 1) * (wide ? 1 : 0.42),
   };
   // A cena carrega depois (chunk separado): ela lê o último pedido ao iniciar
   (window as unknown as { __sceneShape: unknown }).__sceneShape = detail;
@@ -93,31 +94,65 @@ async function runPreloader() {
     bar.style.transform = `scaleX(${progress.value / 100})`;
   };
 
-  if (reduceMotion) {
-    await Promise.race([Promise.all([document.fonts.ready, sceneReady()]), wait(2500)]);
-    root.remove();
-    dispatchEvent(new CustomEvent("intro:done"));
-    return;
-  }
-
   // O "Diego." do topo entra no fim da abertura (revealBrand)
   gsap.set(".header__brand", { opacity: 0 });
-  // O som do título baixa enquanto o contador corre (só é decodificado depois do clique)
-  const hitData = fetch("/audio/intro-hit.m4a")
-    .then((r) => (r.ok ? r.arrayBuffer() : null))
-    .catch(() => null);
 
-  // Sobe até 80% sozinho; os 20% finais esperam fontes e cena (com teto de 4s).
-  const fake = gsap.to(progress, { value: 80, duration: 1.1, ease: "power2.out", onUpdate: render });
-  await Promise.race([Promise.all([document.fonts.ready, sceneReady(), fake.then()]), wait(4000)]);
-  await gsap.to(progress, { value: 100, duration: 0.35, ease: "power1.inOut", onUpdate: render }).then();
+  // O contador mostra o carregamento de verdade: cada tarefa concluída avança a barra, e o
+  // botão só aparece com a abertura inteira pronta para tocar sem engasgo
+  const tasks = preloadTasks();
+  let done = 0;
+  const target = { value: 0 };
+  const track = gsap.ticker.add((_time, deltaMs) => {
+    // Persegue o alvo com suavidade, no mesmo ritmo com qualquer fps (nunca volta, nunca pula)
+    progress.value += (target.value - progress.value) * (1 - Math.exp(-Math.min(deltaMs, 100) / 160));
+    render();
+  });
+  tasks.forEach((task) =>
+    task.then(() => {
+      done++;
+      target.value = (done / tasks.length) * 100;
+    }),
+  );
+  // Teto de segurança: rede muito lenta não prende a pessoa para sempre
+  const [hit] = await Promise.race([Promise.all([...tasks, wait(1200)]), wait(15000).then(() => [null])]);
+  // Fecha em 100 por tempo, não por quadros: com fps baixo o contador não se arrasta
+  gsap.ticker.remove(track);
+  await gsap.to(progress, { value: 100, duration: 0.4, ease: "power1.inOut", onUpdate: render }).then();
   // Botão no meio: o clique libera o som (os navegadores exigem um gesto da pessoa)
   const choice = await askToEnter(root);
-  const hitIn = await startHitSound(choice.sound, hitData);
+  const hitIn = startHitSound(choice.sound, (hit as AudioBuffer | null | undefined) ?? null);
   const expander = expandPill(root, choice.rect, choice.hovered, Math.max(0.6, hitIn - 0.2));
   await wait(hitIn * 1000);
   await playIntro(root, expander);
   dispatchEvent(new CustomEvent("intro:done", { detail: { sound: choice.sound } }));
+}
+
+/**
+ * O que precisa estar pronto antes do botão "Entrar":
+ * - fontes (inclusive o peso 800 do nome gigante da abertura);
+ * - o impacto sonoro, baixado e já decodificado (o clique só dá o play);
+ * - a cena 3D com os shaders compilados;
+ * - as imagens da página, decodificadas;
+ * - com o dev mode vindo de um recarregamento, a trilha e o pulso.
+ * A primeira promessa devolve o áudio decodificado.
+ */
+function preloadTasks(): Promise<unknown>[] {
+  const hit = fetch("/audio/intro-hit.m4a")
+    .then((r) => (r.ok ? r.arrayBuffer() : null))
+    .then((raw) => (raw ? new OfflineAudioContext(2, 1, 48000).decodeAudioData(raw) : null))
+    .catch(() => null);
+  const display = getComputedStyle(document.documentElement).getPropertyValue("--font-display");
+  const fonts = Promise.all([document.fonts.load(`800 100px ${display}`, "DIEGO"), document.fonts.ready]).catch(() => {});
+  const images = Promise.all(
+    [...document.images].filter((img) => img.src).map((img) => {
+      img.loading = "eager";
+      return img.decode().catch(() => {});
+    }),
+  );
+  const dev = document.documentElement.classList.contains("dev")
+    ? Promise.all(["/audio/dev-theme.m4a", "/audio/dev-pulse.m4a"].map((url) => fetch(url).then((r) => r.blob()))).catch(() => {})
+    : Promise.resolve();
+  return [hit, fonts, sceneReady(), images, dev];
 }
 
 /** Degradê do fundo do nome: cobalto, ou vermelho no dev mode. */
@@ -203,14 +238,11 @@ async function askToEnter(root: HTMLElement) {
  * Toca o impacto (subida + golpe) e devolve em quantos segundos o golpe soa. Sem som (escolha
  * da pessoa ou falha de áudio), o tempo é o mesmo: a abertura fica igual, só em silêncio.
  */
-async function startHitSound(sound: boolean, data: Promise<ArrayBuffer | null>) {
-  if (!sound) return HIT_AT;
+function startHitSound(sound: boolean, buffer: AudioBuffer | null) {
+  if (!sound || !buffer) return HIT_AT;
   try {
     const ctx = new AudioContext();
     void ctx.resume();
-    const raw = await data;
-    if (!raw) return HIT_AT;
-    const buffer = await ctx.decodeAudioData(raw);
     const source = ctx.createBufferSource();
     source.buffer = buffer;
     source.connect(ctx.destination);
@@ -385,9 +417,10 @@ async function playIntro(root: HTMLElement, expander?: HTMLElement) {
   const zoom = [maskGroup!, visible!];
   const rings = [...svg.querySelectorAll<SVGTextElement>(".intro-ring")];
 
-  // Durante a abertura, um engasgo do navegador desacelera a animação em vez de pular etapas
+  // Durante a abertura, só um engasgo isolado (> 400 ms, ex.: compilar shader) é absorvido.
+  // Limite menor desacelerava tudo em PCs lentos: a 8 fps a abertura levava 4x mais tempo.
   // (o site usa lagSmoothing(0) por causa da rolagem suave; restaurado no fim)
-  gsap.ticker.lagSmoothing(120, 33);
+  gsap.ticker.lagSmoothing(400, 33);
   const tl = gsap.timeline({ onComplete: () => gsap.ticker.lagSmoothing(0) });
   // 0. O golpe: o nome surge inteiro de uma vez (corte seco), com um clarão, um tremor curto de
   //    câmera e uma aproximação lenta, como título de trailer
@@ -492,9 +525,9 @@ function setupMenu() {
   // Modo leve: escolha da pessoa, guardada entre visitas (a cena escuta "lite:change")
   const lite = document.querySelector<HTMLButtonElement>("[data-lite-toggle]");
   const html = document.documentElement;
-  lite?.setAttribute("aria-pressed", String(html.classList.contains("lite")));
+  lite?.setAttribute("aria-pressed", String(html.classList.contains("is-lite")));
   lite?.addEventListener("click", () => {
-    const on = html.classList.toggle("lite");
+    const on = html.classList.toggle("is-lite");
     lite.setAttribute("aria-pressed", String(on));
     try {
       localStorage.setItem("lite", on ? "1" : "0");
@@ -617,7 +650,9 @@ function setupPage(intro: Promise<void>) {
 
     // Títulos de seção letra a letra: cada letra sobe de trás da máscara girando para frente
     document.querySelectorAll<HTMLElement>("[data-split=chars]").forEach((el) => {
-      const split = SplitText.create(el, { type: "lines,chars", mask: "lines", linesClass: "split-line" });
+      // Palavras também: sem elas cada letra vira um bloco solto e a linha podia quebrar no
+      // meio da palavra ("CONVERSA / R" no celular)
+      const split = SplitText.create(el, { type: "lines,words,chars", mask: "lines", linesClass: "split-line" });
       gsap.set(el, { opacity: 1 });
       gsap.set(split.chars, { yPercent: 110, rotateX: -80, transformOrigin: "50% 100%" });
       ScrollTrigger.create({
@@ -630,11 +665,13 @@ function setupPage(intro: Promise<void>) {
     });
 
     // Parágrafos linha a linha, saindo de um leve desfoque. Sem máscara: dentro dela o
-    // desfoque e o deslocamento seriam cortados em retângulos
+    // desfoque e o deslocamento seriam cortados em retângulos. No celular, sem desfoque:
+    // filtro animado linha a linha por cima da cena 3D engasga a GPU do telefone
+    const blur = finePointer ? 6 : 0;
     document.querySelectorAll<HTMLElement>("[data-lines]").forEach((el) => {
       const split = SplitText.create(el, { type: "lines" });
       gsap.set(el, { opacity: 1 });
-      gsap.set(split.lines, { y: 24, opacity: 0, filter: "blur(6px)" });
+      gsap.set(split.lines, { y: 24, opacity: 0, filter: `blur(${blur}px)` });
       ScrollTrigger.create({
         trigger: el,
         start: "top 90%",
@@ -654,7 +691,7 @@ function setupPage(intro: Promise<void>) {
 
     // Aparecer subindo (os do hero entram junto com a introdução)
     const introReveals = gsap.utils.toArray<HTMLElement>("[data-intro] [data-reveal]");
-    intro.then(() =>
+    if (introReveals.length) intro.then(() =>
       gsap.fromTo(introReveals, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 1.2, stagger: 0.1, ease: EASE, delay: 0.3 }),
     );
     ScrollTrigger.batch("[data-reveal]:not([data-intro] [data-reveal])", {

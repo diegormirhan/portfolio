@@ -70,7 +70,7 @@ const articles = (await articlesFor(lang)).slice(0, 3);
 
   {
     articles.length > 0 && (
-      <section class="section dev-host" data-scene="3" data-scene-x="3.1" data-scene-y="0.2" data-scene-scale="0.66" data-scene-dim="0.38">
+      <section class="section dev-host" data-scene="5" data-scene-x="3" data-scene-y="0.15" data-scene-scale="0.88" data-scene-dim="0.45">
         <DevNote text={devNotes.articles} class="dev-note--top" />
         <div class="wrap">
           <h2 class="display display--lg section-title" data-split="chars">
@@ -183,10 +183,17 @@ const articles = (await articlesFor(lang)).slice(0, 3);
     margin-top: 2.5rem;
   }
 
+  /* A nota do dev mode quebra para baixo do título no celular (lado a lado, espremia o título) */
   .cta {
     min-height: 90dvh;
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
+    align-content: center;
+  }
+
+  .cta > .wrap {
+    width: 100%;
   }
 
   .cta__mail {

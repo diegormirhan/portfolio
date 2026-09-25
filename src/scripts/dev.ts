@@ -172,8 +172,12 @@ function spawn(item: Partial<Item> = {}, anywhere = false): Item {
 function resizeLayer() {
   const canvas = layer.canvas;
   if (!canvas) return;
-  layer.width = innerWidth;
-  layer.height = innerHeight;
+  // Altura do canvas (100lvh): ignora a barra do navegador do celular aparecendo e sumindo
+  const width = canvas.clientWidth || innerWidth;
+  const height = canvas.clientHeight || innerHeight;
+  if (width === layer.width && height === layer.height) return;
+  layer.width = width;
+  layer.height = height;
   canvas.width = layer.width * layer.dpr;
   canvas.height = layer.height * layer.dpr;
   layer.ctx?.setTransform(layer.dpr, 0, 0, layer.dpr, 0, 0);

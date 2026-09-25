@@ -301,10 +301,11 @@ main,
   opacity: 0;
 }
 
+/* A abertura fica de fora: ela é mostrada sempre */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  :not(#preloader, #preloader *, .intro-expand, .intro-expand *),
+  :not(#preloader, #preloader *)::before,
+  :not(#preloader, #preloader *)::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
