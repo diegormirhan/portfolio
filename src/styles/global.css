@@ -70,6 +70,85 @@ html.is-intro {
   scrollbar-width: none;
 }
 
+/* ---------- Barra de rolagem própria (desktop) ----------
+ * A nativa some; o trilho fino à direita só aparece fora da abertura. Parado ele fica discreto;
+ * ao rolar o polegar acende com brilho; no hover o trilho engorda. */
+html.has-scrollbar {
+  scrollbar-width: none;
+}
+
+html.has-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+#scrollbar {
+  display: none;
+}
+
+.has-scrollbar #scrollbar {
+  position: fixed;
+  top: 8px;
+  right: 4px;
+  bottom: 8px;
+  z-index: 80;
+  display: block;
+  width: 10px;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: opacity 0.6s var(--ease-out), width 0.35s var(--ease-out), background-color 0.35s;
+}
+
+.has-scrollbar.is-intro #scrollbar,
+#scrollbar.is-empty {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#scrollbar:hover,
+#scrollbar.is-dragging {
+  width: 14px;
+  background: color-mix(in oklch, var(--fg) 6%, transparent);
+}
+
+.scrollbar__thumb {
+  position: absolute;
+  top: 0;
+  right: 2px;
+  width: 4px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--cerulean-bright), var(--cobalt-bright) 55%, var(--cobalt));
+  opacity: 0.45;
+  transform-origin: 50% 0;
+  will-change: transform;
+  transition:
+    width 0.35s var(--ease-out),
+    opacity 0.5s var(--ease-out),
+    box-shadow 0.5s var(--ease-out),
+    right 0.35s var(--ease-out);
+}
+
+#scrollbar.is-active .scrollbar__thumb {
+  opacity: 1;
+  box-shadow:
+    0 0 12px color-mix(in oklch, var(--cobalt-bright) 70%, transparent),
+    0 0 2px var(--cerulean-bright);
+}
+
+#scrollbar:hover .scrollbar__thumb,
+#scrollbar.is-dragging .scrollbar__thumb {
+  width: 8px;
+  right: 3px;
+  opacity: 1;
+  cursor: grab;
+  box-shadow:
+    0 0 16px color-mix(in oklch, var(--cobalt-bright) 80%, transparent),
+    0 0 3px var(--cerulean-bright);
+}
+
+#scrollbar.is-dragging .scrollbar__thumb {
+  cursor: grabbing;
+}
+
 html.lenis,
 html.lenis body {
   height: auto;

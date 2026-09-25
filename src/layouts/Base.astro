@@ -301,9 +301,13 @@ const socials = [
     <div id="curtain" aria-hidden="true" transition:persist></div>
     <canvas id="dev-bubble" aria-hidden="true" transition:persist></canvas>
 
+    <!-- Barra de rolagem própria (desktop): ver scripts/scrollbar.ts -->
+    <div id="scrollbar" aria-hidden="true" transition:persist><span class="scrollbar__thumb"></span></div>
+
     <script>
       import "../scripts/motion";
       import "../scripts/dev";
+      import "../scripts/scrollbar";
       // Three.js em chunk separado: o conteúdo e as animações não esperam a cena 3D
       import("../scripts/scene");
     </script>
