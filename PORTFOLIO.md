@@ -6,7 +6,7 @@ profile:
   name: Diego Mirhan
   email: mirhan.diego@gmail.com
   phone: "(12) 99141-0569"
-  site: https://diegomirhan.com
+  site: https://www.diegomirhan.com
   # Currículo por idioma (o site em inglês oferece a versão em inglês)
   resume:
     pt: /diego-mirhan-cv.pdf

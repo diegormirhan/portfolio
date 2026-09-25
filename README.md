@@ -13,7 +13,7 @@ A bilingual, static site with a cinematic intro, a real-time 3D scene and a hidd
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
 [![AWS Amplify](https://img.shields.io/badge/Hosted_on-AWS_Amplify-FF9900?logo=awsamplify&logoColor=white)](https://aws.amazon.com/amplify/)
 
-[Live site](https://diegomirhan.com) • [English version](https://diegomirhan.com/en/) • [Features](#features) • [Getting started](#getting-started) • [How it works](#how-it-works)
+[Live site](https://www.diegomirhan.com) • [English version](https://www.diegomirhan.com/en/) • [Features](#features) • [Getting started](#getting-started) • [How it works](#how-it-works)
 
 <img src="public/og/site-en.png" alt="Diego Mirhan, AI & Software Development" width="720" />
 
