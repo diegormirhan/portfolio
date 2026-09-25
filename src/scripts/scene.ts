@@ -25,8 +25,8 @@ import { RoundedBoxGeometry } from "three/examples/jsm/geometries/RoundedBoxGeom
 import { createFluid } from "./fluid";
 import { makeGargantua, makeMatmul, makeNabla } from "./scene-dev";
 import { makeAiChip, makeBoard, makeQuantum } from "./scene-hw";
+import { start2d } from "./scene2d";
 import {
-  reduceMotion,
   isSmall,
   finePointer,
   COBALT,
@@ -687,7 +687,7 @@ function init(canvas: HTMLCanvasElement) {
   // Fumaça do cursor: canvas próprio, acima do escurecimento do texto
   const smokeCanvas = document.querySelector<HTMLCanvasElement>("#smoke");
   const smokeRenderer =
-    !reduceMotion && finePointer && smokeCanvas
+    finePointer && smokeCanvas
       ? new THREE.WebGLRenderer({ canvas: smokeCanvas, antialias: false, alpha: true, premultipliedAlpha: true })
       : null;
   smokeRenderer?.setPixelRatio(Math.min(devicePixelRatio, 1.25)); // fumaça é macia: resolução menor basta
@@ -751,7 +751,6 @@ function init(canvas: HTMLCanvasElement) {
     target.y = detail.y ?? 0;
     target.scale = detail.scale ?? 1;
     target.dim = detail.dim ?? 1;
-    if (reduceMotion) snap();
   }
   addEventListener("scene:shape", (e) => applyShape((e as CustomEvent<ShapeDetail>).detail));
 
@@ -819,16 +818,14 @@ function init(canvas: HTMLCanvasElement) {
     const t = timer.getElapsed();
     const ease = 1 - Math.pow(0.001, dt); // aproximação exponencial independente de FPS
 
-    if (!reduceMotion) {
-      shared.uTime.value = t;
-      desired();
-      // Viagem suave: rápida no começo, desacelerando ao chegar (e reversível no meio)
-      const travel = 1 - Math.exp(-dt * 1.7);
-      camPos.lerp(desiredPos, travel);
-      look.lerp(desiredLook, travel);
-      state.scale += (target.scale - state.scale) * ease * 0.3;
-      state.dim += (target.dim - state.dim) * ease * 0.4;
-    }
+    shared.uTime.value = t;
+    desired();
+    // Viagem suave: rápida no começo, desacelerando ao chegar (e reversível no meio)
+    const travel = 1 - Math.exp(-dt * 1.7);
+    camPos.lerp(desiredPos, travel);
+    look.lerp(desiredLook, travel);
+    state.scale += (target.scale - state.scale) * ease * 0.3;
+    state.dim += (target.dim - state.dim) * ease * 0.4;
     // Só o objeto perto da câmera aparece: os outros encolhem até sumir e crescem ao se
     // aproximar (os vizinhos não ficam atrás do objeto atual, e cada um "surge" na viagem)
     const focus = camPos.z - baseZ;
@@ -837,7 +834,7 @@ function init(canvas: HTMLCanvasElement) {
       station.group.visible = near > 0.01;
       station.group.scale.setScalar(Math.max(near, 0.001) * (i === target.shape ? state.scale : 1));
       // Só anima o que aparece: as estações fora de vista não custam nada
-      if (station.group.visible && !reduceMotion) station.update?.(t);
+      if (station.group.visible) station.update?.(t);
     });
     // Batida do dev mode: a cena acende de leve e a câmera sente o impacto
     const pulse = devWindow.__devPulse;
@@ -852,7 +849,7 @@ function init(canvas: HTMLCanvasElement) {
     speedZoom += (Math.min(scrollSpeed * 0.25, 1) - speedZoom) * ease * 0.15;
     parallax.x += ((pointer.x - 0.5) * 2 - parallax.x) * ease * 0.3;
     parallax.y += ((pointer.y - 0.5) * 2 - parallax.y) * ease * 0.3;
-    const kick = reduceMotion ? 0 : PULSE.value * 0.12;
+    const kick = PULSE.value * 0.12;
     camera.position.set(camPos.x + parallax.x * 0.35, camPos.y + parallax.y * 0.25, camPos.z - speedZoom * 0.8 - kick);
     camera.lookAt(look);
 
@@ -924,9 +921,11 @@ if (canvas) {
   try {
     init(canvas);
   } catch (error) {
-    // Sem WebGL: o CSS mostra um gradiente estático no lugar
-    console.warn("[scene] WebGL indisponível", error);
+    // Sem WebGL (aceleração de hardware desligada): fundo animado em Canvas 2D no lugar
+    console.warn("[scene] WebGL indisponível, usando o fundo 2D", error);
     document.documentElement.classList.add("no-webgl");
+    const fallback = document.querySelector<HTMLCanvasElement>("#scene-2d");
+    if (fallback) start2d(fallback);
     (window as unknown as { __sceneReady: boolean }).__sceneReady = true;
     dispatchEvent(new Event("scene:ready"));
   }

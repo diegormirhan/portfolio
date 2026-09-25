@@ -15,7 +15,6 @@
  */
 import { lenis } from "./motion";
 
-const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const isSmall = matchMedia("(max-width: 767px)").matches;
 const BEAT = 5; // s entre batidas
 const SIGNAL = "255, 43, 58";
@@ -31,6 +30,16 @@ devWindow.__devPulse = { level: 0, age: 99 };
 let on = document.documentElement.classList.contains("dev");
 devWindow.__devOn = on;
 let muted = false;
+/** Volume escolhido no seletor (0-1), guardado na aba */
+let volume = (() => {
+  try {
+    const saved = Number(sessionStorage.getItem("volume"));
+    return sessionStorage.getItem("volume") === null || Number.isNaN(saved) ? 1 : saved;
+  } catch {
+    return 1;
+  }
+})();
+const level = () => (muted ? 0 : volume);
 let busy = false;
 
 /* ---------- Áudio ---------- */
@@ -103,7 +112,7 @@ function startAudio() {
   if (!a) return;
   void a.ctx.resume();
   a.music.play().catch(() => {});
-  fadeMaster(muted ? 0 : 1, 2.5);
+  fadeMaster(level(), 2.5);
 }
 
 function stopAudio() {
@@ -203,7 +212,7 @@ function drawLayer(dt: number, age: number, level: number) {
   const bandFade = 1 - sweep;
 
   for (const item of layer.items) {
-    if (!reduceMotion) item.y -= item.vy * dt;
+    item.y -= item.vy * dt;
     if (item.y < -60) Object.assign(item, spawn());
     let x = item.x;
     let alpha = item.alpha * (1 + level * 0.9);
@@ -321,7 +330,7 @@ function newRidge(beatTime: number) {
 function stepSand(dt: number, time: number, age: number) {
   if (!sand.ready || sand.width !== layer.width || sand.height !== layer.height) setupSand();
   const beatIndex = age < 99 ? Math.floor(time / BEAT) : -1;
-  if (beatIndex >= 0 && beatIndex !== ridgeBeat && age < 0.2 && !reduceMotion) {
+  if (beatIndex >= 0 && beatIndex !== ridgeBeat && age < 0.2) {
     ridgeBeat = beatIndex;
     newRidge(time - age);
   }
@@ -481,7 +490,7 @@ function wobblyCircle(ctx: CanvasRenderingContext2D, x: number, y: number, r: nu
 function bubble(x: number, y: number, toDev: boolean, swap: () => void) {
   const canvas = document.getElementById("dev-bubble") as HTMLCanvasElement | null;
   const ctx = canvas?.getContext("2d");
-  if (!canvas || !ctx || reduceMotion) {
+  if (!canvas || !ctx) {
     swap();
     return Promise.resolve();
   }
@@ -587,11 +596,27 @@ async function toggle(button: HTMLElement) {
 
 function setMuted(value: boolean) {
   muted = value;
-  if (on) fadeMaster(muted ? 0 : 1, 0.4);
+  if (on) fadeMaster(level(), 0.4);
+  syncButtons();
+}
+
+/** Seletor de volume: ajusta na hora (rampa curta, sem estalo); arrastar para cima desmuta. */
+function setVolume(value: number) {
+  volume = value;
+  try {
+    sessionStorage.setItem("volume", String(value));
+  } catch {}
+  if (muted && value > 0) muted = false;
+  if (on) fadeMaster(level(), 0.08);
   syncButtons();
 }
 
 function syncButtons() {
+  document.querySelectorAll<HTMLInputElement>("[data-dev-volume]").forEach((input) => {
+    const shown = muted ? 0 : Math.round(volume * 100);
+    input.value = String(shown);
+    input.style.setProperty("--v", `${shown}%`);
+  });
   document.querySelectorAll<HTMLElement>("[data-dev-toggle]").forEach((b) => b.setAttribute("aria-pressed", String(on)));
   document.querySelectorAll<HTMLElement>("[data-dev-sound]").forEach((b) => {
     b.setAttribute("aria-pressed", String(muted));
@@ -621,6 +646,9 @@ document.addEventListener("astro:page-load", () => {
   document
     .querySelectorAll<HTMLElement>("[data-dev-sound]")
     .forEach((b) => b.addEventListener("click", () => setMuted(!muted)));
+  document
+    .querySelectorAll<HTMLInputElement>("[data-dev-volume]")
+    .forEach((input) => input.addEventListener("input", () => setVolume(Number(input.value) / 100)));
   syncButtons();
 });
 

@@ -28,13 +28,12 @@ import Lenis from "lenis";
 
 gsap.registerPlugin(ScrollTrigger, SplitText);
 
-const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const finePointer = matchMedia("(hover: hover) and (pointer: fine)").matches;
 const EASE = "expo.out";
 
 /* ---------- Rolagem suave ---------- */
 
-export const lenis = reduceMotion ? null : new Lenis({ lerp: 0.1, wheelMultiplier: 0.9 });
+export const lenis = new Lenis({ lerp: 0.1, wheelMultiplier: 0.9 });
 if (lenis) {
   lenis.on("scroll", ScrollTrigger.update);
   gsap.ticker.add((time) => lenis.raf(time * 1000));
@@ -491,7 +490,7 @@ const curtain = () => document.getElementById("curtain");
 document.addEventListener("astro:before-preparation", (event) => {
   closeMenu(true);
   const el = curtain();
-  if (!el || reduceMotion) return;
+  if (!el) return;
   const load = event.loader;
   event.loader = async () => {
     await Promise.all([
@@ -544,13 +543,13 @@ function setupMenu() {
     .set(panel, { visibility: "visible" })
     .fromTo(panel, { clipPath: "circle(0% at calc(100% - 3rem) 2.5rem)" }, {
       clipPath: "circle(150% at calc(100% - 3rem) 2.5rem)",
-      duration: reduceMotion ? 0.01 : 0.9,
+      duration: 0.9,
       ease: "expo.inOut",
     })
     .fromTo(
       panel.querySelectorAll("[data-menu-item]"),
       { yPercent: 110 },
-      { yPercent: 0, duration: reduceMotion ? 0.01 : 0.9, stagger: 0.06, ease: EASE },
+      { yPercent: 0, duration: 0.9, stagger: 0.06, ease: EASE },
       "-=0.45",
     )
     .fromTo(panel.querySelectorAll("[data-menu-fade]"), { opacity: 0 }, { opacity: 1, duration: 0.5 }, "-=0.6");
@@ -730,8 +729,6 @@ function setupPage(intro: Promise<void>) {
     const initial = visible ?? sceneSections[0];
     if (initial) setShape(initial);
 
-    if (reduceMotion) return;
-
     // Paralaxe
     document.querySelectorAll<HTMLElement>("[data-parallax]").forEach((el) => {
       const amount = Number(el.dataset.parallax || 1);
@@ -840,7 +837,7 @@ document.addEventListener("astro:page-load", () => {
   } else {
     const el = curtain();
     intro = new Promise<void>((resolve) => {
-      if (!el || reduceMotion) return resolve();
+      if (!el) return resolve();
       gsap.to(el, { clipPath: "inset(0 0 100% 0)", duration: 0.8, ease: "expo.inOut", delay: 0.05, onComplete: resolve });
     });
   }

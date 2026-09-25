@@ -5,7 +5,6 @@
 import * as THREE from "three";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
 
-export const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 export const isSmall = matchMedia("(max-width: 767px)").matches;
 export const finePointer = matchMedia("(hover: hover) and (pointer: fine)").matches;
 
