@@ -4,7 +4,10 @@
 
 profile:
   name: Diego Mirhan
-  email: mirhan.diego@gmail.com
+  # Email por idioma
+  email:
+    pt: contato@diegomirhan.com
+    en: contact@diegomirhan.com
   phone: "(12) 99141-0569"
   site: https://www.diegomirhan.com
   # Currículo por idioma (o site em inglês oferece a versão em inglês)

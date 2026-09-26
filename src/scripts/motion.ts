@@ -191,7 +191,7 @@ async function askToEnter(root: HTMLElement) {
   root.append(morph);
   gsap.set(bar, { autoAlpha: 0 });
 
-  await gsap
+  const tl = gsap
     .timeline()
     // Os dígitos sobem e são cortados; o nome some
     .to(root.querySelector(".preloader__count"), { clipPath: "inset(0 0 100% 0)", yPercent: -18, duration: 0.7, ease: "expo.in" }, 0)
@@ -216,12 +216,16 @@ async function askToEnter(root: HTMLElement) {
     .set(panel, { autoAlpha: 1 }, 1.35)
     .set(morph, { autoAlpha: 0 }, 1.35)
     .from(root.querySelector(".preloader__halo"), { autoAlpha: 0, duration: 0.8, ease: "power2.out" }, 1.35)
-    .from(silent, { autoAlpha: 0, y: 12, duration: 0.6, ease: EASE }, 1.5)
-    .then();
-  morph.remove();
+    .from(silent, { autoAlpha: 0, y: 12, duration: 0.6, ease: EASE }, 1.5);
 
+  // Os cliques valem assim que o botão aparece (1.35 s), não só no fim da animação do "sem som"
   return new Promise<{ sound: boolean; rect: DOMRect; hovered: boolean }>((resolve) => {
+    let picked = false;
     const pick = (sound: boolean) => {
+      if (picked) return;
+      picked = true;
+      tl.progress(1);
+      morph.remove();
       const rect = go.getBoundingClientRect();
       const hovered = go.matches(":hover");
       gsap.to(silent, { autoAlpha: 0, duration: 0.25, ease: "power1.in" });
@@ -229,6 +233,7 @@ async function askToEnter(root: HTMLElement) {
       resolve({ sound, rect, hovered });
     };
     go.addEventListener("click", () => pick(true), { once: true });
+    morph.addEventListener("click", () => pick(true), { once: true }); // a pílula ainda se formando
     silent.addEventListener("click", () => pick(false), { once: true });
   });
 }
@@ -705,7 +710,7 @@ function setupPage(intro: Promise<void>) {
       const split = SplitText.create(el, { type: "words" });
       gsap.fromTo(
         split.words,
-        { opacity: 0.16 },
+        { opacity: 0.5 },
         {
           opacity: 1,
           stagger: 0.1,

@@ -48,7 +48,7 @@ type DevNotes = {
 type Portfolio = {
   profile: {
     name: string;
-    email: string;
+    email: Record<Lang, string>;
     site: string;
     resume: Record<Lang, string>;
     github: string;

@@ -745,8 +745,13 @@ function init(canvas: HTMLCanvasElement) {
     state.dim = target.dim;
   }
 
+  // Estação de onde a câmera saiu: só ela e o destino aparecem na viagem (as que ficam no
+  // meio do caminho em z, como o "</>" entre a stack e o computador quântico, não surgem)
+  let from = target.shape;
   function applyShape(detail: ShapeDetail) {
-    target.shape = THREE.MathUtils.clamp(Math.round(detail.shape), 0, stations.length - 1);
+    const next = THREE.MathUtils.clamp(Math.round(detail.shape), 0, stations.length - 1);
+    if (next !== target.shape) from = target.shape;
+    target.shape = next;
     target.x = detail.x ?? 0;
     target.y = detail.y ?? 0;
     target.scale = detail.scale ?? 1;
@@ -830,7 +835,7 @@ function init(canvas: HTMLCanvasElement) {
     // aproximar (os vizinhos não ficam atrás do objeto atual, e cada um "surge" na viagem)
     const focus = camPos.z - baseZ;
     stations.forEach((station, i) => {
-      const near = 1 - THREE.MathUtils.smoothstep(Math.abs(station.group.position.z - focus), 3, 11);
+      const near = i === target.shape || i === from ? 1 - THREE.MathUtils.smoothstep(Math.abs(station.group.position.z - focus), 3, 11) : 0;
       station.group.visible = near > 0.01;
       station.group.scale.setScalar(Math.max(near, 0.001) * (i === target.shape ? state.scale : 1));
       // Só anima o que aparece: as estações fora de vista não custam nada
@@ -857,7 +862,8 @@ function init(canvas: HTMLCanvasElement) {
 
     // Enquanto o preloader cobre a tela inteira, só o primeiro frame é desenhado (compila e
     // dispara scene:ready): em GPU fraca, renderizar por baixo travava o contador e o botão
-    const covered = ready && document.getElementById("preloader") !== null;
+    // Páginas de leitura (projeto, artigo) escondem a cena e a fumaça: nada a desenhar
+    const covered = ready && (document.getElementById("preloader") !== null || document.body.classList.contains("is-reading"));
     if (!covered) renderer.render(scene, camera);
 
     if (fluid && !covered) {

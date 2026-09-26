@@ -39,7 +39,9 @@ let volume = (() => {
     return 1;
   }
 })();
-const level = () => (muted ? 0 : volume);
+// Páginas de leitura (projeto, artigo): sem trilha nem pulsar, como a cena 3D some nelas
+const reading = () => document.body.classList.contains("is-reading");
+const level = () => (muted || reading() ? 0 : volume);
 let busy = false;
 
 /* ---------- Áudio ---------- */
@@ -73,12 +75,12 @@ function setupAudio(): AudioRig | null {
     filter.type = "lowpass";
     filter.frequency.value = 900;
     const musicGain = ctx.createGain();
-    musicGain.gain.value = 0.45;
+    musicGain.gain.value = 0.36;
     ctx.createMediaElementSource(music).connect(filter).connect(musicGain).connect(master);
 
     // Pulso: reforço no subgrave para soar como um estrondo, não um clique
     const pulseBus = ctx.createGain();
-    pulseBus.gain.value = 0.55;
+    pulseBus.gain.value = 0.44;
     const shelf = ctx.createBiquadFilter();
     shelf.type = "lowshelf";
     shelf.frequency.value = 80;
@@ -439,7 +441,7 @@ function loop(time: number) {
   devWindow.__devPulse = { level, age: on ? age : 99 };
 
   drawLayer(dt, on ? age : 99, level);
-  if (on) {
+  if (on && !reading()) {
     stepSand(dt, t, age);
     drawSand();
   }
@@ -453,7 +455,7 @@ function loop(time: number) {
     lastScroll = scrollY;
     const at = audio.ctx.currentTime;
     audio.filter.frequency.setTargetAtTime(700 + 5200 * depth ** 1.2 + 2200 * speed, at, 0.4);
-    audio.musicGain.gain.setTargetAtTime(0.42 + 0.25 * depth + 0.1 * speed, at, 0.6);
+    audio.musicGain.gain.setTargetAtTime(0.336 + 0.2 * depth + 0.08 * speed, at, 0.6);
   }
 
   if (on) requestAnimationFrame(loop);
@@ -650,6 +652,8 @@ document.addEventListener("astro:page-load", () => {
     .querySelectorAll<HTMLInputElement>("[data-dev-volume]")
     .forEach((input) => input.addEventListener("input", () => setVolume(Number(input.value) / 100)));
   syncButtons();
+  // Entrar/sair de uma página de leitura: o som some ou volta com suavidade
+  if (on) fadeMaster(level(), 0.6);
 });
 
 // Aba em segundo plano: pausa a trilha; ao voltar, retoma

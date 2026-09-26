@@ -22,9 +22,33 @@ const articles = (await articlesFor(lang)).slice(0, 3);
       <h1 class="hero__name display display--xl" data-split="intro">Diego<br />Mirhan</h1>
       <div class="hero__foot">
         <p class="hero__role display display--sm" data-split="intro" data-delay="0.25">{c.role}</p>
-        <a href={pathFor(lang, "projects")} class="pill pill--solid" data-reveal data-magnetic>
-          {t.selected} <span aria-hidden="true">→</span>
-        </a>
+        <div class="hero__cta">
+          <div class="hero__buttons">
+            <a href={pathFor(lang, "projects")} class="pill pill--solid" data-reveal data-magnetic>
+              {t.selected} <span aria-hidden="true">→</span>
+            </a>
+            <a href={profile.resume[lang]} download class="pill" data-reveal data-magnetic>
+              {t.resume} <span aria-hidden="true">↓</span>
+            </a>
+          </div>
+          <!-- Redes em destaque logo no início, sem ocupar o header -->
+          <ul class="hero__socials display" data-reveal>
+            {
+              [
+                { label: "GitHub", href: profile.github },
+                { label: "LinkedIn", href: profile.linkedin },
+                { label: "Medium", href: profile.medium },
+              ].map((s) => (
+                <li>
+                  <a href={s.href} target="_blank" rel="noreferrer">
+                    <span class="u-link">{s.label}</span>
+                    <span class="hero__arrow" aria-hidden="true">↗</span>
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
       </div>
     </div>
     <DevNote text={devNotes.hero} class="dev-note--hero" />
@@ -57,7 +81,7 @@ const articles = (await articlesFor(lang)).slice(0, 3);
     </ul>
   </section>
 
-  <section class="section dev-host" data-scene="3" data-scene-x="3.1" data-scene-y="0.2" data-scene-scale="0.66" data-scene-dim="0.38">
+  <section class="section dev-host" data-scene="3" data-scene-x="3.6" data-scene-y="1.1" data-scene-scale="0.56" data-scene-dim="0.38">
     <DevNote text={devNotes.selected} class="dev-note--top" />
     <div class="wrap">
       <h2 class="display display--lg section-title" data-split="chars">{t.selected}</h2>
@@ -93,11 +117,11 @@ const articles = (await articlesFor(lang)).slice(0, 3);
     )
   }
 
-  <section class="section cta dev-host" data-scene="0" data-scene-scale="1.15" data-scene-dim="0.6">
+  <section class="section cta dev-host" data-scene="0" data-scene-scale="1.15" data-scene-dim="0.35">
     <div class="wrap">
       <h2 class="display display--xl" data-split="chars">{t.contactTitle}</h2>
-      <a href={`mailto:${profile.email}`} class="cta__mail" data-reveal data-magnetic="0.15">
-        {profile.email}
+      <a href={`mailto:${profile.email[lang]}`} class="cta__mail" data-reveal data-magnetic="0.15">
+        {profile.email[lang]}
       </a>
     </div>
     <DevNote text={devNotes.cta} />
@@ -124,6 +148,57 @@ const articles = (await articlesFor(lang)).slice(0, 3);
     justify-content: space-between;
     gap: 1.5rem;
     margin-top: clamp(1.25rem, 3vh, 2rem);
+  }
+
+  /* Coluna à direita: botões em cima, redes embaixo */
+  .hero__cta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.25rem;
+  }
+
+  .hero__buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .hero__socials {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.75rem;
+    padding: 0;
+    list-style: none;
+    font-size: clamp(1.75rem, 3vw, 2.75rem);
+    line-height: 1;
+  }
+
+  .hero__socials a {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.2em;
+    padding-block: 0.15em;
+  }
+
+  .hero__socials .u-link {
+    background-size: 0 2px;
+  }
+
+  .hero__socials a:is(:hover, :focus-visible) .u-link {
+    background-size: 100% 2px;
+  }
+
+  /* A seta acende na cor de destaque e "sai" na diagonal no hover */
+  .hero__arrow {
+    display: inline-block;
+    color: var(--cerulean-bright);
+    font-size: 0.8em;
+    transition: transform 0.45s var(--ease-out);
+  }
+
+  .hero__socials a:is(:hover, :focus-visible) .hero__arrow {
+    transform: translate(0.12em, -0.12em);
   }
 
   .hero__role {

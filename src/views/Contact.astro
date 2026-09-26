@@ -21,7 +21,7 @@ const channels = [
   <section class="wrap page-top dev-host contact" data-intro data-scene="0" data-scene-x="1.9" data-scene-scale="0.95">
     <h1 class="display display--xl" data-split="intro">{t.contactTitle}</h1>
     <DevNote text={devNotes.page} />
-    <a href={`mailto:${profile.email}`} class="mail" data-reveal data-magnetic="0.12">{profile.email}</a>
+    <a href={`mailto:${profile.email[lang]}`} class="mail" data-reveal data-magnetic="0.12">{profile.email[lang]}</a>
     <div class="actions" data-reveal>
       <a href={profile.resume[lang]} download class="pill pill--solid" data-magnetic>{t.resume} ↓</a>
     </div>

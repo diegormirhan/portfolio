@@ -8,6 +8,8 @@ import { content, pathFor, profile, ui, type Lang, type PageKey } from "../lib/c
 
 interface Props {
   lang: Lang;
+  /** Página de leitura (projeto, artigo): sem cena 3D nem fumaça atrás do texto */
+  reading?: boolean;
   page: PageKey;
   title?: string;
   description?: string;
@@ -25,7 +27,7 @@ interface Props {
   schema?: Record<string, unknown>[];
 }
 
-const { lang, page, title, description, alternate, translated = true, image, imageAlt, published, noindex, schema = [] } =
+const { lang, page, title, description, alternate, translated = true, image, imageAlt, published, noindex, schema = [], reading = false } =
   Astro.props;
 const other: Lang = lang === "pt" ? "en" : "pt";
 const t = ui[lang];
@@ -52,7 +54,7 @@ const person = {
   image: `${site.origin}/icon-512.png`,
   jobTitle: c.role,
   description: c.summary,
-  email: `mailto:${profile.email}`,
+  email: `mailto:${profile.email[lang]}`,
   sameAs: [profile.github, profile.linkedin, profile.medium],
   knowsAbout: c.skillGroups.flatMap((group) => group.items).slice(0, 24),
   knowsLanguage: ["pt-BR", "en", "fr"],
@@ -177,7 +179,7 @@ const socials = [
     />
     <ClientRouter fallback="swap" />
   </head>
-  <body>
+  <body class:list={[{ "is-reading": reading }]}>
     <a class="skip" href="#main">{t.skip}</a>
 
     <canvas id="scene" aria-hidden="true" transition:persist></canvas>
@@ -221,7 +223,7 @@ const socials = [
 
     <header class="header">
       <a href={pathFor(lang, "home")} class="header__brand display" aria-label={profile.name}>
-        Diego<span class="accent">.</span>
+        {[..."Diego"].map((ch, i) => <span class="brand__char" style={`--i:${i}`}><span>{ch}</span></span>)}<span class="accent">.</span>
       </a>
       <!-- Só aparece com o menu aberto -->
       <button class="lite mono" type="button" data-lite-toggle aria-pressed="false">
@@ -285,7 +287,7 @@ const socials = [
         }
       </ul>
       <div class="menu__foot mono" data-menu-fade>
-        <a href={`mailto:${profile.email}`} class="u-link">{profile.email}</a>
+        <a href={`mailto:${profile.email[lang]}`} class="u-link">{profile.email[lang]}</a>
         <ul class="menu__socials">
           {
             socials.map((s) => (
@@ -307,7 +309,7 @@ const socials = [
 
     <footer class="footer wrap">
       <div class="footer__row mono">
-        <a href={`mailto:${profile.email}`} class="u-link">{profile.email}</a>
+        <a href={`mailto:${profile.email[lang]}`} class="u-link">{profile.email[lang]}</a>
         <ul class="footer__socials">
           {
             socials.map((s) => (
@@ -354,6 +356,11 @@ const socials = [
     height: 100lvh;
     z-index: -1;
     pointer-events: none;
+    transition: opacity 0.6s ease;
+  }
+
+  .is-reading :is(#scene, #scene-2d, #smoke) {
+    opacity: 0;
   }
 
   /* Luz ambiente atrás da cena; também é o fundo quando não há WebGL */
@@ -451,6 +458,37 @@ const socials = [
     font-size: 1.75rem;
     line-height: 1;
     mix-blend-mode: difference;
+  }
+
+  /* Hover no "Diego.": cada letra rola para cima e dá lugar a uma cópia (text-shadow), em
+     onda; o ponto pula e acende em branco */
+  /* Recorte justo na altura das maiúsculas (a caixa da linha é mais alta e mostraria a cópia) */
+  .brand__char {
+    display: inline-block;
+    clip-path: inset(0.11em 0 0.12em 0);
+    vertical-align: top;
+  }
+
+  .brand__char > span {
+    display: inline-block;
+    text-shadow: 0 1.2em currentColor;
+    transition: transform 0.6s var(--ease-out) calc(var(--i) * 40ms);
+  }
+
+  .header__brand .accent {
+    display: inline-block;
+    transition:
+      transform 0.5s cubic-bezier(0.34, 1.8, 0.64, 1) 0.2s,
+      color 0.3s ease 0.2s;
+  }
+
+  .header__brand:is(:hover, :focus-visible) .brand__char > span {
+    transform: translateY(-1.2em);
+  }
+
+  .header__brand:is(:hover, :focus-visible) .accent {
+    transform: translateY(-0.22em) scale(1.35);
+    color: var(--fg);
   }
 
   .header__actions {
@@ -759,6 +797,11 @@ const socials = [
 
   .dev #dev-sand {
     opacity: 1;
+  }
+
+  /* Páginas de leitura: sem a explosão de areia */
+  .dev .is-reading #dev-sand {
+    opacity: 0;
   }
 
   #dev-bubble {
