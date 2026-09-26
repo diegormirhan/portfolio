@@ -164,6 +164,14 @@ const articles = (await articlesFor(lang)).slice(0, 3);
     gap: 0.75rem;
   }
 
+  /* "Baixar currículo": fundo escuro fosco e borda clara, legível sobre a cena 3D */
+  .hero__buttons .pill:not(.pill--solid, :hover) {
+    background: color-mix(in oklch, var(--bg-deep) 72%, transparent);
+    border-color: color-mix(in oklch, var(--fg) 45%, transparent);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
   .hero__socials {
     display: flex;
     flex-wrap: wrap;
