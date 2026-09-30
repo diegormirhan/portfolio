@@ -1,11 +1,10 @@
 /*
- * sitemap.xml gerado no build: todas as páginas nos dois idiomas. Páginas com tradução levam
- * os pares hreflang (xhtml:link); artigos existem num idioma só.
+ * sitemap.xml gerado no build: todas as páginas nos dois idiomas. Todas têm tradução e levam
+ * os pares hreflang (xhtml:link). O blog fica em blog.diegomirhan.com, com sitemap próprio.
  */
 import type { APIRoute } from "astro";
 
 import { langs, pathFor, projectPath, projects, type Lang, type PageKey } from "../lib/content";
-import { articlePath, articlesFor } from "../lib/data";
 
 type Entry = { loc: string; alternates?: Record<Lang, string>; lastmod?: Date | null; priority: number };
 
@@ -22,14 +21,10 @@ export const GET: APIRoute = async ({ site }) => {
     ["home", 1],
     ["projects", 0.9],
     ["experience", 0.8],
-    ["blog", 0.8],
     ["contact", 0.6],
   ];
   for (const [page, priority] of pages) pair((lang) => pathFor(lang, page), priority);
   for (const project of projects("pt")) pair((lang) => projectPath(lang, project.slug), 0.8);
-  for (const lang of langs)
-    for (const article of await articlesFor(lang))
-      entries.push({ loc: url(articlePath(lang, article.slug)), lastmod: article.date, priority: 0.7 });
 
   const today = new Date().toISOString().slice(0, 10);
   const body = entries

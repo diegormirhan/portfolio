@@ -4,7 +4,7 @@ import DevNote from "../components/DevNote.astro";
 import LinkRows from "../components/LinkRows.astro";
 import ProjectRows from "../components/ProjectRows.astro";
 import { content, devNotes, pathFor, profile, projects, ui, type Lang } from "../lib/content";
-import { articlePath, articlesFor, formatDate } from "../lib/data";
+import { formatDate, getArticles } from "../lib/data";
 
 interface Props {
   lang: Lang;
@@ -13,7 +13,8 @@ interface Props {
 const { lang } = Astro.props;
 const c = content(lang);
 const t = ui[lang];
-const articles = (await articlesFor(lang)).slice(0, 3);
+// o blog é em português: as duas versões do site mostram os mesmos posts
+const articles = (await getArticles()).slice(0, 3);
 ---
 
 <Base lang={lang} page="home">
@@ -102,7 +103,7 @@ const articles = (await articlesFor(lang)).slice(0, 3);
           </h2>
           <LinkRows
             items={articles.map((a) => ({
-              href: articlePath(lang, a.slug),
+              href: a.link,
               external: false,
               title: a.title,
               meta: formatDate(a.date, lang),

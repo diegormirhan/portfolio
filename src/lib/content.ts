@@ -75,16 +75,19 @@ export type Project = ProjectMeta & ProjectText;
 export const projects = (lang: Lang): Project[] =>
   data.projects.map((meta) => ({ ...meta, ...data[lang].projects[meta.slug]! }));
 
+/** O blog fica no Ghost, fora deste site: o item "Blog" do menu leva para lá. */
+export const blogUrl = "https://blog.diegomirhan.com/";
+
 export type PageKey = "home" | "projects" | "blog" | "experience" | "contact";
 
 // Sempre com barra no fim: é o endereço servido (pasta/index.html) e o canônico. Links sem a
 // barra custariam um redirecionamento e dividiriam o endereço da página para os buscadores.
 const paths: Record<Lang, Record<PageKey, string>> = {
-  pt: { home: "/", projects: "/projetos/", blog: "/blog/", experience: "/experiencia/", contact: "/contato/" },
+  pt: { home: "/", projects: "/projetos/", blog: blogUrl, experience: "/experiencia/", contact: "/contato/" },
   en: {
     home: "/en/",
     projects: "/en/projects/",
-    blog: "/en/blog/",
+    blog: blogUrl,
     experience: "/en/experience/",
     contact: "/en/contact/",
   },
@@ -122,16 +125,11 @@ export const ui = {
     demo: "Demo",
     next: "Próximo projeto",
     minRead: "min de leitura",
-    readOnMedium: "Ler o original no Medium",
-    nextArticle: "Próximo artigo",
-    noArticles: "Os artigos não carregaram agora. Leia direto no",
-    otherLangArticles: "Ainda não há artigos em português. Leia os artigos em inglês",
     fullDocs: "Documentação completa no GitHub",
     rights: "Todos os direitos reservados.",
     backToTop: "Voltar ao topo",
     pageDesc: {
       projects: "Projetos de Diego Mirhan em IA local, RAG, visão computacional, dados de satélite e aplicações desktop e web, com código aberto no GitHub.",
-      blog: "Artigos de Diego Mirhan sobre inteligência artificial, RAG, computação quântica e engenharia de software.",
       experience: "Experiência, formação e stack de Diego Mirhan: IA, machine learning, engenharia de dados e desenvolvimento full-stack.",
       contact: "Fale com Diego Mirhan sobre IA, desenvolvimento de software e oportunidades. E-mail, LinkedIn, GitHub e currículo.",
     },
@@ -164,16 +162,11 @@ export const ui = {
     demo: "Demo",
     next: "Next project",
     minRead: "min read",
-    readOnMedium: "Read the original on Medium",
-    nextArticle: "Next article",
-    noArticles: "The articles didn't load right now. Read them on",
-    otherLangArticles: "No articles in English yet. Read the ones in Portuguese",
     fullDocs: "Full documentation on GitHub",
     rights: "All rights reserved.",
     backToTop: "Back to top",
     pageDesc: {
       projects: "Projects by Diego Mirhan in local AI, RAG, computer vision, satellite data and desktop and web apps, open source on GitHub.",
-      blog: "Articles by Diego Mirhan on artificial intelligence, RAG, quantum computing and software engineering.",
       experience: "Diego Mirhan's experience, education and stack: AI, machine learning, data engineering and full-stack development.",
       contact: "Talk to Diego Mirhan about AI, software development and opportunities. Email, LinkedIn, GitHub and resume.",
     },

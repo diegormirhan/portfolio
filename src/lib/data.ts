@@ -3,7 +3,7 @@
  * o site sai sem a lista, mas o build nunca quebra por causa da rede.
  * Promessas memorizadas: várias páginas pedem o mesmo dado e ele é buscado uma vez só.
  */
-import { pathFor, profile, type Lang } from "./content";
+import { blogUrl, profile, type Lang } from "./content";
 
 const memo = <T>(fn: () => Promise<T>) => {
   let cached: Promise<T> | undefined;
@@ -64,112 +64,43 @@ export const getRepos = memo(async (): Promise<Repo[]> => {
   }
 });
 
-/* ---------- Medium ---------- */
+/* ---------- Blog (Ghost) ---------- */
 
-export type Article = {
-  id: string;
-  /** Último trecho da URL do Medium, sem o id final: vira a URL da página no site */
-  slug: string;
-  title: string;
-  link: string;
-  /** Conteúdo completo, já limpo (ver cleanArticle) */
-  html: string;
-  date: Date | null;
-  thumbnail: string | null;
-  minutes: number;
-  lang: Lang;
-};
+export type Article = { id: string; title: string; link: string; date: Date | null; thumbnail: string | null };
 
-type FeedItem = { guid?: string; title?: string; link?: string; pubDate?: string; thumbnail?: string; content?: string; description?: string };
+const decode = (s: string) =>
+  s
+    .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, "$1")
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .trim();
+const tag = (xml: string, name: string) => decode(xml.match(new RegExp(`<${name}[^>]*>([\\s\\S]*?)</${name}>`))?.[1] ?? "");
 
-const stripHtml = (html: string) =>
-  html.replace(/<[^>]*>/g, " ").replace(/&[a-z#0-9]+;/gi, " ").replace(/\s+/g, " ").trim();
-
-const PT = new Set(
-  "de da do das dos que não nao para com uma um os as em no na nos nas por mais como é são sao ao seu sua isso esse essa este esta também tambem sobre entre quando você voce".split(" "),
-);
-const EN = new Set(
-  "the of and to in is are for with that this it on as be by from an or not how what why you your can will we our their its into about when than".split(" "),
-);
-
-/*
- * O HTML vem do feed do próprio Medium, mas passa por limpeza antes de ir para a página:
- * sai o pixel de estatística, qualquer <script>/<style>, atributos on* e links javascript:;
- * o título repetido no topo também sai (a página já tem o título grande).
- */
-function cleanArticle(html: string, title: string) {
-  return html
-    .replace(/<img[^>]+medium\.com\/_\/stat[^>]*>/gi, "")
-    .replace(/<(script|style)[\s\S]*?<\/\1>/gi, "")
-    .replace(/\son\w+="[^"]*"/gi, "")
-    .replace(/href="javascript:[^"]*"/gi, 'href="#"')
-    .replace(/^\s*<h[1-4]>([\s\S]*?)<\/h[1-4]>/i, (m, heading: string) =>
-      stripHtml(heading).toLowerCase().startsWith(title.toLowerCase().slice(0, 20)) ? "" : m,
-    )
-    .replace(/<a /g, '<a target="_blank" rel="noreferrer" ')
-    .replace(/<img /g, '<img loading="lazy" decoding="async" ')
-    .replace(/<iframe /g, '<iframe loading="lazy" ');
-}
-
-const slugFrom = (link: string) => {
-  const last = decodeURIComponent(new URL(link).pathname.split("/").filter(Boolean).pop() ?? "");
-  // "titulo-do-post-7088ebd132a1": tira o id hexadecimal do fim e os acentos
-  return last
-    .replace(/-[0-9a-f]{8,}$/, "")
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9-]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-};
-
-// O Medium não informa o idioma do post: inferimos pela frequência de stopwords.
-export function detectLang(text: string): Lang {
-  let pt = /[ãõç]/i.test(text) ? 2 : 0;
-  let en = 0;
-  for (const word of text.toLowerCase().split(/[^\p{L}]+/u)) {
-    if (PT.has(word)) pt++;
-    else if (EN.has(word)) en++;
-  }
-  return en > pt ? "en" : "pt";
-}
-
+// Posts do blog (blog.diegomirhan.com), mais recentes primeiro, lidos do RSS público do Ghost no build.
+// Os links vão direto para o post no blog: o portfolio não tem mais páginas de artigo.
 export const getArticles = memo(async (): Promise<Article[]> => {
   try {
-    // O rss2json guarda cada URL de feed em cache por muito tempo; um parâmetro que muda a cada
-    // 10 min força uma leitura nova, então posts recém-publicados entram no próximo build.
-    const bucket = Math.floor(Date.now() / 600_000);
-    const feed = encodeURIComponent(`https://medium.com/feed/${profile.mediumUser}?v=${bucket}`);
-    const data = await getJson<{ status: string; items?: FeedItem[] }>(
-      `https://api.rss2json.com/v1/api.json?rss_url=${feed}`,
-    );
-    if (data.status !== "ok" || !data.items) throw new Error("feed indisponível");
-    return data.items.map((item, index) => {
-      const html = item.content ?? item.description ?? "";
-      const text = stripHtml(html);
-      const date = item.pubDate ? new Date(item.pubDate.replace(" ", "T")) : null;
-      const link = (item.link ?? profile.medium).split("?")[0]!;
+    const res = await fetch(`${blogUrl}rss/`, { headers: { "User-Agent": "diegomirhan.com build" } });
+    if (!res.ok) throw new Error(`rss -> ${res.status}`);
+    const xml = await res.text();
+    return [...xml.matchAll(/<item>([\s\S]*?)<\/item>/g)].map(([, item], index) => {
+      const date = new Date(tag(item!, "pubDate"));
       return {
-        id: item.guid ?? item.link ?? String(index),
-        slug: slugFrom(link) || `artigo-${index}`,
-        title: item.title ?? "",
-        link,
-        html: cleanArticle(html, item.title ?? ""),
-        date: date && !Number.isNaN(date.getTime()) ? date : null,
-        thumbnail: item.thumbnail || html.match(/<img[^>]+src="([^"]+)"/i)?.[1] || null,
-        minutes: Math.max(1, Math.round(text.split(" ").length / 200)),
-        lang: detectLang(`${item.title ?? ""} ${text.slice(0, 1500)}`),
+        id: tag(item!, "guid") || String(index),
+        title: tag(item!, "title"),
+        link: tag(item!, "link"),
+        date: Number.isNaN(date.getTime()) ? null : date,
+        thumbnail: item!.match(/<media:content[^>]+url="([^"]+)"/)?.[1] ?? null,
       };
     });
   } catch (error) {
-    console.warn("[data] Medium indisponível:", error);
+    console.warn("[data] blog indisponível:", error);
     return [];
   }
 });
-
-export const articlesFor = async (lang: Lang) => (await getArticles()).filter((a) => a.lang === lang);
-
-export const articlePath = (lang: Lang, slug: string) => `${pathFor(lang, "blog")}${slug}/`;
 
 export const formatDate = (date: Date | null, lang: Lang) =>
   date

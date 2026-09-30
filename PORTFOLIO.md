@@ -398,7 +398,7 @@ Todo o conteúdo do site está no frontmatter acima. Este corpo documenta de ond
 
 - **README de cada projeto**: `https://raw.githubusercontent.com/<repo>/HEAD/README.md`, renderizado na página `/projetos/<slug>`.
 - **Repositórios fixados do GitHub**: `https://pinned.berrysauce.dev/get/diegormirhan`. Se falhar, cai para os 6 repositórios com mais estrelas via `https://api.github.com/users/diegormirhan/repos` (ignorando forks e arquivados).
-- **Artigos do Medium**: feed `https://medium.com/feed/@diegomirhan` via `https://api.rss2json.com/v1/api.json`. O Medium não informa o idioma do post, então ele é inferido pela frequência de stopwords PT/EN, e cada idioma do site mostra só os seus artigos.
+- **Posts do blog**: RSS público do Ghost, `https://blog.diegomirhan.com/rss/`. Os 3 mais recentes aparecem em "Escritos recentes" nas duas versões do site (o blog é em português) e levam direto ao post no blog. Como o site é estático, um post novo só aparece aqui no próximo build.
 
 ## Arquivos estáticos (`public/`)
 
@@ -420,7 +420,7 @@ Todo o conteúdo do site está no frontmatter acima. Este corpo documenta de ond
 - Preloader com contador em % → botão "Entrar" (ou "entrar sem som") → a pílula vira um círculo cobalto enquanto a subida do som toca → no golpe, "DIEGO" surge de uma vez com clarão e tremor (título de trailer) → o branco se apaga e o site aparece por dentro das letras, o miolo do "O" ganha um contorno luminoso e a câmera mergulha por ele até o site (a cada carregamento completo); o "Diego." do topo entra em seguida;
 - Sem cards e sem frases de apoio nas seções; listas são linhas tipográficas com preview no hover.
 - **Dev mode** (botão ao lado da bandeira): visual mais agressivo (cobalto + vermelho sinal #ff2b3a), versões técnicas dos objetos 3D (backpropagation, descida do gradiente, arquitetura de sistema, multiplicação de matrizes, ∇), linhas de código e símbolos matemáticos flutuando, anotações de código/equações em cada seção, pulso grave a cada 5 s (uma cordilheira de areia vermelha explode de baixo da tela, atrás de tudo, e cai de volta; o relevo 3D gera ondas), trilha sonora que se abre com o scroll, vinheta e grão de filme. Entra por uma bolha que cresce em ondas; sempre leva ao topo; continua ao navegar e desliga ao recarregar; botão de mudo.
-- Páginas: início, projetos (+ uma por projeto, com README), blog, experiência/skills, contato (sem formulário). PT na raiz, EN em `/en/`, troca por bandeira.
+- Páginas: início, projetos (+ uma por projeto, com README), experiência/skills, contato (sem formulário). O item "Blog" do menu leva para blog.diegomirhan.com; os endereços antigos `/blog/…` redirecionam para o post equivalente. PT na raiz, EN em `/en/`, troca por bandeira.
 
 ## Áudio (`public/audio/`)
 
