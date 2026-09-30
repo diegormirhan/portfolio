@@ -515,6 +515,11 @@ document.addEventListener("astro:before-swap", (event) => {
   pageContext = null;
 });
 
+// PT | EN: on click the bubble slides to the other language while the router loads the page (CSS .is-switching)
+document.addEventListener("click", (e) => {
+  (e.target as Element).closest?.("[data-lang-toggle]")?.classList.add("is-switching");
+});
+
 document.addEventListener("astro:after-swap", () => {
   lenis?.scrollTo(0, { immediate: true, force: true });
   if (!lenis) scrollTo(0, 0);

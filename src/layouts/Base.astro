@@ -1,7 +1,5 @@
 ---
 import { ClientRouter } from "astro:transitions";
-import brFlag from "flag-icons/flags/4x3/br.svg?url";
-import usFlag from "flag-icons/flags/4x3/us.svg?url";
 
 import "../styles/global.css";
 import { content, pathFor, profile, ui, type Lang, type PageKey } from "../lib/content";
@@ -250,14 +248,17 @@ const socials = [
         </button>
         <a
           href={otherPath}
-          class="flag"
+          class="langtog mono"
+          data-lang={lang}
           hreflang={other}
           lang={other}
           aria-label={t.switchLang}
           title={t.switchLang}
-          data-magnetic="0.4"
+          data-lang-toggle
         >
-          <img src={other === "en" ? usFlag : brFlag} alt="" width="28" height="21" />
+          <span class="langtog__bubble" aria-hidden="true"></span>
+          <span class="langtog__opt" aria-hidden="true" data-on={lang === "pt" ? "" : undefined}>PT</span>
+          <span class="langtog__opt" aria-hidden="true" data-on={lang === "en" ? "" : undefined}>EN</span>
         </a>
         <button class="burger" type="button" aria-expanded="false" aria-controls="menu" data-menu-toggle data-magnetic="0.3">
           <span class="sr-only">{t.menu}</span>
@@ -813,26 +814,109 @@ const socials = [
     pointer-events: none;
   }
 
-  .flag {
-    display: grid;
-    place-items: center;
-    width: 3rem;
+  /* Idioma: PT | EN com uma bolha sobre o idioma atual. No hover a bolha se estica na direção do outro idioma;
+     no clique ela escorrega até ele (a borda da frente vai primeiro, a de trás segue), enquanto a página troca. */
+  .langtog {
+    --p: 0.3rem;
+    --w: 2.6rem;
+    --stretch: 0.5rem;
+    position: relative;
+    display: inline-grid;
+    grid-template-columns: var(--w) var(--w);
     height: 3rem;
-    border-radius: 50%;
+    padding: var(--p);
+    border-radius: 999px;
     border: 1px solid var(--line);
     background: color-mix(in oklch, var(--bg) 55%, transparent);
     backdrop-filter: blur(12px);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
     transition: border-color 0.3s;
   }
 
-  .flag img {
-    width: 1.4rem;
-    height: auto;
-    border-radius: 2px;
+  .langtog__bubble {
+    position: absolute;
+    top: var(--p);
+    bottom: var(--p);
+    left: var(--p);
+    right: calc(var(--p) + var(--w));
+    border-radius: 999px;
+    background: var(--fg);
+    box-shadow: 0 0.35rem 1.1rem -0.35rem color-mix(in oklch, var(--cerulean-bright) 70%, transparent);
+    transition:
+      left 0.5s var(--ease-out),
+      right 0.5s var(--ease-out),
+      background-color 0.3s;
   }
 
-  .flag:hover {
+  .langtog[data-lang="en"] .langtog__bubble {
+    left: calc(var(--p) + var(--w));
+    right: var(--p);
+  }
+
+  .langtog__opt {
+    position: relative;
+    display: grid;
+    place-items: center;
+    color: var(--muted);
+    transition: color 0.35s var(--ease-out);
+  }
+
+  .langtog__opt[data-on] {
+    color: var(--bg-deep);
+  }
+
+  .langtog:hover,
+  .langtog:focus-visible {
     border-color: var(--fg);
+  }
+
+  .langtog:hover .langtog__opt:not([data-on]),
+  .langtog:focus-visible .langtog__opt:not([data-on]) {
+    color: var(--fg);
+  }
+
+  /* hover: a bolha se estica para o lado do outro idioma */
+  .langtog[data-lang="pt"]:is(:hover, :focus-visible) .langtog__bubble {
+    right: calc(var(--p) + var(--w) - var(--stretch));
+  }
+
+  .langtog[data-lang="en"]:is(:hover, :focus-visible) .langtog__bubble {
+    left: calc(var(--p) + var(--w) - var(--stretch));
+  }
+
+  /* clique: escorrega até o outro idioma; a borda da frente sai antes, a de trás vem 0,08 s depois */
+  .langtog[data-lang="pt"].is-switching .langtog__bubble {
+    left: calc(var(--p) + var(--w));
+    right: var(--p);
+    transition:
+      right 0.45s var(--ease-out),
+      left 0.45s var(--ease-out) 0.08s;
+  }
+
+  .langtog[data-lang="en"].is-switching .langtog__bubble {
+    left: var(--p);
+    right: calc(var(--p) + var(--w));
+    transition:
+      left 0.45s var(--ease-out),
+      right 0.45s var(--ease-out) 0.08s;
+  }
+
+  .langtog.is-switching .langtog__opt[data-on] {
+    color: var(--muted);
+  }
+
+  .langtog[data-lang="pt"].is-switching .langtog__opt:last-child,
+  .langtog[data-lang="en"].is-switching .langtog__opt:nth-child(2) {
+    color: var(--bg-deep);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .langtog__bubble,
+    .langtog__opt {
+      transition: none;
+    }
   }
 
   .burger {
