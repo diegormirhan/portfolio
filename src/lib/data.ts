@@ -77,6 +77,10 @@ const decode = (s: string) =>
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'")
     .trim();
+// Ghost serves any cover resized and as WebP at /content/images/size/w640/format/webp/...: ~20 KB instead of a
+// 1 MB PNG. 640 is one of the blog theme's image_sizes (the only widths Ghost resizes to).
+const small = (url: string | null | undefined) =>
+  url ? url.replace(/\/content\/images\/(?!size\/)/, "/content/images/size/w640/format/webp/") : null;
 const tag = (xml: string, name: string) => decode(xml.match(new RegExp(`<${name}[^>]*>([\\s\\S]*?)</${name}>`))?.[1] ?? "");
 
 // O post marcado "Feature this post" no Ghost vem primeiro. O RSS não diz qual é: o tema do blog marca o endereço
@@ -99,7 +103,7 @@ async function withFeaturedFirst(list: Article[]): Promise<Article[]> {
       title: meta(page, "og:title"),
       link: url,
       date: Number.isNaN(date.getTime()) ? null : date,
-      thumbnail: meta(page, "og:image") || null,
+      thumbnail: small(meta(page, "og:image")),
     };
     return featured.title ? [featured, ...list] : list;
   } catch (error) {
@@ -122,7 +126,7 @@ export const getArticles = memo(async (): Promise<Article[]> => {
         title: tag(item!, "title"),
         link: tag(item!, "link"),
         date: Number.isNaN(date.getTime()) ? null : date,
-        thumbnail: item!.match(/<media:content[^>]+url="([^"]+)"/)?.[1] ?? null,
+        thumbnail: small(item!.match(/<media:content[^>]+url="([^"]+)"/)?.[1]),
       };
     });
     return withFeaturedFirst(list);

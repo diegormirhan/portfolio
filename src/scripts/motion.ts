@@ -793,19 +793,38 @@ function setupPage(intro: Promise<void>) {
         rTo(gsap.utils.clamp(-10, 10, (e.clientX - lastX) * 0.6));
         lastX = e.clientX;
       };
-      document.querySelectorAll<HTMLElement>("[data-preview]").forEach((row) => {
+      const rows = [...document.querySelectorAll<HTMLElement>("[data-preview]")];
+      // one <img> serves every row: without this, the previous row's picture showed until the new one loaded.
+      // The list's pictures are fetched while the browser is idle, and a picture only appears once decoded.
+      const warm = () => rows.forEach((r) => r.dataset.previewSrc && (new Image().src = r.dataset.previewSrc));
+      "requestIdleCallback" in window ? requestIdleCallback(warm, { timeout: 3000 }) : setTimeout(warm, 1500);
+      let current: HTMLElement | null = null;
+      const hide = (duration = 0.4) =>
+        gsap.to(preview, { scale: 0.6, opacity: 0, duration, ease: "power3.out", overwrite: "auto" });
+      rows.forEach((row) => {
         row.addEventListener("pointerenter", (e) => {
           const src = row.dataset.previewSrc;
           if (!src) return;
-          previewImg.src = src;
+          current = row;
           gsap.set(preview, { x: e.clientX, y: e.clientY });
           lastX = e.clientX;
-          gsap.to(preview, { scale: 1, opacity: 1, duration: 0.5, ease: EASE, overwrite: "auto" });
+          if (previewImg.getAttribute("src") !== src) {
+            hide(0.15);
+            previewImg.src = src;
+          }
+          previewImg
+            .decode()
+            .catch(() => {})
+            .then(() => {
+              if (current === row && previewImg.getAttribute("src") === src)
+                gsap.to(preview, { scale: 1, opacity: 1, duration: 0.5, ease: EASE, overwrite: "auto" });
+            });
         });
         row.addEventListener("pointermove", move);
-        row.addEventListener("pointerleave", () =>
-          gsap.to(preview, { scale: 0.6, opacity: 0, duration: 0.4, ease: "power3.out", overwrite: "auto" }),
-        );
+        row.addEventListener("pointerleave", () => {
+          if (current === row) current = null;
+          hide();
+        });
       });
     }
 
