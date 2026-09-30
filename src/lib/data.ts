@@ -79,6 +79,35 @@ const decode = (s: string) =>
     .trim();
 const tag = (xml: string, name: string) => decode(xml.match(new RegExp(`<${name}[^>]*>([\\s\\S]*?)</${name}>`))?.[1] ?? "");
 
+// O post marcado "Feature this post" no Ghost vem primeiro. O RSS não diz qual é: o tema do blog marca o endereço
+// dele na home (data-featured-url). Sem destaque, ou com o blog fora do ar, a ordem é só por data.
+const meta = (html: string, prop: string) =>
+  decode(html.match(new RegExp(`<meta[^>]+(?:property|name)="${prop}"[^>]+content="([^"]*)"`))?.[1] ?? "");
+async function withFeaturedFirst(list: Article[]): Promise<Article[]> {
+  try {
+    const headers = { "User-Agent": "diegomirhan.com build" };
+    const home = await (await fetch(blogUrl, { headers })).text();
+    const url = home.match(/data-featured-url="([^"]+)"/)?.[1];
+    if (!url) return list;
+    const found = list.find((a) => a.link === url);
+    if (found) return [found, ...list.filter((a) => a !== found)];
+    // destaque antigo, fora do RSS: título, data e imagem vêm da própria página do post
+    const page = await (await fetch(url, { headers })).text();
+    const date = new Date(meta(page, "article:published_time"));
+    const featured: Article = {
+      id: url,
+      title: meta(page, "og:title"),
+      link: url,
+      date: Number.isNaN(date.getTime()) ? null : date,
+      thumbnail: meta(page, "og:image") || null,
+    };
+    return featured.title ? [featured, ...list] : list;
+  } catch (error) {
+    console.warn("[data] destaque do blog indisponível:", error);
+    return list;
+  }
+}
+
 // Posts do blog (blog.diegomirhan.com), mais recentes primeiro, lidos do RSS público do Ghost no build.
 // Os links vão direto para o post no blog: o portfolio não tem mais páginas de artigo.
 export const getArticles = memo(async (): Promise<Article[]> => {
@@ -86,7 +115,7 @@ export const getArticles = memo(async (): Promise<Article[]> => {
     const res = await fetch(`${blogUrl}rss/`, { headers: { "User-Agent": "diegomirhan.com build" } });
     if (!res.ok) throw new Error(`rss -> ${res.status}`);
     const xml = await res.text();
-    return [...xml.matchAll(/<item>([\s\S]*?)<\/item>/g)].map(([, item], index) => {
+    const list: Article[] = [...xml.matchAll(/<item>([\s\S]*?)<\/item>/g)].map(([, item], index) => {
       const date = new Date(tag(item!, "pubDate"));
       return {
         id: tag(item!, "guid") || String(index),
@@ -96,6 +125,7 @@ export const getArticles = memo(async (): Promise<Article[]> => {
         thumbnail: item!.match(/<media:content[^>]+url="([^"]+)"/)?.[1] ?? null,
       };
     });
+    return withFeaturedFirst(list);
   } catch (error) {
     console.warn("[data] blog indisponível:", error);
     return [];
