@@ -24,5 +24,8 @@ export default defineConfig({
     "/en/blog/analyzing-the-cpu-execution-pipeline-how-instructions-are-processed-and-optimized-through-branch": "https://blog.diegomirhan.com/pipeline-de-execucao-da-cpu/",
     "/en/blog/how-hierarchical-cache-and-memory-locality-affect-performance-in-multithread-systems": "https://blog.diegomirhan.com/cache-hierarquica-e-localidade-de-memoria-em-multithread/",
     "/en/blog/understanding-decimals-is-not-enough-to-become-a-developer": "https://blog.diegomirhan.com/entender-decimais-nao-e-suficiente-para-ser-desenvolvedor/",
+    // O ToolHaven virou Tools4Devs: o endereço antigo do projeto continua funcionando
+    "/projetos/toolhaven-desktop": "/projetos/tools4devs/",
+    "/en/projects/toolhaven-desktop": "/en/projects/tools4devs/",
   },
 });

@@ -66,13 +66,13 @@ pt:
       description: "4º semestre. Foco em IA, Data Science e Machine Learning. Disciplinas: Cálculo 1 e 2, Álgebra Linear, Cálculo Numérico, Matemática Discreta, Algoritmos e Estruturas de Dados."
       tags: [Data Science, Machine Learning, Pesquisa em IA, Algoritmos]
   projects:
-    toolhaven-desktop:
-      title: ToolHaven
+    tools4devs:
+      title: Tools4Devs
       tagline: Central de ferramentas para Windows
       description: App desktop que reúne FFmpeg, yt-dlp, ImageMagick e mais 22 ferramentas numa interface só, para baixar e converter mídia, editar imagens e PDFs e reconhecer músicas sem linha de comando.
-      imageAlt: Catálogo do ToolHaven no tema escuro
+      imageAlt: Catálogo do Tools4Devs no tema escuro
       overview:
-        - "O ToolHaven reúne 25 ferramentas open source (FFmpeg, yt-dlp, qpdf, ImageMagick, Tesseract e outras) numa única janela, com uma fila de tarefas só. Nove já vêm no instalador; as demais o app baixa, verifica e instala sozinho, mostrando o tamanho do download antes."
+        - "O Tools4Devs reúne 25 ferramentas open source (FFmpeg, yt-dlp, qpdf, ImageMagick, Tesseract e outras) numa única janela, com uma fila de tarefas só. Nove já vêm no instalador; as demais o app baixa, verifica e instala sozinho, mostrando o tamanho do download antes."
         - "Além delas, traz cerca de noventa ferramentas rápidas embutidas (texto, hashes, datas, calculadoras, cores, QR codes e mockups de conversa) que funcionam sem instalar nada. Tudo roda na sua máquina, em português ou inglês, sem conta, nuvem ou telemetria."
       highlights:
         - title: "Sem shell"
@@ -213,13 +213,13 @@ en:
       description: "4th semester. Focus on AI, Data Science and Machine Learning. Subjects: Calculus 1 and 2, Linear Algebra, Numerical Methods, Discrete Mathematics, Algorithms and Data Structures."
       tags: [Data Science, Machine Learning, AI research, Algorithms]
   projects:
-    toolhaven-desktop:
-      title: ToolHaven
+    tools4devs:
+      title: Tools4Devs
       tagline: A toolbox app for Windows
       description: Desktop app that brings FFmpeg, yt-dlp, ImageMagick and 22 more tools into one interface to download and convert media, edit images and PDFs and recognize music with no command line.
-      imageAlt: The ToolHaven catalog in its dark theme
+      imageAlt: The Tools4Devs catalog in its dark theme
       overview:
-        - "ToolHaven puts 25 open-source tools (FFmpeg, yt-dlp, qpdf, ImageMagick, Tesseract and others) in one window with a single job queue. Nine ship inside the installer; the app downloads, verifies and installs the rest on its own, showing the download size first."
+        - "Tools4Devs puts 25 open-source tools (FFmpeg, yt-dlp, qpdf, ImageMagick, Tesseract and others) in one window with a single job queue. Nine ship inside the installer; the app downloads, verifies and installs the rest on its own, showing the download size first."
         - "It also includes about ninety built-in quick tools (text, hashes, dates, calculators, colours, QR codes and chat mockups) that need nothing installed. Everything runs on your machine, in English or Brazilian Portuguese, with no account, cloud or telemetry."
       highlights:
         - title: "No shell"
@@ -349,11 +349,11 @@ dev:
 
 # Dados que não mudam por idioma. A ordem aqui é a ordem no site.
 projects:
-  - slug: toolhaven-desktop
+  - slug: tools4devs
     dev: "invoke(\"run\", { tool: \"ffmpeg\", args })\nqueue.push(job)  // O(1)"
     year: "2026"
-    repo: diegormirhan/toolhaven-desktop
-    image: /projects/toolhaven.webp
+    repo: diegormirhan/tools4devs
+    image: /projects/tools4devs.webp
     demo: https://toolhaven-kohl.vercel.app/
     tags: [Tauri, Rust, React, FFmpeg]
   - slug: polyrag
