@@ -3,7 +3,7 @@ import Base from "../layouts/Base.astro";
 import DevNote from "../components/DevNote.astro";
 import LinkRows from "../components/LinkRows.astro";
 import ProjectRows from "../components/ProjectRows.astro";
-import { content, devNotes, pathFor, profile, projects, ui, type Lang } from "../lib/content";
+import { blogUrl, content, devNotes, pathFor, profile, projects, ui, type Lang } from "../lib/content";
 import { formatDate, getArticles } from "../lib/data";
 
 interface Props {
@@ -38,7 +38,7 @@ const articles = (await getArticles()).slice(0, 3);
               [
                 { label: "GitHub", href: profile.github },
                 { label: "LinkedIn", href: profile.linkedin },
-                { label: "Medium", href: profile.medium },
+                { label: "Blog", href: blogUrl },
               ].map((s) => (
                 <li>
                   <a href={s.href} target="_blank" rel="noreferrer">

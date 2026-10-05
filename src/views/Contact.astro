@@ -2,7 +2,7 @@
 import Base from "../layouts/Base.astro";
 import DevNote from "../components/DevNote.astro";
 import LinkRows from "../components/LinkRows.astro";
-import { devNotes, profile, ui, type Lang } from "../lib/content";
+import { blogUrl, devNotes, profile, ui, type Lang } from "../lib/content";
 
 interface Props {
   lang: Lang;
@@ -13,7 +13,7 @@ const t = ui[lang];
 const channels = [
   { href: profile.linkedin, title: "LinkedIn", meta: profile.linkedinHandle },
   { href: profile.github, title: "GitHub", meta: `@${profile.githubUser}` },
-  { href: profile.medium, title: "Medium", meta: profile.mediumUser },
+  { href: blogUrl, title: "Blog", meta: "blog.diegomirhan.com" },
 ];
 ---
 

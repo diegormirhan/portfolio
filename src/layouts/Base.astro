@@ -2,7 +2,7 @@
 import { ClientRouter } from "astro:transitions";
 
 import "../styles/global.css";
-import { content, pathFor, profile, ui, type Lang, type PageKey } from "../lib/content";
+import { blogUrl, content, pathFor, profile, ui, type Lang, type PageKey } from "../lib/content";
 
 interface Props {
   lang: Lang;
@@ -85,7 +85,7 @@ const pages: PageKey[] = ["home", "projects", "blog", "experience", "contact"];
 const socials = [
   { label: "GitHub", href: profile.github },
   { label: "LinkedIn", href: profile.linkedin },
-  { label: "Medium", href: profile.medium },
+  { label: "Blog", href: blogUrl },
 ];
 ---
 
